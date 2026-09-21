@@ -7,7 +7,7 @@ los computadores de la universidad bloquean scripts y pueden borrar lo instalado
 
 | Herramienta | Dónde | Comprobar en CMD |
 |---|---|---|
-| Node.js LTS (20 o superior) | nodejs.org | `node -v` |
+| Node.js LTS (22.9 o superior) | nodejs.org | `node -v` |
 | Git para Windows | git-scm.com | `git --version` |
 | VS Code | code.visualstudio.com | — |
 

@@ -19,7 +19,7 @@ docs/    operacionalización, requerimientos, backlog y decisiones
 
 ## Primeros pasos
 
-Requisitos: Node.js 20 o superior y Git.
+Requisitos: Node.js 22.9 o superior y Git.
 
 ```
 git clone <url-del-repositorio>
