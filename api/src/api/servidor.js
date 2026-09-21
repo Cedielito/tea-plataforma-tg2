@@ -4,6 +4,7 @@ const { rutasSesiones } = require('./rutas/sesiones');
 const { rutasEventos } = require('./rutas/eventos');
 const { rutasPuntuacion } = require('./rutas/puntuacion');
 const { rutasCuidador } = require('./rutas/cuidador');
+const { rutasRevocacion } = require('./rutas/revocacion');
 
 function crearServidor(repositorio) {
   const app = express();
@@ -13,6 +14,7 @@ function crearServidor(repositorio) {
   app.use('/api/sesiones', rutasEventos(repositorio));
   app.use('/api/sesiones', rutasPuntuacion(repositorio));
   app.use('/api/sesiones', rutasCuidador(repositorio));
+  app.use('/api/sesiones', rutasRevocacion(repositorio));
   app.use((err, _req, res, _next) => {
     const codigo = err instanceof RangeError || err instanceof TypeError ? 400 : 500;
     res.status(codigo).json({ error: err.message });
