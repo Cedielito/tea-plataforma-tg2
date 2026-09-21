@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const { esquemas } = require('./modelos');
 const { INDICADORES } = require('../dominio/indicadores/calculos');
+const { VERSION_CATALOGO } = require('../dominio/puntuacion/version');
 
 const Participante = mongoose.model('Participante', esquemas.participanteSchema);
 const Consentimiento = mongoose.model('Consentimiento', esquemas.consentimientoSchema);
@@ -22,6 +23,7 @@ function armarEntrada(eventos) {
 module.exports = {
   crearParticipante: (datos) => Participante.create(datos),
   obtenerParticipante: (uuid) => Participante.findOne({ uuid }).lean(),
+  crearSesion: (datos) => Sesion.create({ versionCatalogo: VERSION_CATALOGO, ...datos }),
   obtenerConsentimiento: (uuid) => Consentimiento.findOne({ uuid }).lean(),
   guardarEventos: async (uuid, lote) => {
     const docs = await EventoConductual.insertMany(lote.map((e) => ({ ...e, uuid })));

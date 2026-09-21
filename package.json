@@ -10,5 +10,5 @@
     "dev:web": "npm run dev -w web",
     "build:web": "npm run build -w web"
   },
-  "engines": { "node": ">=20" }
+  "engines": { "node": ">=22.9" }
 }

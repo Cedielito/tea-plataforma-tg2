@@ -20,3 +20,6 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.log
+
+# binarios de mongod que descarga mongodb-memory-server en el CI
+.cache/
