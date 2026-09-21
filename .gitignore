@@ -1,0 +1,22 @@
+# dependencias
+node_modules/
+
+# builds y reportes
+web/dist/
+coverage/
+
+# secretos: NUNCA se suben
+.env
+.env.*
+!.env.example
+
+# Claude Code: configuracion personal de cada integrante
+.claude/settings.local.json
+CLAUDE.local.md
+
+# sistema operativo y editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+*.log

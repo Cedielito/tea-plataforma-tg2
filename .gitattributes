@@ -1,0 +1,7 @@
+# evita diferencias de fin de linea entre Windows y Linux (CI)
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary
+*.docx binary

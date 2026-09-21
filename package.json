@@ -1,0 +1,14 @@
+{
+  "name": "tea-plataforma",
+  "private": true,
+  "description": "Plataforma web gamificada para el tamizaje preliminar de indicadores del TEA",
+  "workspaces": ["api", "web"],
+  "scripts": {
+    "test": "npm test -w api",
+    "test:cov": "npm run test:cov -w api",
+    "dev:api": "npm run dev -w api",
+    "dev:web": "npm run dev -w web",
+    "build:web": "npm run build -w web"
+  },
+  "engines": { "node": ">=20" }
+}
