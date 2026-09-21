@@ -1,0 +1,38 @@
+/* Sistema visual del Cuadro 20. Los valores son los que la interfaz debe
+   respetar; su verificacion corresponde a la auditoria de accesibilidad. */
+:root {
+  --color-fondo: #ffffff;
+  --color-texto: #1a1a1a;          /* contraste 16.9:1 sobre fondo (CT-01) */
+  --color-primario: #1f3864;       /* contraste 11.2:1 sobre fondo (CT-01) */
+  --color-superficie: #eef2f9;
+  --color-borde: #4a4a4a;
+  --color-aviso: #7f1d1d;
+  --tipo-base: 16px;               /* escalable al 200% (CT-01, CT-09) */
+  --tipo-familia: system-ui, "Segoe UI", Arial, sans-serif;
+  --objetivo-tactil: 44px;         /* CT-04, CT-09 */
+  --separacion-objetivos: 8px;
+  --radio: 8px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--tipo-familia);
+  font-size: var(--tipo-base);
+  color: var(--color-texto);
+  background: var(--color-fondo);
+}
+button {
+  min-height: var(--objetivo-tactil);
+  min-width: var(--objetivo-tactil);
+  margin: var(--separacion-objetivos);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+  font-size: 1rem;
+  cursor: pointer;
+}
+button:focus-visible { outline: 3px solid var(--color-primario); outline-offset: 2px; }
+/* CP-09: un solo elemento animado por pantalla, desactivable (CT-02, CT-06) */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.sin-movimiento * { animation: none !important; transition: none !important; }
+.alto-contraste { --color-superficie: #ffffff; --color-borde: #000000; }
