@@ -35,4 +35,4 @@ Cómo trabajamos: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ## Equipo
 
 - Lucas — backend
-- Compañero/a — frontend
+- Santiago Cárdenas — frontend
