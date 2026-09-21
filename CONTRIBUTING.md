@@ -4,8 +4,8 @@
 
 | Integrante | Área principal | Carpeta | Revisa los PR de |
 |---|---|---|---|
-| Lucas | Backend: dominio, API, datos, despliegue de la API | `api/` | Compañero/a |
-| Compañero/a | Frontend: pantallas, minijuegos, accesibilidad, despliegue web | `web/` | Lucas |
+| Lucas | Backend: dominio, API, datos, despliegue de la API | `api/` | Santiago Cárdenas |
+| Santiago Cárdenas | Frontend: pantallas, minijuegos, accesibilidad, despliegue web | `web/` | Lucas |
 
 Cada uno es dueño de su carpeta, pero ninguno fusiona su propio código: **todo cambio
 entra por Pull Request aprobado por el otro**. Esa revisión cruzada es además evidencia
