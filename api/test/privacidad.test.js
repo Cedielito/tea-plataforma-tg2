@@ -1,0 +1,79 @@
+'use strict';
+const { generarSeudonimo, esSeudonimoValido, contieneDatoIdentificable } = require('../src/dominio/privacidad/seudonimo');
+const { validarConsentimiento, puedeIniciarSesion, modalidadAsentimiento, revocar, FINALIDADES } = require('../src/dominio/privacidad/consentimiento');
+
+const consentimientoValido = () => ({
+  finalidades: { registro_conductual: true, devolucion_resultados: true, uso_academico_anonimizado: false },
+  versionFormato: 'v1', fecha: '2026-09-10'
+});
+
+describe('CT-11 seudonimizacion', () => {
+  test('genera identificadores validos y distintos', () => {
+    const a = generarSeudonimo();
+    const b = generarSeudonimo();
+    expect(esSeudonimoValido(a)).toBe(true);
+    expect(a).not.toBe(b);
+  });
+  test('rechaza valores que no son UUID', () => {
+    expect(esSeudonimoValido('menor-01')).toBe(false);
+    expect(esSeudonimoValido(null)).toBe(false);
+  });
+  test('detecta campos identificables, con y sin tilde', () => {
+    expect(contieneDatoIdentificable({ nombre: 'x' })).toBe(true);
+    expect(contieneDatoIdentificable({ Teléfono: '300' })).toBe(true);
+    expect(contieneDatoIdentificable({ tiempoReaccionMs: 800 })).toBe(false);
+    expect(contieneDatoIdentificable(null)).toBe(false);
+  });
+});
+
+describe('CT-12 consentimiento granular', () => {
+  test('acepta un consentimiento completo', () => {
+    expect(validarConsentimiento(consentimientoValido()).valido).toBe(true);
+  });
+  test('exige que las tres finalidades esten declaradas', () => {
+    const c = consentimientoValido();
+    delete c.finalidades.uso_academico_anonimizado;
+    const r = validarConsentimiento(c);
+    expect(r.valido).toBe(false);
+    expect(r.errores.join(' ')).toContain('uso_academico_anonimizado');
+  });
+  test('sin registro conductual no hay sesion posible', () => {
+    const c = consentimientoValido();
+    c.finalidades.registro_conductual = false;
+    expect(validarConsentimiento(c).valido).toBe(false);
+  });
+  test('rechaza consentimiento ausente o sin version ni fecha', () => {
+    expect(validarConsentimiento(null).valido).toBe(false);
+    expect(validarConsentimiento({ finalidades: {} }).valido).toBe(false);
+    const c = consentimientoValido();
+    delete c.versionFormato; delete c.fecha;
+    expect(validarConsentimiento(c).errores.length).toBeGreaterThanOrEqual(2);
+  });
+  test('FINALIDADES declara exactamente tres finalidades', () => {
+    expect(FINALIDADES).toHaveLength(3);
+  });
+});
+
+describe('CT-14 asentimiento del menor', () => {
+  test('la negativa del menor bloquea la sesion pese a la autorizacion parental', () => {
+    const r = puedeIniciarSesion({ consentimiento: consentimientoValido(), asentimiento: { aceptado: false } });
+    expect(r.permitido).toBe(false);
+    expect(r.motivo).toBe('asentimiento_negado');
+  });
+  test('permite iniciar con consentimiento y asentimiento validos', () => {
+    expect(puedeIniciarSesion({ consentimiento: consentimientoValido(), asentimiento: { aceptado: true } }).permitido).toBe(true);
+  });
+  test('un consentimiento revocado impide iniciar', () => {
+    const c = revocar(consentimientoValido(), '2026-09-11');
+    const r = puedeIniciarSesion({ consentimiento: c, asentimiento: { aceptado: true } });
+    expect(r.permitido).toBe(false);
+    expect(['consentimiento_revocado', 'consentimiento_invalido']).toContain(r.motivo);
+  });
+  test('la modalidad depende del tramo de edad', () => {
+    expect(modalidadAsentimiento(6)).toBe('pictografico');
+    expect(modalidadAsentimiento(11)).toBe('pictografico');
+    expect(modalidadAsentimiento(12)).toBe('escrito');
+    expect(() => modalidadAsentimiento(3)).toThrow(RangeError);
+    expect(() => modalidadAsentimiento('ocho')).toThrow(TypeError);
+  });
+});
