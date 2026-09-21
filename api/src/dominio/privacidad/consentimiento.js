@@ -30,9 +30,14 @@ function validarConsentimiento(entrada) {
  * Su negativa bloquea la sesion aunque exista autorizacion del representante.
  */
 function puedeIniciarSesion({ consentimiento, asentimiento }) {
+  // La revocacion se comprueba primero: revocar() apaga registro_conductual, de modo
+  // que validarConsentimiento() reportaria 'consentimiento_invalido' y ocultaria el
+  // motivo real. Un consentimiento ausente no llega aqui: no es un objeto.
+  if (consentimiento && typeof consentimiento === 'object' && consentimiento.revocado === true) {
+    return { permitido: false, motivo: 'consentimiento_revocado' };
+  }
   const val = validarConsentimiento(consentimiento);
   if (!val.valido) return { permitido: false, motivo: 'consentimiento_invalido', detalle: val.errores };
-  if (consentimiento.revocado === true) return { permitido: false, motivo: 'consentimiento_revocado' };
   if (!asentimiento || asentimiento.aceptado !== true) {
     return { permitido: false, motivo: 'asentimiento_negado' };
   }
@@ -46,14 +51,58 @@ function modalidadAsentimiento(edad) {
   return edad <= 11 ? 'pictografico' : 'escrito';
 }
 
-/** CT-12. La revocacion inhabilita el registro conductual y deja constancia. */
+/**
+ * CT-12. La revocacion inhabilita el registro conductual y deja constancia.
+ * Es idempotente: si ya estaba revocado conserva la fechaRevocacion original,
+ * porque esa primera fecha es la constancia que la norma exige preservar.
+ */
 function revocar(consentimiento, fecha) {
+  const yaRevocado = consentimiento.revocado === true;
   return {
     ...consentimiento,
     revocado: true,
-    fechaRevocacion: fecha,
+    fechaRevocacion: yaRevocado && consentimiento.fechaRevocacion ? consentimiento.fechaRevocacion : fecha,
     finalidades: { ...consentimiento.finalidades, registro_conductual: false }
   };
 }
 
-module.exports = { FINALIDADES, validarConsentimiento, puedeIniciarSesion, modalidadAsentimiento, revocar };
+/**
+ * CT-12. Colecciones del Cuadro 19 cuyo contenido se suprime al revocar.
+ * Se declara aqui como constante y no se deriva de datos/modelos porque el
+ * dominio es puro: no importa mongoose ni la capa de persistencia. La prueba
+ * `CT-12 supresion tras la revocacion` la contrasta con COLECCIONES para que
+ * una coleccion conductual nueva no quede sin suprimir.
+ */
+const COLECCIONES_SUPRIMIBLES = [
+  'participante', 'sesion', 'evento_conductual', 'respuesta_cuidador', 'puntuacion'
+];
+
+/** CT-12. Colecciones que sobreviven a la revocacion. */
+const COLECCIONES_CONSERVADAS = ['consentimiento'];
+
+/**
+ * CT-12 y HU-10. Declara que se suprime y que se conserva al revocar. Es pura:
+ * no toca la base de datos. La ruta ejecuta el plan que esta funcion describe.
+ */
+function planificarSupresion(consentimiento, fecha) {
+  if (!consentimiento || typeof consentimiento !== 'object') {
+    throw new TypeError('consentimiento ausente');
+  }
+  return {
+    consentimiento: revocar(consentimiento, fecha),
+    suprimir: [...COLECCIONES_SUPRIMIBLES],
+    conservar: [...COLECCIONES_CONSERVADAS],
+    yaEstabaRevocado: consentimiento.revocado === true
+  };
+}
+
+module.exports = {
+  FINALIDADES,
+  COLECCIONES_SUPRIMIBLES,
+  COLECCIONES_CONSERVADAS,
+  validarConsentimiento,
+  puedeIniciarSesion,
+  modalidadAsentimiento,
+  revocar,
+  planificarSupresion
+};
