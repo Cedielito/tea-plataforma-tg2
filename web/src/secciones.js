@@ -101,11 +101,14 @@ export const PAGINAS_PIE = [
   }
 ];
 
-/** Tramos de edad de las señales de alerta (RCN-04), en orden de edad. */
+/**
+ * Tramos de edad de las señales de alerta (RCN-04), en orden de edad. `corta`
+ * es el texto visible de cada pestaña; «años» va en la indicación de encima.
+ */
 export const TRAMOS_EDAD = [
-  { valor: '4-7', etiqueta: '4 a 7 años' },
-  { valor: '8-12', etiqueta: '8 a 12 años' },
-  { valor: '13-17', etiqueta: '13 a 17 años' }
+  { valor: '4-7', corta: '4 a 7', etiqueta: '4 a 7 años' },
+  { valor: '8-12', corta: '8 a 12', etiqueta: '8 a 12 años' },
+  { valor: '13-17', corta: '13 a 17', etiqueta: '13 a 17 años' }
 ];
 
 const seccionDe = (codigo) => SECCIONES.find((s) => s.seccion === codigo);

@@ -4,6 +4,9 @@
  * pestaña elegida está en el orden de tabulación; con las flechas izquierda y
  * derecha (en ciclo), Inicio y Fin se pasa a otra y se muestra de inmediato.
  * Hay un solo panel, cuyo contenido cambia con la pestaña elegida.
+ *
+ * Si una pestaña trae `nombre`, ese es su nombre accesible (aria-label) y debe
+ * empezar por el texto visible (WCAG 2.5.3): «4 a 7» se anuncia «4 a 7 años».
  */
 import { useId, useLayoutEffect, useRef } from 'react';
 
@@ -15,7 +18,7 @@ const TECLAS = {
 };
 
 /**
- * @param {{etiquetadoPor: string, pestanas: {valor: string, etiqueta: string}[],
+ * @param {{etiquetadoPor: string, pestanas: {valor: string, etiqueta: string, nombre?: string}[],
  *   seleccionada: string, alCambiar: (valor: string) => void, children: any}} props
  */
 export default function Pestanas({ etiquetadoPor, pestanas, seleccionada, alCambiar, children }) {
@@ -45,7 +48,7 @@ export default function Pestanas({ etiquetadoPor, pestanas, seleccionada, alCamb
   return (
     <>
       <div role="tablist" aria-labelledby={etiquetadoPor} className="pestanas">
-        {pestanas.map(({ valor, etiqueta }, indice) => {
+        {pestanas.map(({ valor, etiqueta, nombre }, indice) => {
           const elegida = valor === seleccionada;
           return (
             <button
@@ -54,6 +57,7 @@ export default function Pestanas({ etiquetadoPor, pestanas, seleccionada, alCamb
               type="button"
               role="tab"
               id={idPestana(valor)}
+              aria-label={nombre}
               aria-selected={elegida}
               aria-controls={idPanel}
               tabIndex={elegida ? 0 : -1}

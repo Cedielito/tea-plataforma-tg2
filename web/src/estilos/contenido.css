@@ -84,7 +84,11 @@
 .boton svg { width: var(--icono-pequeno); height: var(--icono-pequeno); }
 
 /* ---------- Señales de alerta: pestañas por edad (RF-03, RCN-04) ---------- */
-.senales { max-width: var(--ancho-lectura); margin-top: var(--espacio-4); }
+.senales {
+  max-width: var(--ancho-lectura);
+  margin-top: var(--espacio-4);
+  container: senales / inline-size;
+}
 .senales > h2 {
   padding-top: var(--espacio-3);
   border-top: var(--borde-fino) solid var(--color-borde);
@@ -92,12 +96,18 @@
 }
 .senales__indicacion { color: var(--color-texto-secundario); }
 
-/* Tres botones del mismo ancho; en 320 px el texto pasa a dos líneas */
+/* Tres botones del mismo ancho, con el texto en una sola línea («13 a 17»). */
 .pestanas {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--espacio-1);
   max-width: var(--ancho-pestanas);
+}
+/* Si no caben en una fila, se apilan a todo el ancho. Las tres necesitan unas
+   13,6 em; el umbral va en em, así que sigue al tamaño de letra de la barra
+   M-07: a 320 px caben con letra normal y grande, y se apilan con muy grande. */
+@container senales (max-width: 14em) {
+  .pestanas { grid-template-columns: minmax(0, 1fr); }
 }
 .pestana {
   min-height: var(--objetivo-tactil);
@@ -109,24 +119,32 @@
   font-weight: var(--peso-negrita);
   line-height: var(--interlineado-titulos);
   text-align: center;
+  white-space: nowrap;
   cursor: pointer;
 }
 .pestana:hover { background: var(--color-primario-suave); color: var(--color-primario-hover); }
-/* La pestaña elegida se distingue por el relleno y por el subrayado, no solo por el color */
+/* La pestaña elegida se distingue por el fondo relleno y una barra inferior
+   gruesa, no solo por el tono */
 .pestana[aria-selected="true"] {
   background: var(--color-primario);
   border-color: var(--color-primario);
   color: var(--color-sobre-primario);
-  text-decoration: underline;
-  text-decoration-thickness: var(--grosor-subrayado);
-  text-underline-offset: 0.25em;
+  box-shadow: inset 0 calc(-1 * var(--borde-grueso)) 0 var(--color-acento);
 }
+/* En pantallas pequeñas el panel no es un recuadro: solo una línea separadora,
+   para que el texto use casi todo el ancho */
 .pestanas__panel {
   margin-top: var(--espacio-3);
-  padding: var(--espacio-3);
-  background: var(--color-superficie);
-  border: var(--borde-fino) solid var(--color-borde);
-  border-radius: var(--radio);
+  padding-top: var(--espacio-2);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}
+@media (min-width: 40em) {
+  .pestanas__panel {
+    padding: var(--espacio-3);
+    background: var(--color-superficie);
+    border: var(--borde-fino) solid var(--color-borde);
+    border-radius: var(--radio);
+  }
 }
 .pestanas__panel .prosa h3:first-child { margin-top: 0; }
 

@@ -27,6 +27,9 @@ import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
 import { TRAMOS_EDAD } from '../secciones.js';
 
+/** Pestañas con el texto corto visible y el nombre completo para el lector de pantalla. */
+const PESTANAS_EDAD = TRAMOS_EDAD.map(({ valor, corta, etiqueta }) => ({ valor, etiqueta: corta, nombre: etiqueta }));
+
 export default function SenalesDeAlerta({ seccion }) {
   const { titulo } = seccion;
   useTituloPagina(titulo);
@@ -72,8 +75,8 @@ export default function SenalesDeAlerta({ seccion }) {
 
           <section className="senales" aria-labelledby={idEdades}>
             <h2 id={idEdades}>Señales según la edad</h2>
-            <p className="senales__indicacion">Elige la edad del niño, la niña o el adolescente.</p>
-            <Pestanas etiquetadoPor={idEdades} pestanas={TRAMOS_EDAD} seleccionada={edad} alCambiar={cambiarEdad}>
+            <p className="senales__indicacion">Elige la edad, en años, del niño, la niña o el adolescente.</p>
+            <Pestanas etiquetadoPor={idEdades} pestanas={PESTANAS_EDAD} seleccionada={edad} alCambiar={cambiarEdad}>
               {tramo ? (
                 <Markdown texto={tramo.cuerpo} nivelTitulos={3} />
               ) : (
