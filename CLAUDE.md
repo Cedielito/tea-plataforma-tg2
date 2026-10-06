@@ -90,13 +90,14 @@ api/src/api/         Express: servidor, rutas y middleware (las rutas solo valid
                      llaman al dominio y responden)
 api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
+api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
+                     la base al arrancar (datos/sincronizacionContenidos.js)
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error
-contenidos/          textos S1-S5 en Markdown con fuentes y fecha (se cargan a la base)
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
@@ -109,10 +110,10 @@ Se ejecutan desde la raíz del repositorio.
 npm install          instala api y web (workspaces)
 npm test             pruebas del backend
 npm run test:cov     pruebas con cobertura; el umbral mínimo es 70 %
-npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env)
+npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env);
+                     al arrancar carga los textos de api/contenidos
 npm run dev:web      interfaz en http://localhost:5173 (proxy de /api a la API)
 npm run build:web    compila el frontend
-npm run seed:api     crea 2 contenidos de ejemplo en borrador (usa api/.env)
 ```
 
 ## Convenciones
@@ -176,6 +177,14 @@ los contenidos sin tramo), `/api/contenidos/:slug`, `/api/preguntas`, `/api/recu
 y `/api/buscar?q=`. Aún no hay rutas `/api/admin` (llegan con T4). La fecha de
 revisión es una fecha de calendario: el formulario la envía como AAAA-MM-DD, se
 guarda a medianoche UTC y la web la muestra con `timeZone: 'UTC'`.
+
+Carga de textos (T3, parte A): los archivos de `api/contenidos/` (encabezado YAML +
+Markdown) se sincronizan con la colección `contenido` cada vez que arranca la API,
+antes de escuchar. Busca por `slug`: crea lo que falta y actualiza (y vuelve a
+publicar) solo si la `fechaRevision` del archivo es más reciente que la de la base;
+nunca borra ni despublica. Un archivo con errores queda en el registro («Contenidos:
+…») y no detiene el arranque. El formato se lee en `api/src/dominio/archivoContenido.js`.
+
 Páginas de contenido (T3, parte B): S1, S3, S4 y S5 usan la plantilla
 `web/src/paginas/PaginaContenido.jsx` (migas de pan, h1, aviso RCN-03 donde aplica,
 cuerpo en Markdown, fuentes y «Revisado el dd/mm/aaaa»). Señales de alerta
