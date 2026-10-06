@@ -13,6 +13,7 @@ import './tokens.css';
 import './estilos/base.css';
 import './estilos/layout.css';
 import './estilos/inicio.css';
+import './estilos/contenido.css';
 
 import App from './App.jsx';
 

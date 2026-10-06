@@ -1,6 +1,6 @@
 /**
  * Página de inicio (M-01, RCN-03): mensaje principal, aviso de no diagnóstico y
- * tarjetas de acceso a las seis secciones.
+ * tarjetas de acceso a las secciones (RF-01).
  */
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';

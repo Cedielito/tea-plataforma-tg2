@@ -93,7 +93,11 @@ api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
-web/src/             React + Vite; tokens.css es el sistema visual
+web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
+                     navegación, tarjetas, rutas y enlaces del buscador
+web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
+web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
+                     revisión, pestañas accesibles, estados de carga y error
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
@@ -156,7 +160,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0, T1 y T2 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T3 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -180,4 +184,15 @@ antes de escuchar. Busca por `slug`: crea lo que falta y actualiza (y vuelve a
 publicar) solo si la `fechaRevision` del archivo es más reciente que la de la base;
 nunca borra ni despublica. Un archivo con errores queda en el registro («Contenidos:
 …») y no detiene el arranque. El formato se lee en `api/src/dominio/archivoContenido.js`.
-Siguiente: T3 (`feat/paginas-contenido`). Ver `docs/backlog-fase-i.md`.
+
+Páginas de contenido (T3, parte B): S1, S3, S4 y S5 usan la plantilla
+`web/src/paginas/PaginaContenido.jsx` (migas de pan, h1, aviso RCN-03 donde aplica,
+cuerpo en Markdown, fuentes y «Revisado el dd/mm/aaaa»). Señales de alerta
+(`SenalesDeAlerta.jsx`) muestra la introducción arriba, pestañas WAI-ARIA por tramo con
+el tramo en la dirección (`?edad=8-12`), un recuadro final hacia la ruta y las fuentes de
+cada contenido por separado. El buscador lleva a `/buscar?q=`; solo el resumen va en la
+región `role="status"`. `react-markdown` descarta el HTML, no admite imágenes y se
+descarga aparte (las páginas lo precargan al montarse). Todos los enlaces abren en la
+misma pestaña. Mientras llega la API se muestra un mensaje sin temporizadores; ante
+502/503/504 o falla de red se reintenta una vez y luego se ofrece «Intentar de nuevo».
+Siguiente: T4 (`feat/admin-auth`). Ver `docs/backlog-fase-i.md`.

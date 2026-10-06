@@ -67,6 +67,8 @@
   /* Medidas de elementos concretos */
   --ancho-buscador: 24rem;
   --ancho-buscador-minimo: 14rem;
+  --ancho-buscador-pagina: 36rem;
+  --ancho-pestanas: 36rem;
   --logo-marca-ancho: 0.75rem;
   --logo-marca-alto: 2.5rem;
   --decoracion-portada: 12rem;

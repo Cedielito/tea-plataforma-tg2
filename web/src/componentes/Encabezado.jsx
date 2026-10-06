@@ -1,7 +1,10 @@
 /**
  * Encabezado común (M-01; RA-01 a RA-11): barra de accesibilidad
- * (M-07), logo textual, navegación principal y buscador. En pantallas pequeñas la
- * navegación se despliega con un botón «Menú» (aria-expanded; Escape lo cierra).
+ * (M-07), logo textual, buscador y navegación principal. En pantallas pequeñas el
+ * buscador y la navegación se despliegan con un botón «Menú» (aria-expanded;
+ * Escape lo cierra). En pantallas anchas el buscador va junto al logo y la
+ * navegación ocupa la segunda fila; el orden del código es el mismo que el
+ * visual, así que el foco recorre la página en ese orden (RA-03).
  */
 import { useEffect, useId, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -52,7 +55,8 @@ export default function Encabezado() {
         </button>
 
         <div id={idMenu} className={`menu${menuAbierto ? ' esta-abierto' : ''}`}>
-          <nav aria-label="Principal">
+          <Buscador className="menu__buscador" limpiarAlBuscar alBuscar={() => setMenuAbierto(false)} />
+          <nav aria-label="Principal" className="menu__navegacion">
             <ul className="navegacion">
               {SECCIONES.map(({ ruta, nav }) => (
                 <li key={ruta}>
@@ -61,7 +65,6 @@ export default function Encabezado() {
               ))}
             </ul>
           </nav>
-          <Buscador />
         </div>
       </div>
     </header>

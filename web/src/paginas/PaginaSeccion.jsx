@@ -1,9 +1,11 @@
 /**
- * Página provisional de una sección (M-01 a M-06). Muestra el título, una línea
- * descriptiva y, donde corresponde, el aviso de no diagnóstico (RCN-03).
- * El contenido real llega en T3 y siguientes.
+ * Página provisional de una sección (M-01 a M-06). Muestra las migas de pan, el
+ * título, una línea descriptiva y, donde corresponde, el aviso de no diagnóstico
+ * (RCN-03). El contenido real de directorio, recursos, preguntas, privacidad y
+ * «Acerca de» llega en T6 a T8.
  */
 import AvisoNoDiagnostico from '../componentes/AvisoNoDiagnostico.jsx';
+import MigasDePan from '../componentes/MigasDePan.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 
 export default function PaginaSeccion({ titulo, descripcion, avisoNoDiagnostico = false }) {
@@ -11,6 +13,7 @@ export default function PaginaSeccion({ titulo, descripcion, avisoNoDiagnostico 
 
   return (
     <div className="contenedor pagina">
+      <MigasDePan actual={titulo} />
       <h1>{titulo}</h1>
       <p className="pagina__descripcion">{descripcion}</p>
       {avisoNoDiagnostico && <AvisoNoDiagnostico className="pagina__aviso" />}

@@ -78,7 +78,8 @@
   gap: var(--espacio-3);
 }
 @media (min-width: 40em) { .tarjetas { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 64em) { .tarjetas { grid-template-columns: repeat(3, 1fr); } }
+/* Ocho secciones: dos filas de cuatro en pantallas anchas */
+@media (min-width: 64em) { .tarjetas { grid-template-columns: repeat(4, 1fr); } }
 
 .tarjetas li { display: flex; }
 

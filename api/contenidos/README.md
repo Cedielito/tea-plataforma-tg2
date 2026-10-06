@@ -19,12 +19,12 @@ bloque de página y cumple las reglas de contenido del documento:
 |---|---|---|---|
 | `s1-que-es-el-tea.md` | S1 | — | `/que-es-el-tea` |
 | `s2-senales-de-alerta.md` | S2 | — (introducción, se muestra en las tres pestañas) | `/senales-de-alerta` |
-| `s2-senales-4-a-7.md` | S2 | 4-7 | `/senales-de-alerta` (pestaña) |
-| `s2-senales-8-a-12.md` | S2 | 8-12 | `/senales-de-alerta` (pestaña) |
-| `s2-senales-13-a-17.md` | S2 | 13-17 | `/senales-de-alerta` (pestaña) |
-| `s3-mitos-y-realidades.md` | S3 | — | `/mitos-y-realidades` (nueva, la agrega T3) |
+| `s2-senales-4-a-7.md` | S2 | 4-7 | `/senales-de-alerta?edad=4-7` (pestaña) |
+| `s2-senales-8-a-12.md` | S2 | 8-12 | `/senales-de-alerta?edad=8-12` (pestaña) |
+| `s2-senales-13-a-17.md` | S2 | 13-17 | `/senales-de-alerta?edad=13-17` (pestaña) |
+| `s3-mitos-y-realidades.md` | S3 | — | `/mitos-y-realidades` |
 | `s4-ruta-de-atencion.md` | S4 | — | `/ruta-de-atencion` (arriba de la guía interactiva de T5) |
-| `s5-derechos.md` | S5 | — | `/derechos` (nueva, la agrega T3) |
+| `s5-derechos.md` | S5 | — | `/derechos` |
 
 ## Formato
 
