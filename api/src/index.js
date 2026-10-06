@@ -4,8 +4,7 @@ const { conectar, MENSAJE_SIN_URI } = require('./datos/conexion');
 
 async function principal() {
   await conectar();
-  const repositorio = require('./datos/repositorio');
-  const app = crearServidor(repositorio);
+  const app = crearServidor();
   const puerto = process.env.PORT || 3000;
   app.listen(puerto, () => console.log('API en el puerto ' + puerto));
 }

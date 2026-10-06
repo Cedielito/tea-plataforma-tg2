@@ -1,7 +1,7 @@
 {
   "name": "tea-plataforma",
   "private": true,
-  "description": "Plataforma web gamificada para el tamizaje preliminar de indicadores del TEA",
+  "description": "Plataforma web de información y orientación sobre el TEA para familias y docentes en Colombia (Fase I)",
   "workspaces": ["api", "web"],
   "scripts": {
     "test": "npm test -w api",

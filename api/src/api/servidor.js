@@ -1,25 +1,35 @@
 'use strict';
 const express = require('express');
-const { rutasSesiones } = require('./rutas/sesiones');
-const { rutasEventos } = require('./rutas/eventos');
-const { rutasPuntuacion } = require('./rutas/puntuacion');
-const { rutasCuidador } = require('./rutas/cuidador');
-const { rutasRevocacion } = require('./rutas/revocacion');
 
-function crearServidor(repositorio) {
+/**
+ * Servidor HTTP de la Fase I. Por ahora solo expone el estado del servicio;
+ * las rutas de contenidos, directorio, recursos, contacto y administracion se
+ * agregan en sus tareas del backlog (T2 a T8).
+ */
+function crearServidor() {
   const app = express();
+  app.disable('x-powered-by');
   app.use(express.json({ limit: '256kb' }));
-  app.get('/salud', (_req, res) => res.json({ estado: 'ok' }));
-  app.use('/api/sesiones', rutasSesiones(repositorio));
-  app.use('/api/sesiones', rutasEventos(repositorio));
-  app.use('/api/sesiones', rutasPuntuacion(repositorio));
-  app.use('/api/sesiones', rutasCuidador(repositorio));
-  app.use('/api/sesiones', rutasRevocacion(repositorio));
-  app.use((err, _req, res, _next) => {
-    const codigo = err instanceof RangeError || err instanceof TypeError ? 400 : 500;
-    res.status(codigo).json({ error: err.message });
-  });
+
+  const salud = (_req, res) => res.json({ estado: 'ok' });
+  app.get('/salud', salud);
+  app.get('/api/salud', salud);
+
+  app.use('/api', (_req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));
+
+  app.use(manejarError);
   return app;
 }
 
-module.exports = { crearServidor };
+/**
+ * Errores del cliente (4xx: validacion, JSON mal formado, cuerpo muy grande)
+ * se devuelven con su mensaje; cualquier otro se responde como error interno
+ * sin exponer detalles.
+ */
+function manejarError(err, _req, res, _next) {
+  const esDelCliente = Number.isInteger(err.status) && err.status >= 400 && err.status < 500;
+  const codigo = esDelCliente ? err.status : 500;
+  res.status(codigo).json({ error: esDelCliente ? err.message : 'Error interno del servidor' });
+}
+
+module.exports = { crearServidor, manejarError };

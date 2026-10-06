@@ -2,20 +2,22 @@
 
 <!-- Una o dos frases. -->
 
+Tarea del backlog: T
 Cierra #
 
-## Criterios de la matriz que implementa o modifica
+## Módulos y requisitos
 
-<!-- Ej.: CT-12, RC-05, RF-23 -->
+<!-- Ej.: M-04, RF-05, RS-07 -->
 
 ## Verificación
 
-- [ ] `npm test` pasa en local
-- [ ] Toda función nueva del dominio tiene su prueba
-- [ ] Los `describe` nuevos empiezan con el código del criterio
-- [ ] No emite ninguna salida diagnóstica, de riesgo ni punto de corte
-- [ ] No introduce datos identificables fuera de la colección `consentimiento`
-- [ ] Si cambió un cálculo, subí `VERSION_ALGORITMO`
+- [ ] `npm test` pasa y el CI está en verde
+- [ ] Si toqué `web/`: `npm run build:web` compila y revisé la vista previa
+- [ ] Toda regla de dominio nueva tiene su prueba y su `describe` empieza con el código
+- [ ] Ninguna pantalla evalúa, puntúa ni clasifica a un niño (RCN-04)
+- [ ] Todo contenido nuevo tiene fuente y fecha de revisión (RCN-01/02)
+- [ ] Sin cookies de seguimiento, analítica ni recursos de CDN externos (RS-01)
+- [ ] Se usa con teclado, con foco visible, y se ve bien a 320 px (RA)
 
 ## Impacto en el documento de tesis
 
