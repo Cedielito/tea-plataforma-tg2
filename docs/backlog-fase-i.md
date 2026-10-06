@@ -32,7 +32,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T1 ✅ | `feat/base-visual` | Layout, rutas, sistema visual, barra de accesibilidad e inicio | M-01, M-07, RA-01 a RA-11 | 1 |
 | T2 ✅ | `feat/api-contenidos` | Modelos y API de contenidos, preguntas y recursos con fuente y fecha obligatorias | RCN-01, RCN-02, RF-10 | 1 |
 | T3 ✅ | `feat/paginas-contenido` | Páginas S1 a S5, filtro por edad y buscador | M-02, RF-02, RF-03, RCN-03, RCN-04 | 1 |
-| T4 | `feat/admin-auth` | Login del administrador y editor de contenidos | M-08, RF-09, RF-10, RS-05 | 1 |
+| T4 ✅ | `feat/admin-auth` | Login del administrador y editor de contenidos | M-08, RF-09, RF-10, RS-05 | 1 |
 | T5 | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
 | T6 | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
 | T7 | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
@@ -44,6 +44,12 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 Reglas de cada sesión (Claude Code web): sesión nueva desde `main` → pegar el prompt → revisar y aprobar el plan → Claude programa, prueba, hace commit y push **a la rama de la tarea** y abre el Pull Request → revisar CI y vista previa → el otro integrante aprueba → *Squash and merge* → borrar la rama.
 
 Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
+
+## Pendientes detectados
+
+| Detectado en | Pendiente | Módulos / requisitos |
+|---|---|---|
+| T4 | Las páginas de S1, S3, S4 y S5 muestran un solo contenido, con un slug fijo (`web/src/secciones.js`). Un contenido nuevo en esas secciones, creado desde el panel, no aparece en el sitio: el buscador lo encuentra, pero su enlace lleva a la página fija de la sección. Por ahora el editor lo avisa. Resolver antes de cargar contenidos nuevos en esas secciones (por ejemplo, una ruta `/contenidos/:slug` o mostrar todos los contenidos de la sección). | M-02, RF-01, RF-02, RF-10 |
 
 ---
 
@@ -116,7 +122,12 @@ Pide autorización si necesitas una librería de Markdown.
 Propón el plan antes de escribir código.
 ```
 
-### T4 — Login y panel de administración
+### T4 — Login y panel de administración ✅
+Hecha. Cambio frente al prompt: el primer administrador no se crea con un script por
+consola (Render gratuito no la tiene), sino al arrancar la API con `ADMIN_USUARIO` y
+`ADMIN_CLAVE` si la colección está vacía (pasos en `docs/despliegue.md`). Sesión en el
+servidor dentro del documento `administrador`, bcrypt con costo 10, bloqueo por usuario
+y límite global de intentos: `docs/decisiones/0005-sesion-administrador.md`.
 ```
 Lee CLAUDE.md. Tarea T4, rama feat/admin-auth.
 
