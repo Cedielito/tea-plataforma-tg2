@@ -15,9 +15,12 @@ export const ESTADOS = Object.freeze({
 
 /**
  * @param {string|null} ruta ruta de la API; con null no se pide nada (INACTIVO)
+ * @param {{obtener?: Function, version?: number}} opciones el panel (M-08) usa
+ *   su propio cliente, que envía la cookie de sesión, y cambia `version` para
+ *   volver a pedir los datos después de iniciar sesión de nuevo
  * @returns {{estado: string, datos: any, reintentar: () => void}}
  */
-export default function useDatos(ruta) {
+export default function useDatos(ruta, { obtener = obtenerJson, version = 0 } = {}) {
   const [intento, setIntento] = useState(0);
   const [resultado, setResultado] = useState({ ruta: null, estado: ESTADOS.CARGANDO, datos: null });
 
@@ -25,7 +28,7 @@ export default function useDatos(ruta) {
     if (!ruta) return undefined;
     const control = new AbortController();
     setResultado({ ruta, estado: ESTADOS.CARGANDO, datos: null });
-    obtenerJson(ruta, { signal: control.signal }).then(
+    obtener(ruta, { signal: control.signal }).then(
       (datos) => setResultado({ ruta, estado: ESTADOS.LISTO, datos }),
       (error) => {
         if (control.signal.aborted) return;
@@ -34,7 +37,8 @@ export default function useDatos(ruta) {
       }
     );
     return () => control.abort();
-  }, [ruta, intento]);
+    // `obtener` es una función de módulo: no cambia entre renders.
+  }, [ruta, intento, version]);
 
   const reintentar = useCallback(() => setIntento((n) => n + 1), []);
 

@@ -13,6 +13,21 @@ const formatoFecha = new Intl.DateTimeFormat('es-CO', {
   timeZone: 'UTC'
 });
 
+const formatoDiaColombia = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Bogota',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit'
+});
+
+/**
+ * Hoy en Colombia como AAAA-MM-DD: el máximo de la fecha de revisión en el
+ * editor del panel, igual que valida la API (api/src/dominio/publicacion.js).
+ */
+export function hoyEnColombia(ahora = new Date()) {
+  return formatoDiaColombia.format(ahora);
+}
+
 /** @returns {{iso: string, texto: string} | null} «2026-10-06» y «06/10/2026» */
 export function fechaRevision(valor) {
   const fecha = new Date(valor);

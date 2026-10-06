@@ -74,6 +74,10 @@
   --decoracion-portada: 12rem;
   --decoracion-portada-amplia: 28rem;
   --linea-decorativa: 2rem;
+  --ancho-formulario: 46rem;          /* panel de administración (M-08) */
+  --alto-cuerpo-editor: 20rem;
+  --ancho-campo-fecha: 14rem;
+  --borde-medio: 2px;
 }
 
 @media (min-width: 40em) {

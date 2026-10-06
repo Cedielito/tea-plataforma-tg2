@@ -21,7 +21,7 @@ export class ErrorApi extends Error {
 const REINTENTABLES = new Set([502, 503, 504]);
 
 /** Errores de red (TypeError de fetch) o de una API que todavía está despertando. */
-const esReintentable = (error) => !(error instanceof ErrorApi) || REINTENTABLES.has(error.estado);
+export const esReintentable = (error) => !(error instanceof ErrorApi) || REINTENTABLES.has(error.estado);
 
 async function pedir(ruta, signal) {
   const respuesta = await fetch(ruta, { signal, headers: { Accept: 'application/json' } });
