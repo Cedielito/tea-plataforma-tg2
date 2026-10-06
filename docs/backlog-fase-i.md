@@ -37,7 +37,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T6 | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
 | T7 | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
 | T8 | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
-| T9 | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas | RS-06 | 2 |
+| T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
 | T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones | RA-01 a RA-11 | 3 |
 | T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-15 y su ejecución | C1 | 3 |
 
@@ -107,8 +107,10 @@ dd/mm/aaaa» al final. Sección Señales de alerta con pestañas 4-7, 8-12 y 13-
 cada señal presentada como motivo de consulta y un recuadro final que enlaza a la
 ruta de atención (RCN-04). Aviso de no diagnóstico en señales (RCN-03).
 Buscador funcional con resultados accesibles (región aria-live).
-Estados de carga y error en español, sin jerga técnica. URL de la API por
-variable de entorno. Pide autorización si necesitas una librería de Markdown.
+Estados de carga y error en español, sin jerga técnica (la API gratuita puede
+tardar hasta un minuto en despertar: muéstralo con calma, sin temporizadores).
+Llama a la API con rutas relativas /api/... (ver docs/despliegue.md).
+Pide autorización si necesitas una librería de Markdown.
 Propón el plan antes de escribir código.
 ```
 
@@ -179,16 +181,10 @@ contra abuso (límite de envíos por IP) sin servicios de terceros.
 Propón el plan antes de escribir código.
 ```
 
-### T9 — Despliegue
-```
-Lee CLAUDE.md. Tarea T9, rama chore/despliegue.
-
-Prepara el despliegue: web en Vercel, API en Render (plan gratuito) y base de
-datos en MongoDB Atlas (plan gratuito). Variables de entorno documentadas en
-docs/despliegue.md, CORS restringido al dominio de la web, HTTPS (RS-06) y nada
-de secretos en el repositorio. Dame la lista de pasos que debo hacer yo en cada
-servicio, en orden. Propón el plan antes de escribir código.
-```
+### T9 — Despliegue ✅
+Hecha (adelantada para poder revisar T3 en adelante en las vistas previas). Web en
+Vercel, API en Render y base en MongoDB Atlas; Vercel reenvía `/api/*` a Render, así
+que no hay CORS. Pasos, variables y advertencias en `docs/despliegue.md`.
 
 ### T10 — Accesibilidad y rendimiento
 ```

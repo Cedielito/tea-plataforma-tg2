@@ -14,6 +14,9 @@ consentimiento parental y el asentimiento son de la **Fase II** y viven solo en 
 
 - `web/`: React + Vite (SPA responsiva). Despliegue en Vercel.
 - `api/`: Node.js 22.9+ con Express y Mongoose. MongoDB Atlas. Despliegue en Render.
+- La web llama siempre a `/api/...` con rutas relativas: Vercel las reenvía a Render
+  (`web/vercel.json`) y Vite a `localhost:3000`. Sin CORS ni URL de la API en
+  variables. Detalles en `docs/despliegue.md`.
 - Pruebas: Jest + supertest + mongodb-memory-server. Cobertura mínima 70 % (CI).
 - Monorepo con workspaces de npm.
 

@@ -1,4 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    {
+      "source": "/api/:ruta*",
+      "destination": "https://tea-plataforma-api.onrender.com/api/:ruta*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
