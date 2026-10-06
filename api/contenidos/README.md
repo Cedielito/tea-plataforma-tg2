@@ -52,12 +52,30 @@ dos puntos.
 Reglas para editar:
 
 1. Toda afirmación nueva necesita su fuente en `fuentes`.
-2. Al cambiar un texto, actualizamos `fechaRevision`.
+2. Al cambiar un texto, actualizamos `fechaRevision` a la fecha de hoy (AAAA-MM-DD).
+   **Sin una fecha más reciente, el cambio no llega a la base.**
 3. Revisamos el cambio en un PR, como el código.
 
 ## Cómo llegan a la base de datos
 
-Un script de carga lee esta carpeta y publica cada archivo con los repositorios de la
-API (T2), buscando por `slug`: si ya existe lo actualiza, si no lo crea. El servidor
-rechaza publicar un archivo sin fuentes o sin fecha (RCN-01, RCN-02). El script hace
-parte de T3.
+No hay que instalar nada: basta con editar el archivo en GitHub y fusionar el PR.
+
+1. Como la carpeta está dentro de `api/`, Render vuelve a publicar la API cuando se
+   fusiona un cambio en estos archivos.
+2. Cada vez que la API arranca, lee esta carpeta y la compara con la colección
+   `contenido`, buscando por `slug`
+   (`api/src/datos/sincronizacionContenidos.js`):
+   - si el contenido no existe, lo crea publicado;
+   - si la `fechaRevision` del archivo es más reciente que la de la base, o la base no
+     tiene fecha, lo actualiza y lo vuelve a publicar;
+   - si la base tiene la misma fecha o una más reciente (por ejemplo, una corrección
+     hecha desde el panel), no lo toca.
+3. Nunca borra ni despublica: quitar un archivo de la carpeta no quita la página.
+4. El servidor rechaza publicar un archivo sin fuentes o sin fecha (RCN-01, RCN-02).
+   Un archivo con errores no detiene la API: el resto se carga y el error queda en
+   los logs de Render, debajo de la línea
+   `Contenidos: 0 creados, 1 actualizado, 7 sin cambios, 0 con errores.`
+
+Las pruebas (`npm test`) cargan todos estos archivos en una base en memoria: si uno
+tiene un error de formato, le falta la fuente o la fecha, o la fecha es posterior a
+hoy, el CI del PR queda en rojo antes de fusionar.

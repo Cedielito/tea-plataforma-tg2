@@ -1,9 +1,17 @@
 'use strict';
 const { crearServidor } = require('./api/servidor');
 const { conectar, MENSAJE_SIN_URI } = require('./datos/conexion');
+const { cargarContenidos } = require('./datos/sincronizacionContenidos');
 
+/**
+ * Arranque: conecta, carga los textos de api/contenidos (M-02) y luego
+ * escucha, para que una version nueva reciba trafico con los textos ya
+ * cargados. La carga nunca detiene el arranque; su resultado queda en el
+ * registro.
+ */
 async function principal() {
   await conectar();
+  await cargarContenidos();
   const app = crearServidor();
   const puerto = process.env.PORT || 3000;
   app.listen(puerto, () => console.log('API en el puerto ' + puerto));

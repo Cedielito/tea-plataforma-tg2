@@ -67,6 +67,11 @@ repositorio, en un issue, en un PR ni en un chat.
    desde Vercel).
 3. En los logs de Render, la línea `API en el puerto ...` aparece solo después de
    conectarse a Atlas: si está, la base responde.
+4. Justo antes aparece la carga de textos de `api/contenidos/`, por ejemplo
+   `Contenidos: 8 creados, 0 actualizados, 0 sin cambios, 0 con errores.` Si hay
+   archivos con errores, cada uno sale en una línea debajo, con el motivo.
+5. https://tea-plataforma-tg2.vercel.app/api/contenidos → la lista de contenidos
+   publicados (8 con los textos actuales).
 
 ## Cosas que hay que saber
 
@@ -82,4 +87,8 @@ repositorio, en un issue, en un PR ni en un chat.
   viene en `X-Forwarded-For`; hay que configurar `trust proxy` en Express y probarlo
   en el entorno desplegado.
 - Render solo vuelve a publicar cuando cambia algo dentro de `api/`. Para forzarlo:
-  *Manual Deploy → Deploy latest commit*.
+  *Manual Deploy → Deploy latest commit*. Los textos viven en `api/contenidos/` por
+  eso mismo: un PR que solo cambia un texto también vuelve a publicar la API, y al
+  arrancar la API los carga en Atlas.
+- La carga de textos corre en cada arranque, también cuando la API despierta. Solo
+  escribe si un archivo trae una `fechaRevision` más reciente que la de la base.

@@ -8,7 +8,6 @@
     "test:cov": "npm run test:cov -w api",
     "dev:api": "npm run dev -w api",
     "dev:web": "npm run dev -w web",
-    "seed:api": "npm run seed -w api",
     "build:web": "npm run build -w web"
   },
   "engines": { "node": ">=22.9" }
