@@ -1,50 +1,96 @@
-# CLAUDE.md — Plataforma TEA
+# CLAUDE.md — Plataforma TEA (Fase I)
 
-Plataforma web gamificada para el **tamizaje preliminar** de indicadores del TEA en
-niños, niñas y adolescentes de 4 a 17 años en Colombia. Trabajo de grado de Ingeniería de
-Sistemas, Universidad Católica de Colombia. Equipo de 2 personas.
+Plataforma web de **información y orientación** sobre el trastorno del espectro autista
+(TEA) para **familias y docentes** de niños, niñas y adolescentes de 4 a 17 años en
+Colombia. Trabajo de grado de Ingeniería de Sistemas y Computación, Universidad Católica
+de Colombia. Equipo de 2 personas. Entrega del documento: finales de octubre de 2026.
 
-La plataforma **no diagnostica**. Recolecta indicadores conductuales mediante minijuegos
-basados en paradigmas experimentales de acceso abierto y reporta valores observados a un
-profesional de salud mental.
+**La plataforma NO diagnostica ni hace tamizaje.** Informa, orienta sobre la ruta de
+atención y muestra a dónde acudir. Los minijuegos, el motor de puntuación, el
+consentimiento parental y el asentimiento son de la **Fase II** y viven solo en la rama
+`fase-ii`: no se tocan ni se traen a `main`.
 
-## Reglas no negociables
+## Stack
 
-Estas reglas vienen del documento de tesis y tienen pruebas que las verifican. Si una
-tarea parece exigir romper una, detente y pregunta.
+- `web/`: React + Vite (SPA responsiva). Despliegue en Vercel.
+- `api/`: Node.js 22.9+ con Express y Mongoose. MongoDB Atlas. Despliegue en Render.
+- Pruebas: Jest + supertest + mongodb-memory-server. Cobertura mínima 70 % (CI).
+- Monorepo con workspaces de npm.
 
-1. **Nada de salidas diagnósticas.** Ninguna respuesta, pantalla ni campo puede emitir
-   diagnóstico, nivel de apoyo, severidad, banda de riesgo, puntaje global ni punto de
-   corte. Se reportan valores observados. (RF-28, RN-01)
-2. **B4 nunca se estima desde los ajustes de accesibilidad.** Volumen, audio, contraste y
-   movimiento son metadatos de contexto. B4 sale solo de la escala RC-05. (RN-08, RF-43)
-3. **Omitido ≠ incorrecto.** Un ítem sin respuesta se guarda con `estadoItem: 'omitido'`
-   y se excluye del cálculo de precisión. (RF-23, RN-10)
-4. **Tiempo de reacción neto.** Se mide con `performance.now()` (nunca `Date.now()`) y
-   se resta `pausasDuranteItemMs`. (RF-20)
-5. **Cero datos identificables en colecciones conductuales.** Solo el seudónimo `uuid`.
-   Nombres, documentos y contactos viven únicamente en `consentimiento`. (CT-11)
-6. **Consentimiento y asentimiento son la puerta.** Ninguna ruta que escriba datos
-   conductuales se ejecuta sin pasar por `exigirConsentimiento`. La negativa del menor
-   bloquea aunque el acudiente haya autorizado. (CT-12, CT-14)
-7. **Todo dato del perfil declara su origen**: `desempeno` o `reporte_informante`. (RF-42)
-8. **Los indicadores se calculan en el servidor**, nunca en el cliente.
+## Módulos (códigos del documento de tesis)
+
+- M-01 Inicio y navegación (buscador, aviso de no diagnóstico)
+- M-02 Contenidos: S1 Qué es el TEA, S2 Señales de alerta por edad (4-7, 8-12, 13-17),
+  S3 Mitos y realidades, S4 Ruta de atención, S5 Derechos
+- M-03 Ruta de atención interactiva (3 preguntas: quién consulta, tramo de edad,
+  régimen de afiliación)
+- M-04 Directorio de orientación (filtros por ciudad y tipo de entidad)
+- M-05 Recursos descargables y preguntas frecuentes
+- M-06 Contacto y privacidad
+- M-07 Barra de ajustes de accesibilidad (tamaño de letra, alto contraste, reducir
+  movimiento)
+- M-08 Panel de administración (autenticado)
+
+## Reglas de dominio (no negociables; cada una tiene una prueba)
+
+Si una tarea parece exigir romper una, detente y pregunta.
+
+1. **RCN-01/02** — Todo contenido, pregunta frecuente, recurso, paso de la ruta y entidad
+   del directorio tiene **fuente** y **fecha de revisión**. El servidor rechaza publicar
+   sin ellas.
+2. **RCN-03** — Aviso visible «Esta información no constituye diagnóstico ni sustituye la
+   valoración profesional» en inicio, señales de alerta y ruta de atención.
+3. **RCN-04** — Las señales de alerta son **motivos de consulta**: nunca una lista que se
+   pueda sumar, un puntaje, una banda de riesgo ni un resultado.
+4. **RF-04 / RS-01** — La ruta interactiva se resuelve **en el navegador**; las
+   respuestas no se envían ni se guardan.
+5. **RS-01** — La zona pública **no pide registro**, no usa cookies de seguimiento,
+   analítica de terceros ni recursos de CDN externos (fuentes tipográficas
+   autoalojadas).
+6. **RS-02/03** — El formulario de contacto pide solo correo y mensaje, y no se envía
+   sin la casilla de autorización de tratamiento de datos (Ley 1581 de 2012), con
+   enlace a la política de privacidad. El servidor también lo valida.
+7. **RS-04** — Los mensajes se pueden eliminar y se suprimen automáticamente a los
+   6 meses.
+8. **RS-05** — Administrador con contraseña cifrada (bcrypt) y sesión que expira por
+   inactividad. Toda ruta `/api/admin/*` exige autenticación.
+9. **RS-07** — El directorio solo publica datos institucionales públicos o de
+   profesionales con constancia de autorización.
+
+## Accesibilidad (WCAG 2.1 AA, RA-01 a RA-11)
+
+Contraste ≥ 4,5:1 en texto; todo operable con teclado y foco visible; enlace «Saltar al
+contenido»; textos alternativos; HTML semántico (`header`, `nav`, `main`, `footer`,
+`h1`-`h3` en orden); funciona desde 320 px sin desplazamiento horizontal; zoom al 200 %
+sin romperse; respeta `prefers-reduced-motion`; nada de temporizadores, ventanas
+emergentes automáticas ni carruseles automáticos; objetivos táctiles ≥ 44 px.
+
+## Dirección visual («bonita» pero tranquila)
+
+- Sensación cálida, confiable y calmada. Nada infantil ni clínico-frío. Mucho espacio en
+  blanco; como máximo un elemento animado por pantalla.
+- Paleta en `web/src/tokens.css`: fondo `#FAF8F5`, superficie `#FFFFFF`, texto
+  `#1F2A37`, secundario `#4B5563`, primario `#1F5F7A`, primario hover `#174A5F`, acento
+  `#E8A54B` (solo decorativo, nunca texto sobre blanco), aviso `#FFF4D6` con borde
+  `#B8860B`. Alto contraste: blanco, negro y primario `#0B3A4D`.
+  **Usa siempre las variables; no escribas colores ni tamaños sueltos.**
+- Tipografía: Atkinson Hyperlegible (cuerpo, 18 px base) y Lexend (títulos),
+  autoalojadas con @fontsource (se instalan en T1).
+- Íconos: lucide-react. Ilustraciones simples y planas si se usan.
+- Lenguaje: español de Colombia, frases cortas y literales, sin metáforas; tecnicismos
+  explicados.
 
 ## Mapa del código
 
 ```
-api/src/dominio/     lógica pura, sin dependencias externas. Aquí viven las reglas.
-  privacidad/        seudónimo, consentimiento, asentimiento           CT-11 CT-12 CT-14
-  minijuegos/        catálogo y secuenciador de bloques                CT-08 CP-01 CP-04
-  indicadores/       calculos.js (CC-01 a CC-12) y reporte.js (RC-01 a RC-05)
-  puntuacion/        motor.js y version.js                             CT-13
-api/src/api/         Express: rutas y middleware
-api/src/datos/       esquemas Mongoose y repositorio
-api/test/            pruebas Jest, agrupadas por código de criterio
-web/src/             React + Vite
-  pantallas/         una pantalla por módulo (M-01 a M-07)
-  tokens.css         sistema visual del Cuadro 20; no uses colores ni tamaños sueltos
-docs/                operacionalizacion.md, requerimientos.md, decisiones/, backlog.md
+api/src/api/         Express: servidor, rutas y middleware (las rutas solo validan,
+                     llaman al dominio y responden)
+api/src/dominio/     lógica pura y validaciones de las reglas de dominio
+api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
+api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
+web/src/             React + Vite; tokens.css es el sistema visual
+docs/                backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/ (ADR)
+docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
 
 ## Comandos
@@ -56,45 +102,49 @@ npm install          instala api y web (workspaces)
 npm test             pruebas del backend
 npm run test:cov     pruebas con cobertura; el umbral mínimo es 70 %
 npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env)
-npm run dev:web      interfaz en http://localhost:5173
+npm run dev:web      interfaz en http://localhost:5173 (proxy de /api a la API)
 npm run build:web    compila el frontend
 ```
 
 ## Convenciones
 
 - **Idioma**: código, nombres, comentarios, commits y pruebas en español, sin tildes en
-  identificadores (`calcularEscalas`, no `calcularEscálas`).
-- **Trazabilidad**: todo módulo nuevo declara en su comentario inicial los códigos de la
-  matriz que implementa (CT-xx, CC-xx, CP-xx, RC-xx, RF-xx). Todo `describe` de prueba
-  empieza con el código que verifica.
-- **Códigos oficiales**: los indicadores y escalas usan exactamente la numeración del
-  Cuadro 12 de la tesis. No inventes códigos nuevos; si hace falta uno, pregunta.
-- **Lógica nueva va al dominio** con su prueba. Las rutas solo validan, llaman al dominio
-  y responden.
-- **Toda función nueva del dominio lleva prueba** en el mismo commit.
-- `VERSION_ALGORITMO` en `puntuacion/version.js` sube de versión si cambia cualquier
-  cálculo de indicador o escala. `VERSION_CATALOGO` sube si cambian ítems o estímulos.
+  identificadores (`validarFuente`, no `validárFuente`). Los textos visibles para el
+  usuario sí llevan tildes.
+- **Trazabilidad**: todo archivo nuevo declara en su comentario inicial los códigos que
+  implementa (M-xx, RF-xx, RCN-xx, RA-xx, RS-xx). Todo `describe` de prueba que verifica
+  una regla empieza con su código: `describe('RCN-01 fuente obligatoria', ...)`.
+- **Códigos oficiales**: usa solo los códigos de la matriz de requisitos del documento
+  (RCN-01..08, RA-01..11, RF-01..12, RS-01..07) y de las historias HU-01..HU-15. No
+  inventes códigos; si hace falta uno, pregunta.
+- **Toda regla de dominio nueva lleva su prueba** en el mismo commit.
+- Cada modelo Mongoose nuevo agrega su colección a `COLECCIONES` en
+  `api/src/datos/modelos/index.js`.
 
-## Flujo de trabajo
+## Forma de trabajo (obligatoria)
 
-1. Nunca trabajes sobre `main`. Crea rama desde `main` actualizado:
-   `feat/<modulo>-<descripcion>`, `fix/...`, `test/...`, `docs/...`
-2. Antes de cada commit: `npm test` en verde.
-3. Commits en formato Conventional Commits con el código del criterio:
-   `feat(consentimiento): CT-12 revocación con supresión de eventos`
-4. Al terminar: push de la rama y Pull Request usando la plantilla. La revisión la hace
-   el otro integrante. No se fusiona sin CI en verde.
+1. Lee este archivo y `docs/backlog-fase-i.md`. Una tarea del backlog por sesión.
+2. Antes de escribir código, **propón un plan** y espera aprobación.
+3. Trabaja siempre en la rama de la tarea, creada desde `main` actualizado. Nunca
+   hagas commit ni push a `main`.
+4. Antes de cada commit: `npm test` en verde y, si tocaste `web/`, `npm run build:web`.
+5. Commits en Conventional Commits, en español, con el código del requisito:
+   `feat(contenidos): RCN-01 rechazar contenido sin fuente`.
+6. En Claude Code web: haz commit y push **solo a la rama de la tarea** y abre el Pull
+   Request contra `main`. La revisión y el «Squash and merge» los hace el equipo.
+7. Terminado = pruebas en verde, CI en verde y la funcionalidad revisada en el
+   navegador (vista previa de Vercel).
 
 ## Qué no hacer sin preguntar
 
-- Modificar `docs/operacionalizacion.md` o `docs/requerimientos.md`: están alineados con
-  el documento de tesis y cualquier cambio debe reflejarse allá.
-- Cambiar el esquema de una colección existente (afecta el Cuadro 19 de la tesis).
-- Agregar dependencias nuevas.
+- Agregar dependencias nuevas (las previstas en el backlog se autorizan con el plan).
 - Tocar `.github/workflows/`.
+- Modificar `docs/fase-ii/` o traer código de la rama `fase-ii`.
 - Crear archivos `.env` con credenciales reales o subirlos al repositorio.
+- Agregar cualquier funcionalidad que evalúe, puntúe o clasifique a un niño.
 
 ## Estado actual
 
-Implementado y probado: dominio completo, API, esquemas y pantallas base de React.
-Pendiente: ver `docs/backlog.md`.
+Base limpia (T0): API con `/salud` y `/api/salud`, manejo de errores y conexión a
+MongoDB; web con el sistema visual nuevo y una pantalla provisional.
+Siguiente: T1 (`feat/base-visual`). Ver `docs/backlog-fase-i.md`.

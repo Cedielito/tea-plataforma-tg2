@@ -13,4 +13,4 @@ labels: error
 1.
 2.
 
-**Criterio afectado (si aplica):**
+**Requisito afectado (si aplica):** RF- / RCN- / RA- / RS-

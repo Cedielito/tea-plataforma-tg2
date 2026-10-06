@@ -1,38 +1,85 @@
-/* Sistema visual del Cuadro 20. Los valores son los que la interfaz debe
-   respetar; su verificacion corresponde a la auditoria de accesibilidad. */
+/* Sistema visual de la Fase I (CLAUDE.md, «Dirección visual»).
+   Contrastes verificados sobre el fondo #FAF8F5 o sobre blanco:
+   texto 13,71:1 · secundario 7,13:1 · primario 6,66:1 · primario hover 9,63:1.
+   Usa siempre estas variables; no escribas colores ni tamaños sueltos.
+   En T1 se reemplaza la familia tipográfica por Atkinson Hyperlegible y Lexend
+   autoalojadas (@fontsource), sin CDN externo (RS-01). */
 :root {
-  --color-fondo: #ffffff;
-  --color-texto: #1a1a1a;          /* contraste 16.9:1 sobre fondo (CT-01) */
-  --color-primario: #1f3864;       /* contraste 11.2:1 sobre fondo (CT-01) */
-  --color-superficie: #eef2f9;
-  --color-borde: #4a4a4a;
-  --color-aviso: #7f1d1d;
-  --tipo-base: 16px;               /* escalable al 200% (CT-01, CT-09) */
+  --color-fondo: #faf8f5;
+  --color-superficie: #ffffff;
+  --color-texto: #1f2a37;
+  --color-texto-secundario: #4b5563;
+  --color-primario: #1f5f7a;
+  --color-primario-hover: #174a5f;
+  --color-sobre-primario: #ffffff;
+  --color-acento: #e8a54b;          /* solo decorativo: nunca texto sobre blanco */
+  --color-aviso-fondo: #fff4d6;
+  --color-aviso-borde: #b8860b;
+  --color-borde: #d6d3cd;
+  --color-foco: #1f5f7a;
+
   --tipo-familia: system-ui, "Segoe UI", Arial, sans-serif;
-  --objetivo-tactil: 44px;         /* CT-04, CT-09 */
-  --separacion-objetivos: 8px;
-  --radio: 8px;
+  --tipo-titulos: system-ui, "Segoe UI", Arial, sans-serif;
+  --tipo-base: 1.125rem;            /* 18 px; escalable al 200 % (RA) */
+  --interlineado: 1.6;
+  --ancho-lectura: 68ch;
+
+  --espacio-1: 0.5rem;
+  --espacio-2: 1rem;
+  --espacio-3: 1.5rem;
+  --espacio-4: 2.5rem;
+  --radio: 12px;
+  --objetivo-tactil: 44px;
+  --anillo-foco: 3px;
 }
-* { box-sizing: border-box; }
+
+/* M-07: modo alto contraste, se activa con la clase en <html> */
+.alto-contraste {
+  --color-fondo: #ffffff;
+  --color-superficie: #ffffff;
+  --color-texto: #000000;
+  --color-texto-secundario: #000000;
+  --color-primario: #0b3a4d;
+  --color-primario-hover: #000000;
+  --color-borde: #000000;
+  --color-foco: #000000;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
 body {
   margin: 0;
   font-family: var(--tipo-familia);
   font-size: var(--tipo-base);
+  line-height: var(--interlineado);
   color: var(--color-texto);
   background: var(--color-fondo);
 }
-button {
-  min-height: var(--objetivo-tactil);
-  min-width: var(--objetivo-tactil);
-  margin: var(--separacion-objetivos);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio);
-  background: var(--color-superficie);
-  font-size: 1rem;
-  cursor: pointer;
+
+h1, h2, h3 { font-family: var(--tipo-titulos); line-height: 1.25; }
+
+a { color: var(--color-primario); }
+a:hover { color: var(--color-primario-hover); }
+
+:focus-visible {
+  outline: var(--anillo-foco) solid var(--color-foco);
+  outline-offset: 2px;
 }
-button:focus-visible { outline: 3px solid var(--color-primario); outline-offset: 2px; }
-/* CP-09: un solo elemento animado por pantalla, desactivable (CT-02, CT-06) */
-@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
-.sin-movimiento * { animation: none !important; transition: none !important; }
-.alto-contraste { --color-superficie: #ffffff; --color-borde: #000000; }
+
+/* Un solo elemento animado por pantalla como máximo y siempre desactivable */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+.sin-movimiento *, .sin-movimiento *::before, .sin-movimiento *::after {
+  animation: none !important; transition: none !important;
+}
+
+/* Provisional (T0): se elimina en T1 */
+.provisional { max-width: var(--ancho-lectura); margin: 0 auto; padding: var(--espacio-4) var(--espacio-2); }
+.aviso {
+  background: var(--color-aviso-fondo);
+  border-left: 4px solid var(--color-aviso-borde);
+  border-radius: var(--radio);
+  padding: var(--espacio-2);
+}
+.secundario { color: var(--color-texto-secundario); }

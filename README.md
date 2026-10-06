@@ -1,20 +1,36 @@
 # Plataforma TEA
 
-Plataforma web gamificada para el **tamizaje preliminar** de indicadores del trastorno
-del espectro autista en niños, niñas y adolescentes de 4 a 17 años en Colombia.
+Plataforma web de **información y orientación** sobre el trastorno del espectro autista
+(TEA) para familias y docentes de niños, niñas y adolescentes de 4 a 17 años en Colombia.
 
 Trabajo de grado — Ingeniería de Sistemas y Computación, Universidad Católica de Colombia.
 
-> Esta plataforma **no emite diagnósticos**. Reporta valores observados a un profesional
-> de salud mental, identificando si cada dato procede del desempeño en tarea o del reporte
-> del cuidador.
+> Esta plataforma **no diagnostica ni hace tamizaje**. Explica qué es el TEA, cuáles son
+> las señales que justifican una consulta, cómo es la ruta de atención y a dónde acudir.
+> Todo contenido declara su fuente y su fecha de revisión.
+
+## Módulos (Fase I)
+
+| Código | Módulo |
+|---|---|
+| M-01 | Inicio y navegación |
+| M-02 | Contenidos: qué es el TEA, señales de alerta por edad, mitos, ruta de atención, derechos |
+| M-03 | Ruta de atención interactiva (se resuelve en el navegador, no guarda respuestas) |
+| M-04 | Directorio de orientación |
+| M-05 | Recursos y preguntas frecuentes |
+| M-06 | Contacto y privacidad |
+| M-07 | Barra de accesibilidad |
+| M-08 | Panel de administración |
+
+La Fase II (minijuegos y registro de indicadores) está preservada en la rama
+[`fase-ii`](../../tree/fase-ii) y no forma parte de esta entrega.
 
 ## Estructura
 
 ```
-api/     Node.js + Express + MongoDB — dominio, rutas y datos
-web/     React + Vite — interfaz y minijuegos
-docs/    operacionalización, requerimientos, backlog y decisiones
+api/     Node.js + Express + MongoDB — API de contenidos y administración
+web/     React + Vite — sitio público y panel
+docs/    backlog de la Fase I, guía del equipo y decisiones (ADR)
 ```
 
 ## Primeros pasos
@@ -22,17 +38,20 @@ docs/    operacionalización, requerimientos, backlog y decisiones
 Requisitos: Node.js 22.9 o superior y Git.
 
 ```
-git clone <url-del-repositorio>
-cd tea-plataforma
+git clone https://github.com/Cedielito/tea-plataforma-tg2.git
+cd tea-plataforma-tg2
 npm install
 npm test
 npm run dev:web
 ```
 
-La guía completa de instalación está en [`docs/GUIA_EQUIPO.md`](docs/GUIA_EQUIPO.md).
-Cómo trabajamos: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+La guía de instalación está en [`docs/GUIA_EQUIPO.md`](docs/GUIA_EQUIPO.md), el plan de
+trabajo en [`docs/backlog-fase-i.md`](docs/backlog-fase-i.md) y la forma de trabajar en
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Equipo
 
-- Lucas — backend
-- Santiago Cárdenas — frontend
+- Lucas — desarrollo de la plataforma
+- Santiago Cárdenas Rubio — contenidos, documento y revisión de los Pull Request
+
+Directora: Sara Fernanda Sánchez.
