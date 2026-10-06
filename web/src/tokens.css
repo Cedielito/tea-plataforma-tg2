@@ -1,85 +1,114 @@
-/* Sistema visual de la Fase I (CLAUDE.md, «Dirección visual»).
+/* Sistema visual de la Fase I (CLAUDE.md, «Dirección visual»). RA-01 a RA-11, M-07.
    Contrastes verificados sobre el fondo #FAF8F5 o sobre blanco:
    texto 13,71:1 · secundario 7,13:1 · primario 6,66:1 · primario hover 9,63:1.
    Usa siempre estas variables; no escribas colores ni tamaños sueltos.
-   En T1 se reemplaza la familia tipográfica por Atkinson Hyperlegible y Lexend
-   autoalojadas (@fontsource), sin CDN externo (RS-01). */
+   Fuentes autoalojadas con @fontsource (se importan en main.jsx), sin CDN (RS-01). */
 :root {
+  /* Color */
   --color-fondo: #faf8f5;
   --color-superficie: #ffffff;
+  --color-superficie-suave: #f3eee7;  /* bloques cálidos; texto 12,2:1 · secundario 6,4:1 */
   --color-texto: #1f2a37;
   --color-texto-secundario: #4b5563;
   --color-primario: #1f5f7a;
   --color-primario-hover: #174a5f;
+  --color-primario-suave: #e3eef2;    /* fondo de íconos; primario encima 5,8:1 */
   --color-sobre-primario: #ffffff;
-  --color-acento: #e8a54b;          /* solo decorativo: nunca texto sobre blanco */
+  --color-acento: #e8a54b;            /* solo decorativo: nunca texto sobre blanco */
+  --color-acento-suave: #fbeedb;      /* solo decorativo */
   --color-aviso-fondo: #fff4d6;
   --color-aviso-borde: #b8860b;
   --color-borde: #d6d3cd;
   --color-foco: #1f5f7a;
+  --sombra-suave: 0 1px 2px rgb(31 42 55 / 0.06), 0 2px 8px rgb(31 42 55 / 0.05);
+  --sombra-elevada: 0 4px 12px rgb(31 42 55 / 0.08), 0 12px 28px rgb(31 42 55 / 0.08);
 
-  --tipo-familia: system-ui, "Segoe UI", Arial, sans-serif;
-  --tipo-titulos: system-ui, "Segoe UI", Arial, sans-serif;
-  --tipo-base: 1.125rem;            /* 18 px; escalable al 200 % (RA) */
+  /* Tipografía (en rem: crece con la barra de accesibilidad y con el zoom) */
+  --tipo-familia: "Atkinson Hyperlegible", system-ui, "Segoe UI", Arial, sans-serif;
+  --tipo-titulos: "Lexend", "Atkinson Hyperlegible", system-ui, "Segoe UI", Arial, sans-serif;
+  --tipo-base: 1.125rem;              /* 18 px */
+  --tipo-pequeno: 1rem;
+  --tipo-h1: clamp(1.75rem, 1.35rem + 2vw, 2.75rem);
+  --tipo-h2: clamp(1.375rem, 1.2rem + 0.9vw, 1.75rem);
+  --tipo-h3: 1.25rem;
+  --tipo-destacado: 1.25rem;          /* párrafos de entrada */
+  --tipo-logo: 1.375rem;
+  --peso-titulo: 600;
+  --peso-medio: 500;
+  --peso-negrita: 700;
   --interlineado: 1.6;
+  --interlineado-titulos: 1.25;
   --ancho-lectura: 68ch;
 
+  /* Espacio y forma */
   --espacio-1: 0.5rem;
   --espacio-2: 1rem;
   --espacio-3: 1.5rem;
   --espacio-4: 2.5rem;
+  --espacio-5: 4rem;
+  --ancho-maximo: 72rem;
+  --gutter: 1rem;                     /* margen lateral en móvil (320 px) */
+  --radio-pequeno: 8px;
   --radio: 12px;
+  --radio-grande: 20px;
+  --borde-fino: 1px;
+  --borde-grueso: 4px;
   --objetivo-tactil: 44px;
   --anillo-foco: 3px;
+  --icono: 1.5rem;
+  --icono-pequeno: 1.25rem;
+  --icono-mini: 1.125rem;
+  --icono-tarjeta: 3rem;
+
+  /* Movimiento (un solo elemento animado por pantalla) */
+  --duracion: 180ms;
+  --desplazamiento-realce: -2px;
+
+  /* Medidas de elementos concretos */
+  --ancho-buscador: 24rem;
+  --ancho-buscador-minimo: 14rem;
+  --logo-marca-ancho: 0.75rem;
+  --logo-marca-alto: 2.5rem;
+  --decoracion-portada: 12rem;
+  --decoracion-portada-amplia: 28rem;
+  --linea-decorativa: 2rem;
 }
 
-/* M-07: modo alto contraste, se activa con la clase en <html> */
+@media (min-width: 40em) {
+  :root { --gutter: 1.5rem; }
+}
+
+/* M-07: tamaño de letra en 3 niveles (100 %, 112,5 %, 125 %), clase en <html> */
+.letra-grande { font-size: 112.5%; }
+.letra-muy-grande { font-size: 125%; }
+
+/* M-07: modo alto contraste, clase en <html> */
 .alto-contraste {
   --color-fondo: #ffffff;
   --color-superficie: #ffffff;
+  --color-superficie-suave: #ffffff;
   --color-texto: #000000;
   --color-texto-secundario: #000000;
   --color-primario: #0b3a4d;
   --color-primario-hover: #000000;
+  --color-primario-suave: #ffffff;
+  --color-acento: #0b3a4d;
+  --color-acento-suave: #ffffff;
+  --color-aviso-fondo: #ffffff;
+  --color-aviso-borde: #000000;
   --color-borde: #000000;
   --color-foco: #000000;
+  --sombra-suave: none;
+  --sombra-elevada: none;
+  --borde-fino: 2px;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: var(--tipo-familia);
-  font-size: var(--tipo-base);
-  line-height: var(--interlineado);
-  color: var(--color-texto);
-  background: var(--color-fondo);
-}
-
-h1, h2, h3 { font-family: var(--tipo-titulos); line-height: 1.25; }
-
-a { color: var(--color-primario); }
-a:hover { color: var(--color-primario-hover); }
-
-:focus-visible {
-  outline: var(--anillo-foco) solid var(--color-foco);
-  outline-offset: 2px;
-}
-
-/* Un solo elemento animado por pantalla como máximo y siempre desactivable */
+/* M-07: reducir movimiento, por preferencia del sistema o por la barra */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation: none !important; transition: none !important; scroll-behavior: auto !important;
+  }
 }
 .sin-movimiento *, .sin-movimiento *::before, .sin-movimiento *::after {
-  animation: none !important; transition: none !important;
+  animation: none !important; transition: none !important; scroll-behavior: auto !important;
 }
-
-/* Provisional (T0): se elimina en T1 */
-.provisional { max-width: var(--ancho-lectura); margin: 0 auto; padding: var(--espacio-4) var(--espacio-2); }
-.aviso {
-  background: var(--color-aviso-fondo);
-  border-left: 4px solid var(--color-aviso-borde);
-  border-radius: var(--radio);
-  padding: var(--espacio-2);
-}
-.secundario { color: var(--color-texto-secundario); }

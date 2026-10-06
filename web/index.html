@@ -6,6 +6,19 @@
     <meta name="description" content="Información y orientación sobre el trastorno del espectro autista (TEA) para familias y docentes en Colombia." />
     <meta name="theme-color" content="#1F5F7A" />
     <title>Plataforma TEA – Información y orientación</title>
+    <script>
+      // M-07: aplica los ajustes de accesibilidad guardados en esta visita antes
+      // del primer pintado, para que no parpadee. Misma clave y clases que
+      // src/accesibilidad/ajustes.js. Sin cookies (RS-01).
+      try {
+        var a = JSON.parse(sessionStorage.getItem('tea-ajustes') || '{}');
+        var c = document.documentElement.classList;
+        if (a.tamano === 'grande') c.add('letra-grande');
+        if (a.tamano === 'muy-grande') c.add('letra-muy-grande');
+        if (a.altoContraste === true) c.add('alto-contraste');
+        if (a.reducirMovimiento === true) c.add('sin-movimiento');
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="raiz"></div>
