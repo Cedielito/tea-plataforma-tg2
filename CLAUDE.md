@@ -89,7 +89,7 @@ api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual
-docs/                backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/ (ADR)
+docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
 
@@ -114,9 +114,10 @@ npm run build:web    compila el frontend
 - **Trazabilidad**: todo archivo nuevo declara en su comentario inicial los códigos que
   implementa (M-xx, RF-xx, RCN-xx, RA-xx, RS-xx). Todo `describe` de prueba que verifica
   una regla empieza con su código: `describe('RCN-01 fuente obligatoria', ...)`.
-- **Códigos oficiales**: usa solo los códigos de la matriz de requisitos del documento
-  (RCN-01..08, RA-01..11, RF-01..12, RS-01..07) y de las historias HU-01..HU-15. No
-  inventes códigos; si hace falta uno, pregunta.
+- **Códigos oficiales**: usa solo los códigos de `docs/requisitos-fase-i.md`
+  (RCN-01..08, RA-01..11, RF-01..12, RS-01..07, HU-01..HU-15), que copia los cuadros
+  del documento de tesis, incluido el modelo de datos (Cuadro 13). No inventes
+  códigos; si hace falta uno, pregunta.
 - **Toda regla de dominio nueva lleva su prueba** en el mismo commit.
 - Cada modelo Mongoose nuevo agrega su colección a `COLECCIONES` en
   `api/src/datos/modelos/index.js`.

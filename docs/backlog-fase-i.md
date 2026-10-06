@@ -88,7 +88,7 @@ Lee CLAUDE.md. Tarea T2, rama feat/api-contenidos.
 En api/ crea los modelos contenido (título, slug, sección S1-S5, tramo de edad
 opcional 4-7 | 8-12 | 13-17, cuerpo en Markdown, fuentes [texto, url], fecha de
 revisión, estado borrador|publicado), pregunta_frecuente y recurso, según el
-Cuadro 13 del documento. Reglas en api/src/dominio con pruebas: no se publica
+Cuadro 13 de docs/requisitos-fase-i.md. Reglas en api/src/dominio con pruebas: no se publica
 sin fuentes ni fecha de revisión (RCN-01, RCN-02).
 Rutas públicas de solo lectura: GET /api/contenidos?seccion=&edad=,
 GET /api/contenidos/:slug, GET /api/buscar?q= (contenidos y preguntas publicados).
@@ -206,7 +206,7 @@ rendimiento ≥ 80. Propón el plan antes de escribir código.
 ```
 Lee CLAUDE.md. Tarea T11, rama docs/casos-aceptacion.
 
-A partir del Cuadro 12 del documento (HU-01 a HU-15, que te pego aparte), escribe
+A partir del Cuadro 12 de docs/requisitos-fase-i.md (HU-01 a HU-15), escribe
 docs/evaluacion/casos-aceptacion.md: un caso por historia con pasos, resultado
 esperado y columna de resultado obtenido. Donde sea viable, automatízalos con
 pruebas de extremo a extremo (pide autorización para Playwright).
