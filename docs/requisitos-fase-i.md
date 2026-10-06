@@ -127,9 +127,9 @@ plataforma usa 18 px (más legible y dentro de la regla).
 
 | Colección | Contenido | Campos principales | Requisitos |
 |---|---|---|---|
-| contenido | Páginas de las secciones informativas | título, sección, tramo de edad (opcional), cuerpo, fuentes, fecha de revisión, estado de publicación | RCN-01, RCN-02, RF-10 |
-| pregunta_frecuente | Preguntas y respuestas | pregunta, respuesta, fuente, orden, estado | RF-07 |
-| recurso | Guías y enlaces descargables | título, descripción, archivo o enlace, fuente, perfil destinatario | RF-06 |
+| contenido | Páginas de las secciones informativas | título, slug, sección, tramo de edad (opcional), cuerpo, fuentes, fecha de revisión, estado de publicación | RCN-01, RCN-02, RF-10 |
+| pregunta_frecuente | Preguntas y respuestas | pregunta, respuesta, fuentes, orden, fecha de revisión, estado de publicación | RF-07 |
+| recurso | Guías y enlaces descargables | título, descripción, archivo o enlace, fuentes, perfil destinatario, fecha de revisión, estado de publicación | RF-06 |
 | entidad_directorio | Entidades y profesionales del directorio | nombre, tipo, ciudad, contacto, fecha de verificación, constancia de autorización | RF-05, RS-07 |
 | paso_ruta | Pasos de la ruta de atención | perfil, tramo de edad, régimen, orden, texto, entidad enlazada, fuente | RF-04, RCN-05 |
 | mensaje_contacto | Mensajes recibidos | correo, mensaje, fecha, versión de la autorización aceptada | RF-08, RS-02, RS-04 |
