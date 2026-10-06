@@ -91,7 +91,11 @@ api/src/api/         Express: servidor, rutas y middleware (las rutas solo valid
 api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
-web/src/             React + Vite; tokens.css es el sistema visual
+web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
+                     navegación, tarjetas, rutas y enlaces del buscador
+web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
+web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
+                     revisión, pestañas accesibles, estados de carga y error
 contenidos/          textos S1-S5 en Markdown con fuentes y fecha (se cargan a la base)
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
@@ -155,7 +159,7 @@ npm run seed:api     crea 2 contenidos de ejemplo en borrador (usa api/.env)
 
 ## Estado actual
 
-T0, T1 y T2 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T3 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -172,4 +176,14 @@ los contenidos sin tramo), `/api/contenidos/:slug`, `/api/preguntas`, `/api/recu
 y `/api/buscar?q=`. Aún no hay rutas `/api/admin` (llegan con T4). La fecha de
 revisión es una fecha de calendario: el formulario la envía como AAAA-MM-DD, se
 guarda a medianoche UTC y la web la muestra con `timeZone: 'UTC'`.
-Siguiente: T3 (`feat/paginas-contenido`). Ver `docs/backlog-fase-i.md`.
+Páginas de contenido (T3, parte B): S1, S3, S4 y S5 usan la plantilla
+`web/src/paginas/PaginaContenido.jsx` (migas de pan, h1, aviso RCN-03 donde aplica,
+cuerpo en Markdown, fuentes y «Revisado el dd/mm/aaaa»). Señales de alerta
+(`SenalesDeAlerta.jsx`) muestra la introducción arriba, pestañas WAI-ARIA por tramo con
+el tramo en la dirección (`?edad=8-12`), un recuadro final hacia la ruta y las fuentes de
+cada contenido por separado. El buscador lleva a `/buscar?q=`; solo el resumen va en la
+región `role="status"`. `react-markdown` descarta el HTML, no admite imágenes y se
+descarga aparte (las páginas lo precargan al montarse). Todos los enlaces abren en la
+misma pestaña. Mientras llega la API se muestra un mensaje sin temporizadores; ante
+502/503/504 o falla de red se reintenta una vez y luego se ofrece «Intentar de nuevo».
+Siguiente: T4 (`feat/admin-auth`). Ver `docs/backlog-fase-i.md`.

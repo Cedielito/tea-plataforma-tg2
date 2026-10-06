@@ -1,8 +1,22 @@
 /**
- * Secciones públicas de la plataforma. M-01 (navegación), M-02 a M-05.
- * Fuente única para la navegación, las tarjetas del inicio y las rutas.
+ * Secciones públicas de la plataforma. M-01 (navegación, RF-01), M-02 a M-05.
+ * Fuente única para la navegación, las tarjetas del inicio, las rutas y los
+ * enlaces de los resultados del buscador. El orden es el del Cuadro 11.
+ *
+ * `seccion` es el código del contenido en la API (S1 a S5) y `slug` el del
+ * contenido que muestra la página. Señales de alerta (S2) reúne la
+ * introducción y los tres tramos de edad (RCN-04).
  */
-import { BookOpen, CircleQuestionMark, Download, Eye, MapPin, Route } from 'lucide-react';
+import {
+  BookOpen,
+  CircleQuestionMark,
+  Download,
+  Eye,
+  Lightbulb,
+  MapPin,
+  Route,
+  Scale
+} from 'lucide-react';
 
 export const SECCIONES = [
   {
@@ -10,7 +24,9 @@ export const SECCIONES = [
     nav: 'Qué es el TEA',
     titulo: 'Qué es el TEA',
     descripcion: 'Una explicación clara del trastorno del espectro autista.',
-    Icono: BookOpen
+    Icono: BookOpen,
+    seccion: 'S1',
+    slug: 'que-es-el-tea'
   },
   {
     ruta: '/senales-de-alerta',
@@ -18,7 +34,17 @@ export const SECCIONES = [
     titulo: 'Señales de alerta',
     descripcion: 'Motivos para consultar, según la edad: 4 a 7, 8 a 12 y 13 a 17 años.',
     Icono: Eye,
+    seccion: 'S2',
     avisoNoDiagnostico: true
+  },
+  {
+    ruta: '/mitos-y-realidades',
+    nav: 'Mitos',
+    titulo: 'Mitos y realidades',
+    descripcion: 'Lo que dice la evidencia frente a ideas equivocadas sobre el autismo.',
+    Icono: Lightbulb,
+    seccion: 'S3',
+    slug: 'mitos-y-realidades'
   },
   {
     ruta: '/ruta-de-atencion',
@@ -26,7 +52,18 @@ export const SECCIONES = [
     titulo: 'Ruta de atención',
     descripcion: 'Los pasos para pedir una valoración y a quién acudir en cada uno.',
     Icono: Route,
+    seccion: 'S4',
+    slug: 'ruta-de-atencion',
     avisoNoDiagnostico: true
+  },
+  {
+    ruta: '/derechos',
+    nav: 'Derechos',
+    titulo: 'Derechos',
+    descripcion: 'Derechos en salud y educación de niños, niñas y adolescentes autistas.',
+    Icono: Scale,
+    seccion: 'S5',
+    slug: 'derechos'
   },
   {
     ruta: '/directorio',
@@ -63,3 +100,27 @@ export const PAGINAS_PIE = [
     descripcion: 'Quiénes hacen esta plataforma y con qué propósito.'
   }
 ];
+
+/** Tramos de edad de las señales de alerta (RCN-04), en orden de edad. */
+export const TRAMOS_EDAD = [
+  { valor: '4-7', etiqueta: '4 a 7 años' },
+  { valor: '8-12', etiqueta: '8 a 12 años' },
+  { valor: '13-17', etiqueta: '13 a 17 años' }
+];
+
+const seccionDe = (codigo) => SECCIONES.find((s) => s.seccion === codigo);
+const tramoDe = (valor) => TRAMOS_EDAD.find((t) => t.valor === valor);
+
+/** Página donde se lee un contenido; las señales abren la pestaña de su tramo. */
+export function rutaDeContenido({ seccion, tramoEdad }) {
+  const pagina = seccionDe(seccion);
+  if (!pagina) return '/';
+  return tramoDe(tramoEdad) ? `${pagina.ruta}?edad=${tramoEdad}` : pagina.ruta;
+}
+
+/** «Señales de alerta · 8 a 12 años», para los resultados del buscador. */
+export function nombreDeContenido({ seccion, tramoEdad }) {
+  const pagina = seccionDe(seccion);
+  const tramo = tramoDe(tramoEdad);
+  return [pagina?.titulo, tramo?.etiqueta].filter(Boolean).join(' · ');
+}
