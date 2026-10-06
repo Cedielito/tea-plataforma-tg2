@@ -94,6 +94,28 @@ async function sincronizarContenidos(directorio = DIRECTORIO_CONTENIDOS) {
   return informe;
 }
 
+/**
+ * Archivo de origen de cada slug de api/contenidos, para que el panel avise
+ * cuando una pagina viene del repositorio (M-08). Los archivos no cambian
+ * mientras la API corre (llegan con cada despliegue), asi que se leen una
+ * sola vez por carpeta. Si la lectura falla, se vuelve a intentar la proxima vez.
+ * @returns {Promise<Map<string, string>>} slug -> nombre del archivo
+ */
+const indicesDeArchivos = new Map();
+function archivosPorSlug(directorio = DIRECTORIO_CONTENIDOS) {
+  if (!indicesDeArchivos.has(directorio)) {
+    const indice = leerCarpeta(directorio).then(
+      ({ leidos }) => new Map(leidos.map(({ archivo, datos }) => [datos.slug, archivo])),
+      (error) => {
+        indicesDeArchivos.delete(directorio);
+        throw error;
+      }
+    );
+    indicesDeArchivos.set(directorio, indice);
+  }
+  return indicesDeArchivos.get(directorio);
+}
+
 const contar = (cantidad, singular, plural) => `${cantidad} ${cantidad === 1 ? singular : plural}`;
 
 /** «Contenidos: 0 creados, 1 actualizado, 7 sin cambios, 0 con errores.» */
@@ -123,4 +145,10 @@ async function cargarContenidos({ directorio, registro = console } = {}) {
   }
 }
 
-module.exports = { DIRECTORIO_CONTENIDOS, sincronizarContenidos, resumirInforme, cargarContenidos };
+module.exports = {
+  DIRECTORIO_CONTENIDOS,
+  sincronizarContenidos,
+  resumirInforme,
+  cargarContenidos,
+  archivosPorSlug
+};

@@ -96,6 +96,7 @@ api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en me
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
+web/src/admin/       panel de administración (M-08): sesión, lista y editor
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
@@ -160,7 +161,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T3 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T4 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -174,7 +175,7 @@ viven en `api/src/dominio/publicacion.js` y se aplican al guardar mediante el pl
 los repositorios de `api/src/datos/repositorios/` (`crear`, `actualizar`). Rutas
 públicas de solo lectura: `/api/contenidos?seccion=&edad=` (con edad incluye también
 los contenidos sin tramo), `/api/contenidos/:slug`, `/api/preguntas`, `/api/recursos`
-y `/api/buscar?q=`. Aún no hay rutas `/api/admin` (llegan con T4). La fecha de
+y `/api/buscar?q=`. La fecha de
 revisión es una fecha de calendario: el formulario la envía como AAAA-MM-DD, se
 guarda a medianoche UTC y la web la muestra con `timeZone: 'UTC'`.
 
@@ -195,4 +196,23 @@ región `role="status"`. `react-markdown` descarta el HTML, no admite imágenes 
 descarga aparte (las páginas lo precargan al montarse). Todos los enlaces abren en la
 misma pestaña. Mientras llega la API se muestra un mensaje sin temporizadores; ante
 502/503/504 o falla de red se reintenta una vez y luego se ofrece «Intentar de nuevo».
-Siguiente: T4 (`feat/admin-auth`). Ver `docs/backlog-fase-i.md`.
+Panel de administración (T4, M-08): colección `administrador` (usuario, `claveCifrada`
+con bcrypt costo 10, `fechaUltimoAcceso` y `sesiones` con el hash SHA-256 del token).
+El primer administrador se crea al arrancar si la colección está vacía y existen
+`ADMIN_USUARIO` y `ADMIN_CLAVE` (`datos/administradorInicial.js`). Inicio de sesión en
+`POST /api/sesion` (fuera de `/api/admin`); todo `/api/admin/*` pasa por
+`exigirSesion` (`api/src/api/autenticacion.js`) y responde 401 sin sesión, también en
+rutas que no existen. Cookie `sesion_admin` HttpOnly, SameSite=Strict,
+`Path=/api/admin` y Secure con `NODE_ENV=production`. La sesión vence a los 30 minutos
+sin actividad o a las 8 horas; como máximo 5 por administrador. Límites en memoria
+(`dominio/limiteIntentos.js`): 5 fallos por usuario en 15 minutos lo bloquean 15
+minutos, y 20 intentos por minuto en total. Nunca se registra la clave, el token ni la
+cookie. Rutas del panel: `GET|DELETE /api/admin/sesion` y
+`GET|POST /api/admin/contenidos`, `GET|PATCH /api/admin/contenidos/:id`; los errores
+de guardado llegan como `{ error, campos }` (`api/erroresDeGuardado.js`) y cada
+contenido trae `archivo` si viene de `api/contenidos/` (su slug no se puede cambiar).
+En la web, `/admin` se descarga aparte (`web/src/admin/`), con su layout, noindex y
+sin enlace desde la zona pública; si la sesión vence, el editor conserva lo escrito y
+pide entrar de nuevo. Pendiente detectado: contenidos nuevos de S1, S3, S4 y S5 no se
+ven en el sitio (ver backlog).
+Siguiente: T5 (`feat/ruta-atencion`). Ver `docs/backlog-fase-i.md`.
