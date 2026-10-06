@@ -23,7 +23,7 @@ Trabajo de grado — Ingeniería de Sistemas y Computación, Universidad Católi
 | M-08 | Panel de administración |
 
 La Fase II (minijuegos y registro de indicadores) está preservada en la rama
-[`fase-ii`](../../tree/fase-ii) y no forma parte de esta entrega.
+[`fase-ii`](https://github.com/Cedielito/tea-plataforma-tg2/tree/fase-ii) y no forma parte de esta entrega.
 
 ## Estructura
 
