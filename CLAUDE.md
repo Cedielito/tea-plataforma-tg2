@@ -104,6 +104,7 @@ npm run test:cov     pruebas con cobertura; el umbral mínimo es 70 %
 npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env)
 npm run dev:web      interfaz en http://localhost:5173 (proxy de /api a la API)
 npm run build:web    compila el frontend
+npm run seed:api     crea 2 contenidos de ejemplo en borrador (usa api/.env)
 ```
 
 ## Convenciones
@@ -146,9 +147,21 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 y T1 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0, T1 y T2 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
 se definen una sola vez en `web/src/secciones.js` (navegación, tarjetas y rutas).
-Siguiente: T2 (`feat/api-contenidos`). Ver `docs/backlog-fase-i.md`.
+
+Contenidos (T2): colecciones `contenido`, `pregunta_frecuente` y `recurso` con
+`fuentes [{texto, url}]`, `fechaRevision` y `estado` (borrador | publicado). RCN-01/02
+viven en `api/src/dominio/publicacion.js` y se aplican al guardar mediante el plugin
+`publicable` (`api/src/datos/modelos/comunes.js`); las actualizaciones por consulta
+(`updateOne`, `findOneAndUpdate`, ...) están bloqueadas, así que toda escritura va por
+los repositorios de `api/src/datos/repositorios/` (`crear`, `actualizar`). Rutas
+públicas de solo lectura: `/api/contenidos?seccion=&edad=` (con edad incluye también
+los contenidos sin tramo), `/api/contenidos/:slug`, `/api/preguntas`, `/api/recursos`
+y `/api/buscar?q=`. Aún no hay rutas `/api/admin` (llegan con T4). La fecha de
+revisión es una fecha de calendario: el formulario la envía como AAAA-MM-DD, se
+guarda a medianoche UTC y la web la muestra con `timeZone: 'UTC'`.
+Siguiente: T3 (`feat/paginas-contenido`). Ver `docs/backlog-fase-i.md`.

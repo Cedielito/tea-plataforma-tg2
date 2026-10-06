@@ -1,15 +1,18 @@
 'use strict';
+const Contenido = require('./contenido');
+const PreguntaFrecuente = require('./preguntaFrecuente');
+const Recurso = require('./recurso');
 
 /**
- * Registro de modelos Mongoose de la Fase I.
+ * Registro de modelos Mongoose de la Fase I (Cuadro 13).
  *
- * Vacio a proposito: los esquemas de contenidos, preguntas frecuentes,
- * recursos, entidades del directorio, mensajes y administradores se agregan en
- * las tareas T2, T4, T6, T7 y T8. Cada modelo nuevo debe sumar el nombre de su
- * coleccion a COLECCIONES para que las pruebas limpien la base entre casos.
+ * Cada modelo nuevo debe sumar el nombre de su coleccion a COLECCIONES para
+ * que las pruebas limpien la base entre casos. Faltan las colecciones de las
+ * tareas T4 (administrador), T5 (paso_ruta), T6 (entidad_directorio) y T8
+ * (mensaje_contacto).
  *
  * Los esquemas de la Fase II viven en la rama `fase-ii`.
  */
-const COLECCIONES = [];
+const COLECCIONES = ['contenido', 'pregunta_frecuente', 'recurso'];
 
-module.exports = { COLECCIONES };
+module.exports = { COLECCIONES, Contenido, PreguntaFrecuente, Recurso };

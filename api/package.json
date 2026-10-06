@@ -7,7 +7,8 @@
     "test": "jest",
     "test:cov": "jest --coverage",
     "dev": "node --env-file-if-exists=.env --watch src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "seed": "node --env-file-if-exists=.env src/datos/semilla.js"
   },
   "dependencies": {
     "express": "^4.19.2",

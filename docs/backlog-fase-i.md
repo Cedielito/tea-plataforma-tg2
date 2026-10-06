@@ -30,7 +30,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 |---|---|---|---|---|
 | T0 ✅ | `chore/reenfoque-plataforma` | Preservar Fase II en la rama `fase-ii` y limpiar `main` | — | 1 |
 | T1 ✅ | `feat/base-visual` | Layout, rutas, sistema visual, barra de accesibilidad e inicio | M-01, M-07, RA-01 a RA-11 | 1 |
-| T2 | `feat/api-contenidos` | Modelos y API de contenidos, preguntas y recursos con fuente y fecha obligatorias | RCN-01, RCN-02, RF-10 | 1 |
+| T2 ✅ | `feat/api-contenidos` | Modelos y API de contenidos, preguntas y recursos con fuente y fecha obligatorias | RCN-01, RCN-02, RF-10 | 1 |
 | T3 | `feat/paginas-contenido` | Páginas S1 a S5, filtro por edad y buscador | M-02, RF-02, RF-03, RCN-03, RCN-04 | 1 |
 | T4 | `feat/admin-auth` | Login del administrador y editor de contenidos | M-08, RF-09, RF-10, RS-05 | 1 |
 | T5 | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
@@ -81,7 +81,7 @@ funciona en 320 px y los tres ajustes de la barra funcionan.
 Propón el plan antes de escribir código.
 ```
 
-### T2 — API de contenidos
+### T2 — API de contenidos ✅
 ```
 Lee CLAUDE.md. Tarea T2, rama feat/api-contenidos.
 

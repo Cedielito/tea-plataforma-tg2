@@ -1,10 +1,12 @@
 'use strict';
 const express = require('express');
+const { crearRutasPublicas } = require('./rutas/publicas');
 
 /**
- * Servidor HTTP de la Fase I. Por ahora solo expone el estado del servicio;
- * las rutas de contenidos, directorio, recursos, contacto y administracion se
- * agregan en sus tareas del backlog (T2 a T8).
+ * Servidor HTTP de la Fase I: estado del servicio y rutas publicas de
+ * contenidos, preguntas frecuentes, recursos y buscador (T2). Las rutas de
+ * directorio, contacto y administracion se agregan en sus tareas del backlog
+ * (T4 a T8).
  */
 function crearServidor() {
   const app = express();
@@ -14,6 +16,8 @@ function crearServidor() {
   const salud = (_req, res) => res.json({ estado: 'ok' });
   app.get('/salud', salud);
   app.get('/api/salud', salud);
+
+  app.use('/api', crearRutasPublicas());
 
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));
 

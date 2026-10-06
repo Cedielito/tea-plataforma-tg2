@@ -26,12 +26,17 @@ async function levantar() {
 /**
  * Deja las colecciones vacias entre pruebas. Se borran los documentos y no la
  * base completa: `dropDatabase` se llevaria los indices, y hay pruebas que
- * dependen del indice unico de participante.uuid.
+ * dependen del indice unico de contenido.slug.
  */
 async function limpiar() {
   const db = mongoose.connection.db;
   if (!db) return;
   await Promise.all(COLECCIONES.map((c) => db.collection(c).deleteMany({})));
+}
+
+/** Cadena de conexion de la base en memoria, para probar scripts que conectan solos. */
+function uri() {
+  return servidor.getUri('tea_pruebas');
 }
 
 async function bajar() {
@@ -40,4 +45,4 @@ async function bajar() {
   servidor = null;
 }
 
-module.exports = { levantar, limpiar, bajar };
+module.exports = { levantar, limpiar, bajar, uri };
