@@ -92,6 +92,7 @@ api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual
+contenidos/          textos S1-S5 en Markdown con fuentes y fecha (se cargan a la base)
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
@@ -122,6 +123,10 @@ npm run seed:api     crea 2 contenidos de ejemplo en borrador (usa api/.env)
   (RCN-01..08, RA-01..11, RF-01..12, RS-01..07, HU-01..HU-15), que copia los cuadros
   del documento de tesis, incluido el modelo de datos (Cuadro 13). No inventes
   códigos; si hace falta uno, pregunta.
+- **Voz del equipo**: commits, PR, comentarios de revisión y documentos se redactan en
+  primera persona del plural, como trabajo del equipo: «implementamos», «verificamos»,
+  «revisamos». Nunca en singular («revisé», «comprobé»). En el chat de la sesión sí se
+  puede hablar en singular.
 - **Toda regla de dominio nueva lleva su prueba** en el mismo commit.
 - Cada modelo Mongoose nuevo agrega su colección a `COLECCIONES` en
   `api/src/datos/modelos/index.js`.
