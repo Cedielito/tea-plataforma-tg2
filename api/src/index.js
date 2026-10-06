@@ -2,15 +2,17 @@
 const { crearServidor } = require('./api/servidor');
 const { conectar, MENSAJE_SIN_URI } = require('./datos/conexion');
 const { cargarContenidos } = require('./datos/sincronizacionContenidos');
+const { prepararAdministradorInicial } = require('./datos/administradorInicial');
 
 /**
- * Arranque: conecta, carga los textos de api/contenidos (M-02) y luego
- * escucha, para que una version nueva reciba trafico con los textos ya
- * cargados. La carga nunca detiene el arranque; su resultado queda en el
- * registro.
+ * Arranque: conecta, crea el primer administrador si hace falta (M-08), carga
+ * los textos de api/contenidos (M-02) y luego escucha, para que una version
+ * nueva reciba trafico con los textos ya cargados. Ni el administrador ni la
+ * carga detienen el arranque; su resultado queda en el registro.
  */
 async function principal() {
   await conectar();
+  await prepararAdministradorInicial();
   await cargarContenidos();
   const app = crearServidor();
   const puerto = process.env.PORT || 3000;

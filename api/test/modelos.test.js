@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const { levantar, limpiar, bajar } = require('./ayudas/baseEnMemoria');
 const datos = require('./ayudas/datos');
-const { COLECCIONES, Contenido, PreguntaFrecuente, Recurso } = require('../src/datos/modelos');
+const { COLECCIONES, Administrador, Contenido, PreguntaFrecuente, Recurso } = require('../src/datos/modelos');
 const { MENSAJE_ESCRITURA_DIRECTA } = require('../src/datos/modelos/comunes');
 const { MENSAJES } = require('../src/dominio/publicacion');
 const repoContenidos = require('../src/datos/repositorios/contenidos');
@@ -11,7 +11,7 @@ const repoRecursos = require('../src/datos/repositorios/recursos');
 
 beforeAll(async () => {
   await levantar();
-  await Promise.all([Contenido.init(), PreguntaFrecuente.init(), Recurso.init()]);
+  await Promise.all([Contenido.init(), PreguntaFrecuente.init(), Recurso.init(), Administrador.init()]);
 });
 afterEach(limpiar);
 afterAll(bajar);
@@ -208,6 +208,31 @@ describe('Esquema de recurso', () => {
   test('rechaza un tipo distinto de archivo o enlace', async () => {
     const errores = await erroresAlGuardar(repoRecursos.crear(datos.recurso({ tipo: 'video' })));
     expect(errores.tipo).toBeDefined();
+  });
+});
+
+describe('RS-05 esquema de administrador', () => {
+  const nuevo = (usuario = 'equipo.tea') =>
+    new Administrador({ usuario, claveCifrada: '$2b$10$hashdepruebahashdepruebahashdepruebahashdepruebaha' }).save();
+
+  test('la clave cifrada no se lee salvo que se pida', async () => {
+    await nuevo();
+    expect((await Administrador.findOne().lean()).claveCifrada).toBeUndefined();
+    expect((await Administrador.findOne().select('+claveCifrada').lean()).claveCifrada).toMatch(/^\$2b\$/);
+  });
+
+  test('al convertirse a JSON nunca incluye la clave cifrada ni las sesiones', async () => {
+    const doc = await nuevo();
+    doc.sesiones.push({ tokenHash: 'abc', creadaEn: new Date(), ultimaActividad: new Date() });
+    const json = doc.toJSON();
+    expect(json).not.toHaveProperty('claveCifrada');
+    expect(json).not.toHaveProperty('sesiones');
+    expect(json.usuario).toBe('equipo.tea');
+  });
+
+  test('el usuario es unico y se guarda en minusculas', async () => {
+    expect((await nuevo('  Equipo.TEA ')).usuario).toBe('equipo.tea');
+    await expect(nuevo('equipo.tea')).rejects.toMatchObject({ code: 11000 });
   });
 });
 
