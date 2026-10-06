@@ -145,6 +145,9 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-Base limpia (T0): API con `/salud` y `/api/salud`, manejo de errores y conexión a
-MongoDB; web con el sistema visual nuevo y una pantalla provisional.
-Siguiente: T1 (`feat/base-visual`). Ver `docs/backlog-fase-i.md`.
+T0 y T1 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
+común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
+(`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
+se definen una sola vez en `web/src/secciones.js` (navegación, tarjetas y rutas).
+Siguiente: T2 (`feat/api-contenidos`). Ver `docs/backlog-fase-i.md`.
