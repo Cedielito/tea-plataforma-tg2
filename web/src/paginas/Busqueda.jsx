@@ -3,6 +3,9 @@
  * dirección (/buscar?q=...) desde la caja del encabezado o desde la de esta
  * página.
  *
+ * Cada pregunta frecuente encontrada muestra su respuesta y enlaza a la
+ * misma pregunta en /preguntas-frecuentes#slug, que la abre (RF-07, HU-10).
+ *
  * Solo el resumen («Encontramos 3 páginas…») está en la región aria-live
  * (role="status"): el lector de pantalla lo anuncia en cada búsqueda y la
  * persona recorre después la lista, que va justo debajo. Si la lista entera
@@ -17,7 +20,7 @@ import MigasDePan from '../componentes/MigasDePan.jsx';
 import { TEXTO_ESPERA } from '../componentes/EstadoDatos.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
-import { nombreDeContenido, rutaDeContenido } from '../secciones.js';
+import { RUTA_PREGUNTAS_WEB, nombreDeContenido, rutaDeContenido, rutaDePregunta } from '../secciones.js';
 import { caracteresBuscables, contar } from '../utilidades/formato.js';
 
 /** Los mismos límites que valida la API (api/src/dominio/busqueda.js). */
@@ -112,15 +115,19 @@ export default function Busqueda() {
         <section className="resultados" aria-labelledby={idPreguntas}>
           <h2 id={idPreguntas}>Preguntas frecuentes</h2>
           <ul className="resultados__lista">
-            {resultados.preguntas.map(({ _id, pregunta, respuesta }) => (
-              <li key={_id ?? pregunta} className="resultado">
-                <h3 className="resultado__pregunta">{pregunta}</h3>
+            {resultados.preguntas.map(({ slug, pregunta, respuesta }) => (
+              <li key={slug} className="resultado">
+                <h3 className="resultado__pregunta">
+                  <Link to={rutaDePregunta(slug)} className="resultado__enlace">
+                    {pregunta}
+                  </Link>
+                </h3>
                 <Markdown texto={respuesta} nivelTitulos={3} className="prosa resultado__respuesta" />
               </li>
             ))}
           </ul>
           <p>
-            <Link to="/preguntas-frecuentes">Ver todas las preguntas frecuentes</Link>
+            <Link to={RUTA_PREGUNTAS_WEB}>Ver todas las preguntas frecuentes</Link>
           </p>
         </section>
       )}

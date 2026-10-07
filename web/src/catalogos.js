@@ -1,6 +1,7 @@
 /**
- * Valores y nombres visibles de la ruta de atención (M-03, RF-04) y de los
- * tipos de entidad y ciudades del directorio (M-04, RF-05). Los valores
+ * Valores y nombres visibles de la ruta de atención (M-03, RF-04), de los
+ * tipos de entidad y ciudades del directorio (M-04, RF-05) y de los tipos de
+ * recurso (M-05, RF-06). Los valores
  * coinciden con los de la API (api/src/dominio/catalogos.js); los nombres son
  * los que ve la persona. Los tramos de edad están en secciones.js, junto a las
  * señales de alerta.
@@ -40,6 +41,12 @@ export const CIUDADES = [
   { valor: 'Medellín', parametro: 'medellin', etiqueta: 'Medellín' },
   { valor: 'Cali', parametro: 'cali', etiqueta: 'Cali' },
   { valor: 'Barranquilla', parametro: 'barranquilla', etiqueta: 'Barranquilla' }
+];
+
+/** Tipos de recurso (M-05): un archivo para descargar o una página oficial. */
+export const TIPOS_RECURSO = [
+  { valor: 'archivo', etiqueta: 'Archivo para descargar (por ejemplo, un PDF)' },
+  { valor: 'enlace', etiqueta: 'Enlace a una página oficial' }
 ];
 
 /** Las que se pueden elegir en los filtros: las nacionales aparecen siempre. */

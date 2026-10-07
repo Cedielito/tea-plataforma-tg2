@@ -16,6 +16,8 @@ import './estilos/inicio.css';
 import './estilos/contenido.css';
 import './estilos/ruta.css';
 import './estilos/directorio.css';
+import './estilos/recursos.css';
+import './estilos/preguntas.css';
 
 import App from './App.jsx';
 

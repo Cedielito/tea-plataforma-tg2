@@ -8,7 +8,8 @@
 import { useId } from 'react';
 import { esEnlaceWeb, fechaRevision } from '../utilidades/formato.js';
 
-function Revision({ valor }) {
+/** «Revisado el 06/10/2026», o nada si la fecha no es válida. También en preguntas y recursos (M-05). */
+export function Revision({ valor }) {
   const fecha = fechaRevision(valor);
   if (!fecha) return null;
   return (

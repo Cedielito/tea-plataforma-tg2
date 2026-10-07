@@ -1,8 +1,7 @@
 /**
  * Página provisional de una sección (M-01 a M-06). Muestra las migas de pan, el
  * título, una línea descriptiva y, donde corresponde, el aviso de no diagnóstico
- * (RCN-03). El contenido real de directorio, recursos, preguntas, privacidad y
- * «Acerca de» llega en T6 a T8.
+ * (RCN-03). Hoy la usan privacidad y «Acerca de», cuyo contenido llega en T8.
  */
 import AvisoNoDiagnostico from '../componentes/AvisoNoDiagnostico.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';

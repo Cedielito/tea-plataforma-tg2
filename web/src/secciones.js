@@ -21,6 +21,13 @@ import {
 /** Página del directorio (M-04); la guía de la ruta enlaza aquí, sin filtros. */
 export const RUTA_DIRECTORIO_WEB = '/directorio';
 
+/** Páginas de recursos y de preguntas frecuentes (M-05). */
+export const RUTA_RECURSOS_WEB = '/recursos';
+export const RUTA_PREGUNTAS_WEB = '/preguntas-frecuentes';
+
+/** Pregunta frecuente dentro de su página: el ancla #slug la abre (RF-07). */
+export const rutaDePregunta = (slug) => `${RUTA_PREGUNTAS_WEB}#${slug}`;
+
 export const SECCIONES = [
   {
     ruta: '/que-es-el-tea',
@@ -76,14 +83,14 @@ export const SECCIONES = [
     Icono: MapPin
   },
   {
-    ruta: '/recursos',
+    ruta: RUTA_RECURSOS_WEB,
     nav: 'Recursos',
     titulo: 'Recursos',
     descripcion: 'Guías y documentos oficiales para descargar o consultar.',
     Icono: Download
   },
   {
-    ruta: '/preguntas-frecuentes',
+    ruta: RUTA_PREGUNTAS_WEB,
     nav: 'Preguntas',
     titulo: 'Preguntas frecuentes',
     descripcion: 'Respuestas cortas a las dudas más comunes de familias y docentes.',
