@@ -26,6 +26,10 @@ const entidadesDirectorio = require('../../datos/repositorios/entidadesDirectori
  * filtra por ciudad y tipo en el navegador, asi que la ciudad que elige la
  * persona en la guia de la ruta no llega a la API (RF-04, RS-01). Sin la
  * constancia de autorizacion de los profesionales (RS-07).
+ *
+ * /preguntas, /recursos y /buscar identifican cada pregunta y cada recurso por
+ * su slug, sin el _id: la web enlaza cada pregunta como
+ * /preguntas-frecuentes#slug.
  */
 
 const NO_ENCONTRADO = 'Contenido no encontrado.';

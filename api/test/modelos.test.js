@@ -175,9 +175,24 @@ describe('Esquema de contenido', () => {
 });
 
 describe('Esquema de pregunta frecuente', () => {
-  test('exige pregunta y respuesta', async () => {
+  test('exige pregunta, respuesta, slug y orden', async () => {
     const errores = await erroresAlGuardar(repoPreguntas.crear({ estado: 'borrador' }));
-    expect(Object.keys(errores)).toEqual(expect.arrayContaining(['pregunta', 'respuesta']));
+    expect(Object.keys(errores)).toEqual(expect.arrayContaining(['pregunta', 'respuesta', 'slug', 'orden']));
+    expect(errores.orden.message).toBe('El orden es obligatorio.');
+  });
+
+  test('genera el slug a partir de la pregunta si no llega', async () => {
+    const doc = await repoPreguntas.crear(datos.pregunta({ pregunta: '¿A quién debo consultar primero?' }));
+    expect(doc.slug).toBe('a-quien-debo-consultar-primero');
+  });
+
+  test('el slug es unico y con formato valido', async () => {
+    await repoPreguntas.crear(datos.pregunta({ slug: 'sin-eps' }));
+    await expect(repoPreguntas.crear(datos.pregunta({ slug: 'sin-eps', pregunta: 'Otra' }))).rejects.toMatchObject({
+      code: 11000
+    });
+    const errores = await erroresAlGuardar(repoPreguntas.crear(datos.pregunta({ slug: 'con espacios' })));
+    expect(errores.slug).toBeDefined();
   });
 
   test('el orden es un entero no negativo', async () => {
@@ -189,6 +204,14 @@ describe('Esquema de pregunta frecuente', () => {
 });
 
 describe('Esquema de recurso', () => {
+  test('genera el slug a partir del titulo si no llega; es unico', async () => {
+    const doc = await repoRecursos.crear(datos.recurso({ titulo: 'Decreto 1421 de 2017: educación inclusiva' }));
+    expect(doc.slug).toBe('decreto-1421-de-2017-educacion-inclusiva');
+    await expect(repoRecursos.crear(datos.recurso({ slug: doc.slug, titulo: 'Otro' }))).rejects.toMatchObject({
+      code: 11000
+    });
+  });
+
   test('acepta un enlace absoluto o una ruta de archivo del sitio', async () => {
     const archivo = await repoRecursos.crear(datos.recurso({ tipo: 'archivo', url: '/recursos/guia.pdf' }));
     expect(archivo.url).toBe('/recursos/guia.pdf');
