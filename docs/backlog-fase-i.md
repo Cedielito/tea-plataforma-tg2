@@ -18,10 +18,10 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | Tarea | Responsable | Plazo | Bloquea |
 |---|---|---|---|
 | ✅ Textos de S1 a S5 a partir de las fuentes oficiales (MinSalud, OMS, DSM-5-TR), con fuente y fecha | Hechos (`api/contenidos/`); Santiago los revisa | 10 oct | T3 |
-| ✅ Lista de 15 a 30 entidades públicas para el directorio con fuente | Hecha: 19 verificadas (`api/contenidos/directorio/`); Santiago revisa y completa Cali y las Personerías de Bogotá y Medellín | 14 oct | T6 |
+| ✅ Lista de 15 a 30 entidades públicas para el directorio con fuente | Hecha: 23 verificadas (`api/contenidos/directorio/`); Santiago las revisa | 14 oct | T6 |
 | ✅ Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Hechos: 18 pasos (`api/contenidos/ruta/`); Santiago los revisa | 13 oct | T5 |
 | ✅ 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Hechos: 6 recursos y 12 preguntas (`api/contenidos/recursos/` y `preguntas/`); Santiago los revisa | 15 oct | T7 |
-| Completar los `COMPLETAR` de `api/contenidos/paginas/` (nombres, correo, dirección y teléfono del responsable, fecha de vigencia) | Ambos | Antes de fusionar T8 | T8 |
+| Completar los `COMPLETAR` de `api/contenidos/paginas/` (dirección y teléfono del responsable, fecha de vigencia) | Ambos | Antes de fusionar T8 | T8 |
 | Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
 | Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
 
@@ -171,7 +171,7 @@ Modelo entidad_directorio (nombre, tipo, ciudad, contacto, fuente, fecha de
 verificación, es_profesional, constancia_autorizacion). Regla con prueba: si
 es_profesional, no se publica sin constancia (RS-07). Página pública con filtros
 por ciudad y tipo, tarjetas accesibles y «Verificado el dd/mm/aaaa».
-Administración en el panel. Las 19 entidades verificadas ya están en
+Administración en el panel. Las 23 entidades verificadas ya están en
 api/contenidos/directorio/entidades.yaml (lee api/contenidos/README.md): cárgalas
 al arrancar, buscando por id. Las entidades nacionales aparecen con cualquier
 ciudad que se elija.

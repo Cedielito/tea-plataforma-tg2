@@ -197,6 +197,25 @@
   fechaVerificacion: 2026-10-06
   esProfesional: false
 
+- id: personeria-bogota
+  nombre: "Personería de Bogotá, D. C."
+  tipo: proteccion
+  ciudad: Bogotá
+  descripcion: "Entidad del Ministerio Público que protege y promueve los derechos humanos en Bogotá. Atiende en sus sedes, en las personerías locales y por la línea 143."
+  contacto:
+    telefonos: ["143", "(601) 382 0450", "(601) 382 0480", "318 206 6705 (WhatsApp)"]
+    correo: "institucional@personeriabogota.gov.co"
+    web: "https://www.personeriabogota.gov.co"
+    direccion: "Centro de Atención a la Comunidad (C.A.C.): Carrera 8 No. 20-56, Bogotá, D. C."
+    horario: "Centro de Atención a la Comunidad, personerías locales y CADE: lunes a viernes, 7:00 a. m. a 4:00 p. m."
+  fuentes:
+    - texto: "Personería de Bogotá, D. C. Sitio oficial, sección Contacto. Consultada el 6 de octubre de 2026."
+      url: "https://www.personeriabogota.gov.co"
+    - texto: "Constitución Política de Colombia, 1991. Artículo 118 (Ministerio Público: guarda y promoción de los derechos humanos)."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4125"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
 - id: secretaria-salud-medellin
   nombre: "Secretaría de Salud de Medellín"
   tipo: salud
@@ -251,6 +270,57 @@
       url: "https://www.medellin.gov.co/es/secretaria-de-salud/"
     - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia (agosto de 2025). Consultada el 6 de octubre de 2026."
       url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: personeria-medellin
+  nombre: "Personería de Medellín"
+  tipo: proteccion
+  ciudad: Medellín
+  descripcion: "Entidad del Ministerio Público que protege y promueve los derechos humanos en Medellín. Atiende en su sede principal, junto al Centro Administrativo La Alpujarra."
+  contacto:
+    telefonos: ["(604) 384 9999, ext. 300", "01 8000 518 618"]
+    correo: "info@personeriamedellin.gov.co"
+    web: "https://www.personeriamedellin.gov.co"
+    direccion: "Sede principal La Alpujarra: Centro Cultural Plaza la Libertad, Carrera 53A No. 42-101, Medellín"
+    horario: "Lunes a viernes, 7:00 a. m. a 7:00 p. m."
+  fuentes:
+    - texto: "Personería de Medellín. Sitio oficial, sedes y canales de atención. Consultada el 6 de octubre de 2026."
+      url: "https://www.personeriamedellin.gov.co"
+    - texto: "Constitución Política de Colombia, 1991. Artículo 118 (Ministerio Público: guarda y promoción de los derechos humanos)."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4125"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-salud-cali
+  nombre: "Secretaría de Salud Pública de Cali"
+  tipo: salud
+  ciudad: Cali
+  descripcion: "Para consultas sobre los servicios de salud en Cali. Se contacta por los canales de atención a la ciudadanía de la Alcaldía de Santiago de Cali."
+  contacto:
+    telefonos: ["195", "(602) 885 6173", "(602) 885 6174", "(602) 885 6178", "01 8000 222 195"]
+    correo: "contactenos@cali.gov.co"
+    web: "https://www.cali.gov.co/salud/"
+    direccion: "Centro Administrativo Municipal (CAM): Avenida 2 Norte # 10-70, Cali"
+  fuentes:
+    - texto: "Alcaldía de Santiago de Cali. Sitio oficial, canales de atención a la ciudadanía (pie de página). Consultada el 6 de octubre de 2026."
+      url: "https://www.cali.gov.co"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-educacion-cali
+  nombre: "Secretaría de Educación de Cali"
+  tipo: educacion
+  ciudad: Cali
+  descripcion: "Para consultas sobre el servicio educativo en Cali. Se contacta por los canales de atención a la ciudadanía de la Alcaldía de Santiago de Cali."
+  contacto:
+    telefonos: ["195", "(602) 885 6173", "(602) 885 6174", "(602) 885 6178", "01 8000 222 195"]
+    correo: "contactenos@cali.gov.co"
+    web: "https://www.cali.gov.co/educacion/"
+    direccion: "Centro Administrativo Municipal (CAM): Avenida 2 Norte # 10-70, Cali"
+  fuentes:
+    - texto: "Alcaldía de Santiago de Cali. Sitio oficial, canales de atención a la ciudadanía (pie de página). Consultada el 6 de octubre de 2026."
+      url: "https://www.cali.gov.co"
   fechaVerificacion: 2026-10-06
   esProfesional: false
 

@@ -91,7 +91,7 @@ actualizar solo si la fecha del archivo es más reciente y nunca borrar.
 | Carpeta | Colección (Cuadro 13) | Tarea | Contenido |
 |---|---|---|---|
 | `ruta/pasos.yaml` | `paso_ruta` | T5 | 18 pasos: 12 para familias y 6 para docentes |
-| `directorio/entidades.yaml` | `entidad_directorio` | T6 | 19 entidades públicas verificadas |
+| `directorio/entidades.yaml` | `entidad_directorio` | T6 | 23 entidades públicas verificadas |
 | `preguntas/preguntas.yaml` | `pregunta_frecuente` | T7 | 12 preguntas frecuentes |
 | `recursos/recursos.yaml` | `recurso` | T7 | 6 documentos y enlaces oficiales |
 | `paginas/privacidad.md` | página fija (M-06) | T8 | Política de tratamiento de datos, versión 1.0 |
@@ -130,10 +130,10 @@ Ciudades: Nacional, Bogotá, Medellín, Cali y Barranquilla. Las entidades nacio
 deben aparecer con cualquier ciudad que se elija. Los números de WhatsApp van en
 `telefonos` con el sufijo «(WhatsApp)».
 
-Pendientes por verificar, sin publicar, porque sus sitios oficiales no respondieron
-el 6 de octubre de 2026: Personería de Bogotá, Personería de Medellín, Secretaría de
-Salud Pública de Cali y Secretaría de Educación de Cali. Se agregan cuando se
-verifiquen en su página oficial.
+Las secretarías de Salud Pública y de Educación de Cali aparecen con los canales
+generales de atención de la Alcaldía de Santiago de Cali, porque sus páginas propias
+no respondieron el 6 de octubre de 2026. Cuando se puedan consultar, se cambian por
+sus canales propios y se actualiza `fechaVerificacion`.
 
 ### Páginas fijas (`paginas/`)
 
@@ -141,7 +141,7 @@ Markdown con el mismo encabezado de los contenidos. La política de privacidad a
 `version` (la que se guarda con cada mensaje, RS-02), `vigenteDesde` y
 `textoAutorizacion` (el texto de la casilla del formulario de contacto).
 
-**Antes de publicar, reemplazar todos los textos `COMPLETAR`**: nombres de los
-integrantes, correo, dirección y teléfono del responsable (Decreto 1377 de 2013,
-art. 13) y la fecha de vigencia. La carga de T8 debe rechazar un archivo que todavía
-diga `COMPLETAR`.
+**Antes de publicar, reemplazar todos los textos `COMPLETAR`**: dirección y teléfono
+del responsable (Decreto 1377 de 2013, art. 13) y la fecha de vigencia. Los nombres
+y el correo ya están. La carga de T8 debe rechazar un archivo que todavía diga
+`COMPLETAR`.
