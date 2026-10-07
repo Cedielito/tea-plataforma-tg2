@@ -57,7 +57,8 @@
   font-size: var(--tipo-destacado);
   font-weight: var(--peso-negrita);
 }
-.directorio__resumen:empty { display: none; }
+/* Vacía mientras carga: sin espacio, pero presente para que se anuncien los cambios */
+.directorio__resumen:empty { margin: 0; }
 .directorio__vacio { max-width: var(--ancho-lectura); margin-top: var(--espacio-2); }
 
 /* ---------- Grupos y tarjetas ---------- */
