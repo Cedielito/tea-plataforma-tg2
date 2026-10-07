@@ -1,0 +1,265 @@
+# Pasos de la ruta de atención interactiva (M-03, RF-04, RCN-05). Colección paso_ruta.
+#
+# La guía hace 3 preguntas (quién consulta, tramo de edad y régimen de afiliación) y
+# muestra, en orden, los pasos cuyo perfil, tramo y régimen coinciden con las
+# respuestas. Las respuestas se procesan en el navegador y no se guardan (RS-01).
+#
+# - perfiles: familia | docente
+# - tramos: 4-7 | 8-12 | 13-17
+# - regimenes: contributivo | subsidiado | sin-afiliacion
+# - orden: de menor a mayor dentro de cada perfil (de 10 en 10, para poder intercalar)
+# - tiposEntidad: tipos del directorio (directorio/entidades.yaml) que la guía muestra
+#   junto al paso, filtrados por la ciudad que elija la persona
+# - texto: dos frases como máximo (RCN-06)
+#
+# Contributivo y subsidiado comparten los mismos pasos: en los dos el camino empieza en
+# la EPS. Sin afiliación agrega primero la afiliación de oficio.
+- id: familia-afiliacion
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [sin-afiliacion]
+  orden: 10
+  titulo: "Afilia al niño, la niña o el adolescente"
+  texto: "Pide la afiliación en la secretaría de salud de tu municipio, o en la IPS (clínica, hospital o centro de salud) cuando busques atención: deben hacerla aunque no tengas la encuesta del SISBÉN. La atención de urgencias no necesita autorización previa."
+  tiposEntidad: [salud]
+  fuentes:
+    - texto: "Presidencia de la República de Colombia; Ministerio de Salud y Protección Social. Decreto 064 de 2020, sobre afiliados al régimen subsidiado y afiliación de oficio. Artículo 2.1.5.4 del Decreto 780 de 2016."
+      url: "https://normograma.supersalud.gov.co/compilacion/docs/decreto_0064_2020.htm"
+    - texto: "Congreso de la República de Colombia. Ley Estatutaria 1751 de 2015, que regula el derecho fundamental a la salud. Artículos 11 y 14."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60733"
+  fechaRevision: 2026-10-06
+
+- id: familia-anotar
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 20
+  titulo: "Anota lo que observas"
+  texto: "Escribe ejemplos concretos: qué pasa, dónde y desde cuándo. Pide también al colegio que te cuente lo que observa."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-escuchar
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 30
+  titulo: "Habla con el niño, la niña o el adolescente"
+  texto: "Explícale con palabras sencillas por qué van a consultar y escucha lo que piensa. Los niños, niñas y adolescentes tienen derecho a ser escuchados y a que su opinión se tenga en cuenta."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 1098 de 2006, Código de la Infancia y la Adolescencia. Artículo 26."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=22106"
+  fechaRevision: 2026-10-06
+
+- id: familia-cita-eps
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 40
+  titulo: "Pide una cita en tu EPS"
+  texto: "Pide una cita de medicina general o de valoración integral (antes llamada de crecimiento y desarrollo). No necesitas un diagnóstico: basta con contar lo que observas."
+  tiposEntidad: [salud]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Resolución 3280 de 2018, lineamientos de la Ruta Integral de Atención para la Promoción y Mantenimiento de la Salud."
+      url: "https://normograma.supersalud.gov.co/compilacion/docs/resolucion_minsaludps_3280_2018.htm"
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-pediatria
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 50
+  titulo: "Valoración por pediatría"
+  texto: "Si hay al menos una señal de alerta, el protocolo del Ministerio de Salud recomienda remitir al pediatra. El pediatra hace una historia clínica completa, pero no confirma el diagnóstico por sí solo."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-especialista
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 60
+  titulo: "Remisión a un especialista"
+  texto: "Si el pediatra mantiene la sospecha, el protocolo recomienda remitir a neuropediatría o a psiquiatría infantil."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-diagnostico
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 70
+  titulo: "Diagnóstico por un equipo"
+  texto: "Según el protocolo, el neuropediatra o el psiquiatra infantil confirma el diagnóstico, con la valoración de un psicólogo clínico y de un terapeuta de lenguaje."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-plan
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 80
+  titulo: "Plan de atención"
+  texto: "Según las necesidades, el equipo puede incluir pediatría, neuropediatría, psiquiatría infantil, psicología clínica, terapia de lenguaje, terapia ocupacional, análisis del comportamiento y trabajo social."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: familia-colegio
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 90
+  titulo: "Habla con el colegio"
+  texto: "Cuéntale a orientación escolar o al docente de apoyo lo que pasa. El colegio no puede negar la matrícula ni los ajustes razonables (cambios y apoyos para que pueda aprender) por discapacidad, y si aún no hay diagnóstico debe matricular con la información que da la familia."
+  tiposEntidad: [educacion]
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: familia-reclamar
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 100
+  titulo: "Si te niegan o te demoran un servicio"
+  texto: "Presenta un derecho de petición (una solicitud formal) a la EPS: por regla general, debe responder en 15 días hábiles. Si no se resuelve, acude a la Superintendencia Nacional de Salud o presenta una acción de tutela a nombre del niño, la niña o el adolescente."
+  tiposEntidad: [quejas-salud, proteccion]
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 1755 de 2015, que regula el derecho fundamental de petición."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=65334"
+    - texto: "Congreso de la República de Colombia. Ley 4 de 1913, Código de Régimen Político y Municipal. Artículo 62: los plazos de días no cuentan los feriados."
+      url: "https://normas.cra.gov.co/Gestor/Docs/ley_0004_1913.htm"
+    - texto: "Superintendencia Nacional de Salud. Contáctenos."
+      url: "https://www.supersalud.gov.co/es-co/atencion-ciudadano/contactenos"
+    - texto: "Constitución Política de Colombia, 1991. Artículo 86 (acción de tutela)."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4125"
+    - texto: "Congreso de la República de Colombia. Ley Estatutaria 1751 de 2015, que regula el derecho fundamental a la salud. Artículos 11 y 14."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60733"
+  fechaRevision: 2026-10-06
+
+- id: familia-certificado
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 110
+  titulo: "Certificado de discapacidad"
+  texto: "Si quieres, con el diagnóstico puedes pedir el certificado de discapacidad en la secretaría de salud del municipio o distrito donde vives. El trámite es gratuito."
+  tiposEntidad: [salud]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Resolución 1197 de 2024, procedimiento de certificación de discapacidad."
+      url: "https://normativa.colpensiones.gov.co/compilacion/docs/resolucion_minsaludps_1197_2024.htm"
+  fechaRevision: 2026-10-06
+
+- id: familia-apoyo
+  perfiles: [familia]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 120
+  titulo: "Apoyo para ti"
+  texto: "Si necesitas apoyo emocional, llama a la Línea 106: es gratuita, confidencial y atiende las 24 horas."
+  tiposEntidad: [linea-apoyo]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Línea 106."
+      url: "https://www.minsalud.gov.co/salud/publica/salud-mental/Paginas/linea-106.aspx"
+  fechaRevision: 2026-10-06
+
+- id: docente-registrar
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 10
+  titulo: "Registra lo que observas"
+  texto: "Anota situaciones concretas del aula: qué pasó, cuándo y en qué actividad. Describe conductas, sin usar etiquetas ni diagnósticos."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: docente-orientacion
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 20
+  titulo: "Comparte con orientación escolar"
+  texto: "Cuéntale lo que observas a orientación escolar o al docente de apoyo de tu institución."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: docente-familia
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 30
+  titulo: "Habla con la familia"
+  texto: "Cuéntale lo que observas, con ejemplos y en un tono tranquilo. Sugiérele pedir una cita en su EPS para una valoración."
+  tiposEntidad: [salud]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: docente-afiliacion
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [sin-afiliacion]
+  orden: 40
+  titulo: "Si el estudiante no tiene EPS"
+  texto: "Orienta a la familia a la secretaría de salud del municipio, o a una IPS cuando busque atención: deben afiliar al estudiante aunque la familia no tenga la encuesta del SISBÉN."
+  tiposEntidad: [salud]
+  fuentes:
+    - texto: "Presidencia de la República de Colombia; Ministerio de Salud y Protección Social. Decreto 064 de 2020, sobre afiliados al régimen subsidiado y afiliación de oficio. Artículo 2.1.5.4 del Decreto 780 de 2016."
+      url: "https://normograma.supersalud.gov.co/compilacion/docs/decreto_0064_2020.htm"
+  fechaRevision: 2026-10-06
+
+- id: docente-ajustes
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 50
+  titulo: "Haz los ajustes razonables"
+  texto: "Los ajustes razonables y el PIAR (Plan Individual de Ajustes Razonables) se definen a partir de una valoración pedagógica y social, junto con la familia y el estudiante. El colegio no puede negar la matrícula ni los ajustes por la discapacidad del estudiante."
+  tiposEntidad: [educacion]
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+    - texto: "Ministerio de Educación Nacional. Documento de orientaciones técnicas, administrativas y pedagógicas para la atención educativa a estudiantes con discapacidad en el marco de la educación inclusiva. Actualizado en 2020."
+      url: "https://www.mineducacion.gov.co/portal/men/Publicaciones/Guias/360293:Documento-de-orientaciones-tecnicas-administrativas-y-pedagogicas-para-la-atencion-educativa-a-estudiantes-con-discapacidad-en-el-marco-de-la-educacion-inclusiva"
+  fechaRevision: 2026-10-06
+
+- id: docente-escuchar
+  perfiles: [docente]
+  tramos: ["4-7", "8-12", "13-17"]
+  regimenes: [contributivo, subsidiado, sin-afiliacion]
+  orden: 60
+  titulo: "Escucha al estudiante"
+  texto: "Explícale con palabras sencillas los apoyos que van a probar y pregúntale cómo se siente con ellos. Los niños, niñas y adolescentes tienen derecho a ser escuchados y a que su opinión se tenga en cuenta."
+  tiposEntidad: []
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 1098 de 2006, Código de la Infancia y la Adolescencia. Artículo 26."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=22106"
+  fechaRevision: 2026-10-06
