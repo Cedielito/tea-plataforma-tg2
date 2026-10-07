@@ -48,9 +48,23 @@ function recurso(cambios = {}) {
   };
 }
 
+function pasoRuta(cambios = {}) {
+  return {
+    titulo: 'Pide una cita en tu EPS',
+    texto: 'Pide una cita de medicina general. No necesitas un diagnóstico.',
+    perfiles: ['familia'],
+    tramos: ['4-7', '8-12', '13-17'],
+    regimenes: ['contributivo', 'subsidiado', 'sin-afiliacion'],
+    orden: 40,
+    tiposEntidad: ['salud'],
+    ...publicable(),
+    ...cambios
+  };
+}
+
 /** Un dia despues de hoy, en formato AAAA-MM-DD. */
 function fechaFutura() {
   return new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
-module.exports = { FUENTE, FECHA_REVISION, contenido, pregunta, recurso, fechaFutura };
+module.exports = { FUENTE, FECHA_REVISION, contenido, pregunta, recurso, pasoRuta, fechaFutura };

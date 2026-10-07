@@ -7,6 +7,7 @@ const { Contenido } = require('../src/datos/modelos');
 const repoContenidos = require('../src/datos/repositorios/contenidos');
 const repoPreguntas = require('../src/datos/repositorios/preguntas');
 const repoRecursos = require('../src/datos/repositorios/recursos');
+const repoPasosRuta = require('../src/datos/repositorios/pasosRuta');
 const { MENSAJES: MENSAJES_CONTENIDOS } = require('../src/dominio/contenidos');
 const { MENSAJES: MENSAJES_BUSQUEDA } = require('../src/dominio/busqueda');
 
@@ -161,6 +162,46 @@ describe('RF-07 preguntas frecuentes en orden', () => {
     await repoPreguntas.crear(datos.pregunta({ pregunta: 'Segunda', orden: 2 }));
     const res = await request(app).get('/api/preguntas');
     expect(res.body.map((p) => p.pregunta)).toEqual(['Primera', 'Segunda', 'Tercera']);
+  });
+});
+
+describe('RF-04 RS-01 la API entrega todos los pasos publicados de la ruta, sin recibir respuestas', () => {
+  beforeEach(async () => {
+    const crear = (titulo, slug, cambios) => repoPasosRuta.crear(datos.pasoRuta({ titulo, slug, ...cambios }));
+    await crear('Afiliación', 'familia-afiliacion', { orden: 10, regimenes: ['sin-afiliacion'] });
+    await crear('Registra', 'docente-registrar', { orden: 10, perfiles: ['docente'] });
+    await crear('Cita', 'familia-cita-eps', { orden: 40 });
+    await crear('Borrador', 'borrador', { orden: 5, ...borrador });
+  });
+
+  test('GET /api/pasos-ruta devuelve los publicados por orden, con fuentes y fecha, sin borradores', async () => {
+    const res = await request(app).get('/api/pasos-ruta');
+    expect(res.status).toBe(200);
+    expect(res.body.map((paso) => paso.slug)).toEqual(['familia-afiliacion', 'docente-registrar', 'familia-cita-eps']);
+    expect(res.body[2]).toEqual({
+      slug: 'familia-cita-eps',
+      titulo: 'Cita',
+      texto: expect.any(String),
+      perfiles: ['familia'],
+      tramos: ['4-7', '8-12', '13-17'],
+      regimenes: ['contributivo', 'subsidiado', 'sin-afiliacion'],
+      orden: 40,
+      tiposEntidad: ['salud'],
+      fuentes: [datos.FUENTE],
+      fechaRevision: `${datos.FECHA_REVISION}T00:00:00.000Z`
+    });
+  });
+
+  test('no filtra por respuestas: con parametros en la consulta devuelve lo mismo', async () => {
+    const todos = await request(app).get('/api/pasos-ruta');
+    const conRespuestas = await request(app).get('/api/pasos-ruta?perfil=familia&edad=8-12&regimen=subsidiado');
+    expect(conRespuestas.status).toBe(200);
+    expect(conRespuestas.body).toEqual(todos.body);
+  });
+
+  test('no pone cookies', async () => {
+    const res = await request(app).get('/api/pasos-ruta');
+    expect(res.headers['set-cookie']).toBeUndefined();
   });
 });
 

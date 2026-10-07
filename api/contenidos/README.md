@@ -83,10 +83,17 @@ hoy, el CI del PR queda en rojo antes de fusionar.
 ## Datos de la semana 2 (T5 a T8)
 
 Además de las páginas de S1 a S5, esta carpeta guarda en subcarpetas los datos que
-cargan las tareas T5 a T8. La carga actual solo lee los `.md` de este primer nivel,
-así que las subcarpetas no afectan lo que ya está publicado. Cada tarea agrega su
-propia carga, con las mismas reglas: buscar por `id` o `slug`, crear lo que falta,
-actualizar solo si la fecha del archivo es más reciente y nunca borrar.
+cargan las tareas T5 a T8. La carga de las páginas solo lee los `.md` de este primer
+nivel. Cada tarea agrega su propia carga, con las mismas reglas: buscar por `id` o
+`slug`, crear lo que falta, actualizar solo si la fecha del archivo es más reciente y
+nunca borrar. Ya se cargan los pasos de la ruta (T5); las demás subcarpetas todavía
+no afectan lo publicado.
+
+Las listas `.yaml` se cargan con `api/src/datos/sincronizacionListas.js`: el `id` de
+cada elemento se guarda en la base como `slug`, para no confundirlo con el `_id` de
+MongoDB que usan el panel y sus rutas. Un elemento con errores queda en los logs de
+Render, con el archivo y su `id`, y los demás se cargan:
+`Pasos de la ruta: 18 creados, 0 actualizados, 0 sin cambios, 0 con errores.`
 
 | Carpeta | Colección (Cuadro 13) | Tarea | Contenido |
 |---|---|---|---|
@@ -111,6 +118,13 @@ paso las entidades del directorio de los `tiposEntidad` indicados. Contributivo 
 subsidiado comparten los pasos, porque en los dos el camino empieza en la EPS. Sin
 afiliación agrega primero la afiliación de oficio. Cada `texto` tiene dos frases como
 máximo (RCN-06).
+
+La guía está en `/ruta-de-atencion`, arriba del texto de S4. Si consulta un docente,
+la pregunta del régimen ofrece «No lo sé» y muestra los pasos de todos los regímenes:
+por eso los pasos que dependen del régimen se escriben como condicionales («Si el
+estudiante no tiene EPS»). Las pruebas cargan este archivo y comprueban que no tenga
+errores, que haya pasos para cada combinación de respuestas y que cada `texto` tenga
+dos frases como máximo.
 
 ### Directorio (`directorio/entidades.yaml`)
 

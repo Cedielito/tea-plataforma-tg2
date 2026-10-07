@@ -7,10 +7,11 @@ const administradores = require('../../datos/repositorios/administradores');
 const contenidos = require('../../datos/repositorios/contenidos');
 const { archivosPorSlug } = require('../../datos/sincronizacionContenidos');
 const { leerCambiosContenido, validarCambioDeSlug } = require('../../dominio/edicionContenido');
+const { crearRutasAdminPasosRuta } = require('./adminPasosRuta');
 
 /**
  * Rutas del panel de administracion, todas detras de exigirSesion (ver
- * servidor.js). M-08, RF-09, RF-10, RS-05, RCN-01, RCN-02
+ * servidor.js). M-03, M-08, RF-09, RF-10, RS-05, RCN-01, RCN-02
  *
  * - GET    /sesion            administrador de la sesion
  * - DELETE /sesion            cerrar sesion (la borra de la base)
@@ -18,6 +19,7 @@ const { leerCambiosContenido, validarCambioDeSlug } = require('../../dominio/edi
  * - GET    /contenidos/:id    uno, con cuerpo y fuentes
  * - POST   /contenidos        crear (borrador o publicado)
  * - PATCH  /contenidos/:id    editar, publicar (estado: publicado) o despublicar (estado: borrador)
+ * - /pasos-ruta                pasos de la ruta de atencion (adminPasosRuta.js)
  *
  * Toda escritura va por los repositorios (crear, actualizar), asi que el
  * modelo rechaza publicar sin fuente ni fecha de revision (RCN-01, RCN-02).
@@ -106,6 +108,8 @@ function crearRutasAdmin({ produccion }) {
       }
     })
   );
+
+  rutas.use('/pasos-ruta', crearRutasAdminPasosRuta());
 
   return rutas;
 }
