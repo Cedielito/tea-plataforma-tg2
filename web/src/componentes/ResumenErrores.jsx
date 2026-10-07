@@ -1,7 +1,9 @@
 /**
- * Resumen de errores del editor (M-08; RA-03, RA-11). Aparece arriba del
- * formulario cuando el servidor no deja guardar, recibe el foco y enlaza a
- * cada campo con problema. El mensaje de cada campo se repite junto a él.
+ * Resumen de errores de los editores del panel y del formulario de contacto
+ * (M-06, M-08; RA-03, RA-11). Aparece arriba del formulario cuando no se
+ * puede guardar o enviar, recibe el foco y enlaza a cada campo con problema.
+ * El mensaje de cada campo se repite junto a él; un error sin campo (`id`
+ * vacío) se muestra como texto.
  */
 import { forwardRef, useId } from 'react';
 import { CircleAlert } from 'lucide-react';

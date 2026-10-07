@@ -1,7 +1,7 @@
 /**
- * Campo de formulario del panel (M-08; RA-03, RA-11): etiqueta visible, pista
- * opcional y el mensaje del servidor junto al campo, entre la etiqueta y el
- * control. El control recibe id, aria-describedby (pista y error) y
+ * Campo de formulario del panel y del formulario de contacto (M-06, M-08;
+ * RA-03, RA-11): etiqueta visible, pista opcional y el mensaje de error junto
+ * al campo, entre la etiqueta y el control. El control recibe id, aria-describedby (pista y error) y
  * aria-invalid; el error se marca con ícono y con la palabra «Error», no solo
  * con color.
  */

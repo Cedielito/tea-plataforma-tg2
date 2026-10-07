@@ -5,29 +5,42 @@ const { crearExigirSesion } = require('./autenticacion');
 const { crearRutasPublicas } = require('./rutas/publicas');
 const { crearRutasSesion } = require('./rutas/sesion');
 const { crearRutasAdmin } = require('./rutas/admin');
+const { crearRutasContacto } = require('./rutas/contacto');
+const { paginasFijas } = require('../datos/paginasFijas');
 
 /**
  * Servidor HTTP de la Fase I: estado del servicio, rutas publicas de
  * contenidos, preguntas frecuentes, recursos y buscador (T2), pasos de la
  * ruta (T5), directorio (T6), inicio de sesion y panel de administracion
- * (T4), con las preguntas frecuentes y los recursos (T7). Las rutas de
- * contacto se agregan en su tarea del backlog (T8).
+ * (T4), con las preguntas frecuentes y los recursos (T7), y el formulario de
+ * contacto, las paginas fijas y la bandeja de mensajes (T8).
  *
  * RS-05: todo /api/admin/* pasa primero por exigirSesion, sin excepciones
  * (tambien las rutas que no existen responden 401 sin sesion). El inicio de
  * sesion vive aparte, en POST /api/sesion.
  *
- * @param {{ahora?: () => Date, produccion?: boolean, registro?: Console}} opciones
- *   el reloj y el registro se pueden cambiar en las pruebas; `produccion`
- *   decide si la cookie de sesion lleva Secure (por defecto, NODE_ENV=production)
+ * RS-02: la IP de quien envia el formulario de contacto llega en
+ * X-Forwarded-For, a traves del reenvio de Vercel y del balanceador de Render
+ * (docs/despliegue.md). `trust proxy` con un numero cuenta los saltos desde
+ * la derecha: con 2 (Render y Vercel), req.ip es la direccion que escribio
+ * Vercel, y lo que el visitante agregue a la izquierda no cuenta. Se puede
+ * cambiar con la variable SALTOS_PROXY sin tocar el codigo.
+ *
+ * @param {{ahora?: () => Date, produccion?: boolean, registro?: Console,
+ *   saltosProxy?: number, paginas?: object}} opciones el reloj, el registro y
+ *   las paginas fijas se pueden cambiar en las pruebas; `produccion` decide si
+ *   la cookie de sesion lleva Secure (por defecto, NODE_ENV=production)
  */
 function crearServidor({
   ahora = () => new Date(),
   produccion = process.env.NODE_ENV === 'production',
-  registro = console
+  registro = console,
+  saltosProxy = leerSaltosProxy(process.env.SALTOS_PROXY),
+  paginas = paginasFijas
 } = {}) {
   const app = express();
   app.disable('x-powered-by');
+  app.set('trust proxy', saltosProxy);
   app.use(express.json({ limit: '256kb' }));
   app.use(cookieParser());
 
@@ -37,12 +50,23 @@ function crearServidor({
 
   app.use('/api/sesion', crearRutasSesion({ ahora, produccion, registro }));
   app.use('/api/admin', crearExigirSesion({ ahora, produccion }), crearRutasAdmin({ produccion }));
-  app.use('/api', crearRutasPublicas());
+  app.use('/api/contacto', crearRutasContacto({ ahora, paginas }));
+  app.use('/api', crearRutasPublicas({ paginas }));
 
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));
 
   app.use(manejarError);
   return app;
+}
+
+const SALTOS_PROXY_POR_DEFECTO = 2;
+
+/** SALTOS_PROXY: entero de 0 a 10; cualquier otro valor usa el de por defecto. */
+function leerSaltosProxy(valor) {
+  const numero = Number(valor);
+  return Number.isInteger(numero) && numero >= 0 && numero <= 10 && String(valor).trim() !== ''
+    ? numero
+    : SALTOS_PROXY_POR_DEFECTO;
 }
 
 const JSON_INVALIDO = 'Los datos enviados no son un JSON válido.';
@@ -62,4 +86,4 @@ function manejarError(err, _req, res, _next) {
   res.status(codigo).json({ error: mensaje });
 }
 
-module.exports = { crearServidor, manejarError, JSON_INVALIDO };
+module.exports = { crearServidor, manejarError, leerSaltosProxy, SALTOS_PROXY_POR_DEFECTO, JSON_INVALIDO };

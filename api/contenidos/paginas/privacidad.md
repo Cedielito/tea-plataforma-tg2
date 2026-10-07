@@ -2,9 +2,9 @@
 titulo: "Política de tratamiento de datos personales"
 slug: privacidad
 version: "1.0"
-vigenteDesde: "COMPLETAR: fecha de publicación (AAAA-MM-DD)"
+vigenteDesde: 2026-10-07
 textoAutorizacion: "Autorizo el tratamiento de mi correo y mi mensaje para que el equipo del proyecto responda mi consulta, y su almacenamiento en servidores fuera de Colombia, según la Política de tratamiento de datos personales (versión 1.0)."
-fechaRevision: 2026-10-06
+fechaRevision: 2026-10-07
 fuentes:
   - texto: "Congreso de la República de Colombia. Ley Estatutaria 1581 de 2012, disposiciones generales para la protección de datos personales. Artículos 5, 7, 8, 14, 15, 16 y 26."
     url: "https://normas.cra.gov.co/Gestor/Docs/ley_1581_2012.htm"
@@ -13,7 +13,7 @@ fuentes:
 ---
 Esta política explica qué datos personales recogemos en esta plataforma, para qué los usamos y cómo puedes ejercer tus derechos, según la Ley 1581 de 2012.
 
-**Versión 1.0.** Vigente desde el COMPLETAR: fecha de publicación.
+**Versión 1.0.** Vigente desde el 7 de octubre de 2026.
 
 ## Quién es el responsable
 

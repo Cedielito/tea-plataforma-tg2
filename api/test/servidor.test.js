@@ -1,6 +1,6 @@
 'use strict';
 const request = require('supertest');
-const { crearServidor, manejarError } = require('../src/api/servidor');
+const { crearServidor, manejarError, leerSaltosProxy, SALTOS_PROXY_POR_DEFECTO } = require('../src/api/servidor');
 
 describe('Servidor base de la Fase I', () => {
   const app = crearServidor();
@@ -34,6 +34,25 @@ describe('Servidor base de la Fase I', () => {
       .set('Content-Type', 'application/json')
       .send('{"mal": ');
     expect(res.status).toBe(400);
+  });
+});
+
+describe('RS-02 IP de quien consulta detras de Vercel y Render', () => {
+  test('SALTOS_PROXY acepta un entero de 0 a 10; si no, usa 2', () => {
+    expect(SALTOS_PROXY_POR_DEFECTO).toBe(2);
+    expect(leerSaltosProxy('3')).toBe(3);
+    expect(leerSaltosProxy('0')).toBe(0);
+    for (const valor of [undefined, '', ' ', 'dos', '1.5', '-1', '11']) expect(leerSaltosProxy(valor)).toBe(2);
+  });
+
+  test('con 2 saltos, req.ip es la direccion que escribio Vercel, contando desde la derecha', () => {
+    const app = crearServidor();
+    const confiar = app.get('trust proxy fn');
+    // La conexion llega del balanceador de Render (salto 0); la ultima de
+    // X-Forwarded-For es la de Vercel (salto 1); la anterior, la del visitante.
+    expect(confiar('10.0.0.1', 0)).toBe(true);
+    expect(confiar('76.76.21.1', 1)).toBe(true);
+    expect(confiar('203.0.113.7', 2)).toBe(false);
   });
 });
 

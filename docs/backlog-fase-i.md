@@ -21,7 +21,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | ✅ Lista de 15 a 30 entidades públicas para el directorio con fuente | Hecha: 23 verificadas (`api/contenidos/directorio/`); Santiago las revisa | 14 oct | T6 |
 | ✅ Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Hechos: 18 pasos (`api/contenidos/ruta/`); Santiago los revisa | 13 oct | T5 |
 | ✅ 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Hechos: 6 recursos y 12 preguntas (`api/contenidos/recursos/` y `preguntas/`); Santiago los revisa | 15 oct | T7 |
-| Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Ambos | Antes de fusionar T8 | T8 |
+| ✅ Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Hecha: vigente desde el 7 de octubre de 2026; si T8 se fusiona otro día, se cambia antes de fusionar | Antes de fusionar T8 | T8 |
 | Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
 | Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
 
@@ -37,7 +37,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T5 ✅ | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
 | T6 ✅ | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
 | T7 ✅ | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
-| T8 | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
+| T8 ✅ | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
 | T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
 | T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones | RA-01 a RA-11 | 3 |
 | T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-15 y su ejecución | C1 | 3 |
@@ -50,6 +50,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T8 | Comprobar en el entorno desplegado el límite de envíos por IP (pasos en `docs/despliegue.md`, «Formulario de contacto») y ajustar `SALTOS_PROXY` en Render si hace falta. El documento debe reflejar que los mensajes se suprimen a los 180 días (seis meses de 30 días: unos días antes de cumplirse los seis meses de calendario, nunca después) y que en el Cuadro 13 la versión de la autorización se llama `versionPolitica`. | M-06, RS-02, RS-04 |
 | T7 | El documento debe reflejar lo que cambió con T7. En el Cuadro 13, `pregunta_frecuente` y `recurso` llevan además un identificador (`slug`), y en `pregunta_frecuente` el orden es obligatorio. En el Cuadro B.1, la tarea T7 («¿A quién debo consultar primero?») se cumple desplegando la pregunta en `/preguntas-frecuentes` o desde el buscador, que enlaza a la pregunta abierta. | M-05, RF-06, RF-07 |
 | T6 | El documento debe reflejar lo que cambió con T6. En el Cuadro B.1, la tarea T4 de la prueba de usabilidad («Aplica el filtro de ciudad y abre un registro») ya no aplica: el directorio no tiene página de detalle y cada tarjeta muestra todos los datos (lo ajusta el equipo). En el Cuadro 13, `entidad_directorio` lleva además descripción, fuentes, estado de publicación y la marca de profesional independiente. | M-04, RF-05, RS-07 |
 | T4 | Las páginas de S1, S3, S4 y S5 muestran un solo contenido, con un slug fijo (`web/src/secciones.js`). Un contenido nuevo en esas secciones, creado desde el panel, no aparece en el sitio: el buscador lo encuentra, pero su enlace lleva a la página fija de la sección. Por ahora el editor lo avisa. Resolver antes de cargar contenidos nuevos en esas secciones (por ejemplo, una ruta `/contenidos/:slug` o mostrar todos los contenidos de la sección). | M-02, RF-01, RF-02, RF-10 |
@@ -219,7 +220,16 @@ T3, buscando por id; los modelos de T2 necesitan ese campo identificador.
 Propón el plan antes de escribir código.
 ```
 
-### T8 — Contacto y privacidad
+### T8 — Contacto y privacidad ✅
+Hecha. Cambios frente al prompt: la política y «Acerca de» no van a la base: la API
+las lee de `api/contenidos/paginas/` al arrancar y las sirve en `/api/paginas/:slug`; un
+archivo que dice `COMPLETAR` no se publica. El servidor rechaza cualquier campo además
+de correo, mensaje, autorización y versión, y responde 409 si la versión enviada no es
+la vigente. Límite de 5 envíos por IP cada 15 minutos y 40 por hora en total, con
+`trust proxy` = 2 (variable `SALTOS_PROXY`). La supresión a los 6 meses es un índice TTL
+de MongoDB de 180 días, no una tarea programada. La bandeja está en `/admin/mensajes` y
+Preguntas frecuentes termina con un enlace al contacto. Decisión registrada en
+`docs/decisiones/0006-mensajes-contacto.md`.
 ```
 Lee CLAUDE.md. Tarea T8, rama feat/contacto.
 

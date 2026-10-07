@@ -13,14 +13,18 @@
  *   Layout al navegar, porque los datos llegan después. Un ancla que no
  *   corresponde a ninguna pregunta se ignora.
  * - Sin animaciones ni temporizadores.
+ * - Al final, «¿No encontraste tu respuesta? Escríbenos» lleva al formulario
+ *   de contacto (M-06, RF-08; tarea T8 de la prueba de usabilidad).
  */
 import { useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { Mail } from 'lucide-react';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import { precargarMarkdown } from '../componentes/Markdown.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
+import { RUTA_CONTACTO_WEB } from '../secciones.js';
 import PreguntaDesplegable from './PreguntaDesplegable.jsx';
 import { RUTA_PREGUNTAS, preguntaDelAncla } from './anclaPregunta.js';
 
@@ -85,6 +89,11 @@ export default function PreguntasFrecuentes({ seccion }) {
           sinContenido="Todavía no hay preguntas frecuentes publicadas."
         />
       )}
+
+      <p className="enlace-contacto">
+        <Mail aria-hidden="true" />
+        <Link to={RUTA_CONTACTO_WEB}>¿No encontraste tu respuesta? Escríbenos</Link>
+      </p>
     </div>
   );
 }

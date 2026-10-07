@@ -8,13 +8,18 @@
  * respuesta es 502, 503 o 504, o la red falla, se reintenta una sola vez, de
  * inmediato y sin temporizadores. Si vuelve a fallar, la página ofrece
  * «Intentar de nuevo».
+ *
+ * El formulario de contacto (M-06, RS-02) envía con enviarJson, que nunca
+ * reintenta solo: un envío repetido guardaría dos veces el mismo mensaje.
  */
 
 export class ErrorApi extends Error {
-  constructor(estado) {
+  /** @param {object|null} cuerpo respuesta de la API ({ error, campos, ... }), si la trae */
+  constructor(estado, cuerpo = null) {
     super(`La API respondió ${estado}`);
     this.name = 'ErrorApi';
     this.estado = estado;
+    this.cuerpo = cuerpo;
   }
 }
 
@@ -36,4 +41,19 @@ export async function obtenerJson(ruta, { signal } = {}) {
     if (signal?.aborted || !esReintentable(error)) throw error;
     return pedir(ruta, signal);
   }
+}
+
+/**
+ * POST con JSON, sin reintento. Una respuesta de error lanza ErrorApi con el
+ * cuerpo de la API (mensaje y errores por campo); una falla de red, TypeError.
+ */
+export async function enviarJson(ruta, datos) {
+  const respuesta = await fetch(ruta, {
+    method: 'POST',
+    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos)
+  });
+  const cuerpo = await respuesta.json().catch(() => null);
+  if (!respuesta.ok) throw new ErrorApi(respuesta.status, cuerpo);
+  return cuerpo;
 }

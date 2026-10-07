@@ -11,10 +11,12 @@ const { crearRutasAdminPasosRuta } = require('./adminPasosRuta');
 const { crearRutasAdminDirectorio } = require('./adminDirectorio');
 const { crearRutasAdminPreguntas } = require('./adminPreguntas');
 const { crearRutasAdminRecursos } = require('./adminRecursos');
+const { crearRutasAdminMensajes } = require('./adminMensajes');
 
 /**
  * Rutas del panel de administracion, todas detras de exigirSesion (ver
- * servidor.js). M-03, M-04, M-05, M-08, RF-09, RF-10, RS-05, RCN-01, RCN-02
+ * servidor.js). M-03, M-04, M-05, M-06, M-08, RF-09, RF-10, RF-11, RS-04, RS-05,
+ * RCN-01, RCN-02
  *
  * - GET    /sesion            administrador de la sesion
  * - DELETE /sesion            cerrar sesion (la borra de la base)
@@ -26,6 +28,7 @@ const { crearRutasAdminRecursos } = require('./adminRecursos');
  * - /directorio                entidades del directorio (adminDirectorio.js)
  * - /preguntas                 preguntas frecuentes (adminPreguntas.js)
  * - /recursos                  recursos descargables y enlaces (adminRecursos.js)
+ * - /mensajes                  bandeja de mensajes de contacto (adminMensajes.js)
  *
  * Toda escritura va por los repositorios (crear, actualizar), asi que el
  * modelo rechaza publicar sin fuente ni fecha de revision (RCN-01, RCN-02).
@@ -119,6 +122,7 @@ function crearRutasAdmin({ produccion }) {
   rutas.use('/directorio', crearRutasAdminDirectorio());
   rutas.use('/preguntas', crearRutasAdminPreguntas());
   rutas.use('/recursos', crearRutasAdminRecursos());
+  rutas.use('/mensajes', crearRutasAdminMensajes());
 
   return rutas;
 }

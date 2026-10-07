@@ -1,7 +1,7 @@
 ---
 titulo: "Acerca de esta plataforma"
 slug: acerca-de
-fechaRevision: 2026-10-06
+fechaRevision: 2026-10-07
 fuentes:
   - texto: "World Wide Web Consortium (W3C). Web Content Accessibility Guidelines (WCAG) 2.1. 2018."
     url: "https://www.w3.org/TR/WCAG21/"
@@ -34,7 +34,7 @@ En la parte superior de cada página puedes cambiar el tamaño de la letra, acti
 
 ## Privacidad
 
-Para usar la plataforma no tienes que registrarte, y no usamos cookies de seguimiento. Solo guardamos datos si nos escribes por el formulario de contacto. Los detalles están en la **Política de privacidad**.
+Para usar la plataforma no tienes que registrarte, y no usamos cookies de seguimiento. Solo guardamos datos si nos escribes por el formulario de contacto. Los detalles están en la [Política de privacidad](/privacidad).
 
 ## Quiénes la hacen
 
@@ -44,4 +44,4 @@ No es un servicio de salud ni un canal oficial de la Universidad.
 
 ## Contacto
 
-Si tienes una pregunta o una sugerencia, escríbenos por el formulario de **Contacto**.
+Si tienes una pregunta o una sugerencia, escríbenos por el formulario de [Contacto](/contacto).

@@ -18,6 +18,8 @@ import './estilos/ruta.css';
 import './estilos/directorio.css';
 import './estilos/recursos.css';
 import './estilos/preguntas.css';
+import './estilos/formularios.css';
+import './estilos/contacto.css';
 
 import App from './App.jsx';
 

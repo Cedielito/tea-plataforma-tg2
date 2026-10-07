@@ -24,9 +24,9 @@ import Markdown, { precargarMarkdown } from '../componentes/Markdown.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import { fechaRevision } from '../utilidades/formato.js';
 import { rutaDeContenido } from '../secciones.js';
-import Campo from './Campo.jsx';
+import Campo from '../componentes/Campo.jsx';
 import EditorFuentes from './EditorFuentes.jsx';
-import ResumenErrores from './ResumenErrores.jsx';
+import ResumenErrores from '../componentes/ResumenErrores.jsx';
 import SesionVencida from './SesionVencida.jsx';
 import { AccionesEditor, AvisoArchivo, CampoFechaRevision, EtiquetaEstado } from './PiezasEditor.jsx';
 import {
