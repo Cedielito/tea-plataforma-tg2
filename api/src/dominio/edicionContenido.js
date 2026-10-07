@@ -77,17 +77,18 @@ function leerCambiosContenido(cuerpo) {
 }
 
 /**
- * El slug de una pagina que viene de api/contenidos no cambia desde el panel:
- * la carga automatica busca por slug y crearia un duplicado.
+ * El slug de lo que viene de api/contenidos no cambia desde el panel: la carga
+ * automatica busca por slug y crearia un duplicado.
  * @param {string} slugActual
- * @param {object} cambios resultado de leerCambiosContenido
+ * @param {object} cambios resultado de leerCambiosContenido (o de otro editor)
  * @param {string|null} archivo nombre del archivo de origen, si lo tiene
+ * @param {(archivo: string) => string} mensaje texto del error
  * @returns {string|null} mensaje de error
  */
-function validarCambioDeSlug(slugActual, cambios, archivo) {
+function validarCambioDeSlug(slugActual, cambios, archivo, mensaje = MENSAJES.SLUG_DE_ARCHIVO) {
   if (!archivo || !tiene(cambios, 'slug')) return null;
   const nuevo = typeof cambios.slug === 'string' ? cambios.slug.trim().toLowerCase() : '';
-  return nuevo === slugActual ? null : MENSAJES.SLUG_DE_ARCHIVO(archivo);
+  return nuevo === slugActual ? null : mensaje(archivo);
 }
 
-module.exports = { MENSAJES, leerCambiosContenido, validarCambioDeSlug };
+module.exports = { MENSAJES, leerCambiosContenido, leerFuentes, validarCambioDeSlug };

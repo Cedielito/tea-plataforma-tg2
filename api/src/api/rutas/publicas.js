@@ -7,14 +7,19 @@ const { esSlugValido } = require('../../dominio/slug');
 const contenidos = require('../../datos/repositorios/contenidos');
 const preguntas = require('../../datos/repositorios/preguntas');
 const recursos = require('../../datos/repositorios/recursos');
+const pasosRuta = require('../../datos/repositorios/pasosRuta');
 
 /**
- * Rutas publicas de solo lectura. M-01, M-02, M-05, RF-02, RF-03, RF-06, RF-07,
- * RCN-01, RCN-02, RS-01
+ * Rutas publicas de solo lectura. M-01, M-02, M-03, M-05, RF-02, RF-03, RF-04,
+ * RF-06, RF-07, RCN-01, RCN-02, RS-01
  *
  * Solo devuelven lo publicado, con sus fuentes y su fecha de revision. No piden
  * registro ni guardan nada de quien consulta. Las rutas de escritura van en
  * /api/admin y llegan con la autenticacion de T4.
+ *
+ * /pasos-ruta devuelve todos los pasos publicados y no recibe respuestas: la
+ * guia elige en el navegador los que corresponden (RF-04, RS-01). Si llegan
+ * parametros en la consulta, se ignoran.
  */
 
 const NO_ENCONTRADO = 'Contenido no encontrado.';
@@ -52,6 +57,13 @@ function crearRutasPublicas() {
     '/recursos',
     envolver(async (_req, res) => {
       res.json(await recursos.listarPublicados());
+    })
+  );
+
+  rutas.get(
+    '/pasos-ruta',
+    envolver(async (_req, res) => {
+      res.json(await pasosRuta.listarPublicados());
     })
   );
 

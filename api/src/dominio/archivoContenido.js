@@ -120,4 +120,12 @@ function decidirAccion(fechaArchivo, existente) {
   return fechaArchivo > fechaBase ? ACCIONES.ACTUALIZAR : ACCIONES.OMITIR;
 }
 
-module.exports = { CAMPOS, ACCIONES, MENSAJES, leerArchivoContenido, decidirAccion };
+module.exports = {
+  CAMPOS,
+  ACCIONES,
+  MENSAJES,
+  leerArchivoContenido,
+  decidirAccion,
+  esFechaDeCalendario,
+  erroresDeFuentes
+};

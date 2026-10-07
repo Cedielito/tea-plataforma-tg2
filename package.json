@@ -4,8 +4,8 @@
   "description": "Plataforma web de información y orientación sobre el TEA para familias y docentes en Colombia (Fase I)",
   "workspaces": ["api", "web"],
   "scripts": {
-    "test": "npm test -w api",
-    "test:cov": "npm run test:cov -w api",
+    "test": "npm test -w api && npm test -w web",
+    "test:cov": "npm run test:cov -w api && npm test -w web",
     "dev:api": "npm run dev -w api",
     "dev:web": "npm run dev -w web",
     "build:web": "npm run build -w web"

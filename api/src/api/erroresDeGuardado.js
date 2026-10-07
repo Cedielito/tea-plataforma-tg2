@@ -4,6 +4,7 @@ const { MENSAJES: MENSAJES_PUBLICACION } = require('../dominio/publicacion');
 
 /**
  * Respuesta del panel cuando el modelo rechaza guardar. M-08, RF-10, RCN-01, RCN-02
+ * La usan el editor de contenidos y el de pasos de la ruta.
  *
  * Devuelve un mensaje por campo ({ campos: { fuentes: '...' } }) para que el
  * editor lo muestre junto a cada uno. Los mensajes son los de los esquemas y
@@ -14,6 +15,7 @@ const { MENSAJES: MENSAJES_PUBLICACION } = require('../dominio/publicacion');
 const MENSAJES = Object.freeze({
   REVISA_CAMPOS: 'No se pudo guardar. Revisa los campos marcados.',
   SLUG_REPETIDO: 'Ya existe otro contenido con este slug. Escribe uno distinto.',
+  SLUG_REPETIDO_PASO: 'Ya existe otro paso con este slug. Escribe uno distinto.',
   VALOR_INVALIDO: 'El valor no es válido.'
 });
 
@@ -34,13 +36,14 @@ function camposDe(error) {
 /**
  * Responde 422 (validacion) o 409 (slug repetido). Cualquier otro error se
  * vuelve a lanzar para que responda manejarError, sin exponer detalles.
+ * @param {{slugRepetido?: string}} opciones mensaje del slug repetido en cada editor
  */
-function responderErrorDeGuardado(error, res) {
+function responderErrorDeGuardado(error, res, { slugRepetido = MENSAJES.SLUG_REPETIDO } = {}) {
   if (error instanceof mongoose.Error.ValidationError) {
     return res.status(422).json({ error: MENSAJES.REVISA_CAMPOS, campos: camposDe(error) });
   }
   if (error && error.code === 11000) {
-    return res.status(409).json({ error: MENSAJES.REVISA_CAMPOS, campos: { slug: MENSAJES.SLUG_REPETIDO } });
+    return res.status(409).json({ error: MENSAJES.REVISA_CAMPOS, campos: { slug: slugRepetido } });
   }
   throw error;
 }

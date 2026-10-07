@@ -2,10 +2,11 @@
 const { Schema } = require('mongoose');
 const { ESTADOS } = require('../../dominio/catalogos');
 const { MENSAJES, esUrlSegura, validarPublicacion } = require('../../dominio/publicacion');
+const { PATRON_SLUG, LARGO_MAXIMO, generarSlug } = require('../../dominio/slug');
 
 /**
  * Piezas comunes de los esquemas que se publican: contenido,
- * pregunta_frecuente y recurso (Cuadro 13). RCN-01, RCN-02, RF-10
+ * pregunta_frecuente, recurso y paso_ruta (Cuadro 13). RCN-01, RCN-02, RF-10
  */
 
 /**
@@ -16,6 +17,30 @@ const aNFC = (valor) => (typeof valor === 'string' ? valor.normalize('NFC') : va
 
 function texto(opciones = {}) {
   return { type: String, trim: true, set: aNFC, ...opciones };
+}
+
+/**
+ * Identificador legible y unico. Los archivos de api/contenidos lo llaman
+ * `slug` (paginas) o `id` (listas YAML); en la base siempre es `slug`, para no
+ * confundirlo con el _id de MongoDB que usan el panel y sus rutas.
+ */
+function campoSlug() {
+  return {
+    type: String,
+    trim: true,
+    lowercase: true,
+    unique: true,
+    required: [true, 'El slug es obligatorio.'],
+    maxlength: [LARGO_MAXIMO, `El slug puede tener como máximo ${LARGO_MAXIMO} caracteres.`],
+    match: [PATRON_SLUG, 'El slug solo puede tener letras sin tildes, números y guiones.']
+  };
+}
+
+/** Plugin: si no llega un slug, se genera a partir del título. */
+function slugDesdeTitulo(schema) {
+  schema.pre('validate', function completarSlug() {
+    if (!this.slug && this.titulo) this.slug = generarSlug(this.titulo);
+  });
 }
 
 const sinVacio = (valor) => (typeof valor === 'string' && valor.trim() === '' ? undefined : valor);
@@ -76,4 +101,12 @@ function publicable(schema) {
   });
 }
 
-module.exports = { texto, esquemaFuente, publicable, ESCRITURAS_DIRECTAS, MENSAJE_ESCRITURA_DIRECTA };
+module.exports = {
+  texto,
+  campoSlug,
+  slugDesdeTitulo,
+  esquemaFuente,
+  publicable,
+  ESCRITURAS_DIRECTAS,
+  MENSAJE_ESCRITURA_DIRECTA
+};

@@ -1,9 +1,9 @@
 'use strict';
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const mongoose = require('mongoose');
 const { Contenido } = require('./modelos');
 const contenidos = require('./repositorios/contenidos');
+const { describirError: describir, resumirInforme } = require('./informeCarga');
 const { ACCIONES, leerArchivoContenido, decidirAccion } = require('../dominio/archivoContenido');
 
 /**
@@ -28,16 +28,7 @@ const DIRECTORIO_CONTENIDOS = path.join(__dirname, '..', '..', 'contenidos');
 /** Los textos son los .md de la carpeta; README.md la documenta. */
 const esArchivoDeContenido = (nombre) => nombre.endsWith('.md') && nombre.toLowerCase() !== 'readme.md';
 
-/** Mensaje legible de un error al guardar: validacion, slug repetido u otro. */
-function describirError(error) {
-  if (error instanceof mongoose.Error.ValidationError) {
-    return Object.values(error.errors)
-      .map((detalle) => detalle.message)
-      .join(' ');
-  }
-  if (error && error.code === 11000) return 'Ya existe otro contenido con el mismo slug.';
-  return error && error.message ? error.message : String(error);
-}
+const describirError = (error) => describir(error, 'Ya existe otro contenido con el mismo slug.');
 
 /** Lee la carpeta y separa los archivos que se pueden cargar de los que tienen errores. */
 async function leerCarpeta(directorio) {
@@ -114,18 +105,6 @@ function archivosPorSlug(directorio = DIRECTORIO_CONTENIDOS) {
     indicesDeArchivos.set(directorio, indice);
   }
   return indicesDeArchivos.get(directorio);
-}
-
-const contar = (cantidad, singular, plural) => `${cantidad} ${cantidad === 1 ? singular : plural}`;
-
-/** «Contenidos: 0 creados, 1 actualizado, 7 sin cambios, 0 con errores.» */
-function resumirInforme({ creados, actualizados, sinCambios, errores }) {
-  return [
-    `Contenidos: ${contar(creados.length, 'creado', 'creados')}`,
-    contar(actualizados.length, 'actualizado', 'actualizados'),
-    `${sinCambios.length} sin cambios`,
-    `${contar(errores.length, 'con error', 'con errores')}.`
-  ].join(', ');
 }
 
 /**

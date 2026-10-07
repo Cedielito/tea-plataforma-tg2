@@ -47,6 +47,10 @@ describe('RS-05 toda ruta /api/admin exige sesion', () => {
     ['patch', '/api/admin/contenidos/66f000000000000000000000'],
     ['put', '/api/admin/contenidos/66f000000000000000000000'],
     ['delete', '/api/admin/contenidos/66f000000000000000000000'],
+    ['get', '/api/admin/pasos-ruta'],
+    ['post', '/api/admin/pasos-ruta'],
+    ['get', '/api/admin/pasos-ruta/66f000000000000000000000'],
+    ['patch', '/api/admin/pasos-ruta/66f000000000000000000000'],
     ['get', '/api/admin/ruta-que-no-existe']
   ];
 

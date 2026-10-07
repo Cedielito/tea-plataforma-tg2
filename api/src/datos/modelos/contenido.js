@@ -2,8 +2,7 @@
 const mongoose = require('mongoose');
 const { SECCIONES, TRAMOS_EDAD } = require('../../dominio/catalogos');
 const { MENSAJES } = require('../../dominio/contenidos');
-const { PATRON_SLUG, LARGO_MAXIMO, generarSlug } = require('../../dominio/slug');
-const { texto, publicable } = require('./comunes');
+const { texto, campoSlug, slugDesdeTitulo, publicable } = require('./comunes');
 
 /**
  * Coleccion `contenido` (Cuadro 13): paginas de las secciones S1 a S5.
@@ -15,15 +14,7 @@ const { texto, publicable } = require('./comunes');
 const esquema = new mongoose.Schema(
   {
     titulo: texto({ required: [true, 'El título es obligatorio.'] }),
-    slug: {
-      type: String,
-      trim: true,
-      lowercase: true,
-      unique: true,
-      required: [true, 'El slug es obligatorio.'],
-      maxlength: [LARGO_MAXIMO, `El slug puede tener como máximo ${LARGO_MAXIMO} caracteres.`],
-      match: [PATRON_SLUG, 'El slug solo puede tener letras sin tildes, números y guiones.']
-    },
+    slug: campoSlug(),
     seccion: {
       type: String,
       required: [true, 'La sección es obligatoria.'],
@@ -40,10 +31,6 @@ const esquema = new mongoose.Schema(
 );
 
 esquema.plugin(publicable);
-
-/** Si no llega un slug, se genera a partir del título. */
-esquema.pre('validate', function completarSlug() {
-  if (!this.slug && this.titulo) this.slug = generarSlug(this.titulo);
-});
+esquema.plugin(slugDesdeTitulo);
 
 module.exports = mongoose.model('Contenido', esquema);

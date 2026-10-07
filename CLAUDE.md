@@ -18,6 +18,8 @@ consentimiento parental y el asentimiento son de la **Fase II** y viven solo en 
   (`web/vercel.json`) y Vite a `localhost:3000`. Sin CORS ni URL de la API en
   variables. Detalles en `docs/despliegue.md`.
 - Pruebas: Jest + supertest + mongodb-memory-server. Cobertura mínima 70 % (CI).
+  La lógica pura de `web/` (por ejemplo, el filtro de la ruta) se prueba con el
+  ejecutor de Node (`node --test`, archivos `web/src/**/*.test.js`), sin dependencias.
 - Monorepo con workspaces de npm.
 
 ## Módulos (códigos del documento de tesis)
@@ -92,11 +94,14 @@ api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
+api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
+                     slug (datos/sincronizacionListas.js)
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
-web/src/admin/       panel de administración (M-08): sesión, lista y editor
+web/src/ruta/        guía de la ruta (M-03): preguntas, filtro en el navegador y final
+web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
@@ -109,8 +114,8 @@ Se ejecutan desde la raíz del repositorio.
 
 ```
 npm install          instala api y web (workspaces)
-npm test             pruebas del backend
-npm run test:cov     pruebas con cobertura; el umbral mínimo es 70 %
+npm test             pruebas del backend (Jest) y de web/ (node --test)
+npm run test:cov     lo mismo, con la cobertura del backend; el umbral mínimo es 70 %
 npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env);
                      al arrancar carga los textos de api/contenidos
 npm run dev:web      interfaz en http://localhost:5173 (proxy de /api a la API)
@@ -161,7 +166,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T4 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T5 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -215,4 +220,18 @@ En la web, `/admin` se descarga aparte (`web/src/admin/`), con su layout, noinde
 sin enlace desde la zona pública; si la sesión vence, el editor conserva lo escrito y
 pide entrar de nuevo. Pendiente detectado: contenidos nuevos de S1, S3, S4 y S5 no se
 ven en el sitio (ver backlog).
-Siguiente: T5 (`feat/ruta-atencion`). Ver `docs/backlog-fase-i.md`.
+
+Ruta de atención (T5, M-03): colección `paso_ruta` (`slug`, título, texto, `perfiles`,
+`tramos`, `regimenes`, `orden`, `tiposEntidad`, fuentes, fecha y estado). Los 18 pasos
+de `api/contenidos/ruta/pasos.yaml` se cargan al arrancar con
+`datos/sincronizacionListas.js` (`crearCargaDeLista`, que T6 y T7 reutilizan): el `id`
+del YAML se guarda como `slug`. `GET /api/pasos-ruta` devuelve todos los pasos
+publicados y no recibe respuestas. La guía va arriba en `/ruta-de-atencion`
+(`web/src/ruta/`): tres preguntas, una por pantalla, cada una en un `<form>` con
+`<fieldset>`; las respuestas viven solo en el estado de React (ni API, ni dirección, ni
+sessionStorage) y `filtroPasos.js` elige los pasos en el navegador. Los docentes tienen
+«No lo sé» en el régimen. Panel: `/admin/ruta` (lista y editor) sobre
+`GET|POST /api/admin/pasos-ruta` y `GET|PATCH /api/admin/pasos-ruta/:id`; los dos
+editores comparten `admin/edicion.js` y `admin/PiezasEditor.jsx`. Las entidades junto a
+cada paso llegan con T6.
+Siguiente: T6 (`feat/directorio`). Ver `docs/backlog-fase-i.md`.

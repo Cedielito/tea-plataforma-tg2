@@ -1,9 +1,10 @@
 /**
- * Secciones y tramos de edad que usa el panel (M-08, RF-10). Salen de
- * secciones.js, la misma fuente de la navegación pública, para que los
- * nombres coincidan con los del sitio.
+ * Secciones, tramos de edad y catálogos de la ruta que usa el panel (M-08,
+ * RF-10). Salen de secciones.js y catalogos.js, las mismas fuentes de la zona
+ * pública, para que los nombres coincidan con los del sitio.
  */
 import { SECCIONES, TRAMOS_EDAD } from '../secciones.js';
+import { PERFILES, REGIMENES, TIPOS_ENTIDAD } from '../catalogos.js';
 
 /** S1 a S5, en orden: código, nombre, ruta pública y slug fijo de su página (si tiene). */
 export const SECCIONES_CONTENIDO = SECCIONES.filter((s) => s.seccion).map(({ seccion, titulo, ruta, slug }) => ({
@@ -22,4 +23,10 @@ export const nombreSeccion = (codigo) => {
 
 export const etiquetaTramo = (valor) => TRAMOS_EDAD.find((t) => t.valor === valor)?.etiqueta ?? null;
 
-export { TRAMOS_EDAD };
+/** «a», «a y b», «a, b y c». */
+export function unirConY(partes) {
+  if (partes.length <= 1) return partes.join('');
+  return `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}`;
+}
+
+export { TRAMOS_EDAD, PERFILES, REGIMENES, TIPOS_ENTIDAD };

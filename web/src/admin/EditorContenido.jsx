@@ -12,28 +12,37 @@
  *   reemplazar lo que se guarde aquí y no deja cambiar el slug.
  * - Si la sesión vence, el formulario sigue montado con lo escrito
  *   (SesionVencida.jsx) y se puede guardar al volver a entrar.
+ *
+ * El guardado, los errores y las piezas que comparte con el editor de pasos
+ * de la ruta están en edicion.js y PiezasEditor.jsx.
  */
-import { useEffect, useId, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, CalendarCheck, Eye, EyeOff, FileText } from 'lucide-react';
+import { useEffect, useId, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import Markdown, { precargarMarkdown } from '../componentes/Markdown.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
-import { ESTADOS } from '../api/useDatos.js';
-import { fechaRevision, hoyEnColombia } from '../utilidades/formato.js';
+import { fechaRevision } from '../utilidades/formato.js';
 import { rutaDeContenido } from '../secciones.js';
 import Campo from './Campo.jsx';
-import EditorFuentes, { ID_AGREGAR_FUENTE, filaVacia, idEnlaceFuente, idTextoFuente } from './EditorFuentes.jsx';
+import EditorFuentes from './EditorFuentes.jsx';
 import ResumenErrores from './ResumenErrores.jsx';
 import SesionVencida from './SesionVencida.jsx';
-import useDatosAdmin from './useDatosAdmin.js';
-import { EtiquetaEstado } from './ListaContenidos.jsx';
+import { AccionesEditor, AvisoArchivo, CampoFechaRevision, EtiquetaEstado } from './PiezasEditor.jsx';
+import {
+  BORRADOR,
+  PUBLICADO,
+  fuentesAFilas,
+  fuentesParaEnviar,
+  listaDelResumen,
+  useCargaEditor,
+  useEditor
+} from './edicion.js';
 import { SESION, useSesion } from './ContextoSesion.jsx';
-import { ErrorAdmin, mensajeDeError, pedirAdmin } from './clienteAdmin.js';
 import { SECCIONES_CONTENIDO, TRAMOS_EDAD, seccionDe } from './catalogos.js';
 
-const PUBLICADO = 'publicado';
-const BORRADOR = 'borrador';
+const RUTA_API = '/api/admin/contenidos';
+const RUTA_EDITOR = '/admin/contenidos';
 const SECCION_CON_TRAMOS = 'S2';
 
 const ID = Object.freeze({
@@ -61,27 +70,20 @@ const ORDEN_CAMPOS = ['titulo', 'slug', 'seccion', 'tramoEdad', 'cuerpo', 'fuent
 const NUEVO = Object.freeze({ _id: null, estado: BORRADOR, archivo: null });
 
 function aFormulario(contenido) {
-  const fuentes = contenido.fuentes?.length
-    ? contenido.fuentes.map(({ texto, url }) => filaVacia(texto ?? '', url ?? ''))
-    : [filaVacia()];
   return {
     titulo: contenido.titulo ?? '',
     slug: contenido.slug ?? '',
     seccion: contenido.seccion ?? '',
     tramoEdad: contenido.tramoEdad ?? '',
     cuerpo: contenido.cuerpo ?? '',
-    fuentes,
+    fuentes: fuentesAFilas(contenido.fuentes),
     fechaRevision: fechaRevision(contenido.fechaRevision)?.iso ?? ''
   };
 }
 
-/**
- * Datos para la API. Las filas de fuentes vacías no se envían; `filasEnviadas`
- * guarda a qué fila del formulario corresponde cada fuente enviada, para
- * ubicar los errores `fuentes.N.*` del servidor.
- */
+/** Datos para la API; las filas de fuentes vacías no se envían. */
 function aDatos(formulario, estado) {
-  const filasEnviadas = formulario.fuentes.filter((fila) => fila.texto.trim() !== '' || fila.url.trim() !== '');
+  const { filasEnviadas, fuentes } = fuentesParaEnviar(formulario.fuentes);
   return {
     filasEnviadas,
     datos: {
@@ -90,53 +92,11 @@ function aDatos(formulario, estado) {
       seccion: formulario.seccion,
       tramoEdad: formulario.seccion === SECCION_CON_TRAMOS ? formulario.tramoEdad || null : null,
       cuerpo: formulario.cuerpo,
-      fuentes: filasEnviadas.map(({ texto, url }) => ({ texto, url })),
+      fuentes,
       fechaRevision: formulario.fechaRevision || null,
       estado
     }
   };
-}
-
-/** Reparte los mensajes del servidor entre los campos y las filas de fuentes. */
-function repartirErrores(campos, filasEnviadas) {
-  const errores = { porCampo: {}, porFila: {}, otros: [] };
-  for (const [ruta, mensaje] of Object.entries(campos)) {
-    const fila = /^fuentes\.(\d+)\.(texto|url)$/.exec(ruta);
-    if (fila) {
-      const destino = filasEnviadas[Number(fila[1])];
-      if (destino) {
-        errores.porFila[destino.clave] = { ...errores.porFila[destino.clave], [fila[2]]: mensaje };
-        continue;
-      }
-    }
-    if (ORDEN_CAMPOS.includes(ruta)) errores.porCampo[ruta] = mensaje;
-    else errores.otros.push(mensaje);
-  }
-  return errores;
-}
-
-function listaDelResumen(errores, filas) {
-  const lista = [];
-  for (const campo of ORDEN_CAMPOS) {
-    if (campo === 'fuentes') {
-      if (errores.porCampo.fuentes) {
-        const destino = filas[0] ? idTextoFuente(filas[0].clave) : ID_AGREGAR_FUENTE;
-        lista.push({ id: destino, etiqueta: ETIQUETAS.fuentes, mensaje: errores.porCampo.fuentes });
-      }
-      filas.forEach((fila, indice) => {
-        const deLaFila = errores.porFila[fila.clave] ?? {};
-        if (deLaFila.texto) {
-          lista.push({ id: idTextoFuente(fila.clave), etiqueta: `Fuente ${indice + 1}`, mensaje: deLaFila.texto });
-        }
-        if (deLaFila.url) {
-          lista.push({ id: idEnlaceFuente(fila.clave), etiqueta: `Enlace de la fuente ${indice + 1}`, mensaje: deLaFila.url });
-        }
-      });
-    } else if (errores.porCampo[campo]) {
-      lista.push({ id: ID[campo], etiqueta: ETIQUETAS[campo], mensaje: errores.porCampo[campo] });
-    }
-  }
-  return [...lista, ...errores.otros.map((mensaje) => ({ id: null, etiqueta: '', mensaje }))];
 }
 
 function textoDeExito(anterior, nuevo) {
@@ -148,22 +108,16 @@ function textoDeExito(anterior, nuevo) {
     : 'Borrador guardado. Todavía no aparece en el sitio.';
 }
 
-function AvisoArchivo({ archivo }) {
+function AvisoArchivoContenido({ archivo }) {
   return (
-    <div role="note" className="aviso aviso-archivo">
-      <FileText aria-hidden="true" />
-      <div>
-        <p>
-          <strong>Esta página viene del archivo <code>api/contenidos/{archivo}</code> del repositorio.</strong>
-        </p>
-        <p>
-          Lo que guardes aquí se mantiene hasta que alguien actualice ese archivo con una fecha de revisión más
-          reciente. En ese momento, el archivo reemplaza tus cambios y vuelve a publicar la página, aunque la
-          hayas despublicado.
-        </p>
-        <p>Para que un cambio sea permanente, hazlo también en el archivo.</p>
-      </div>
-    </div>
+    <AvisoArchivo titulo={<>Esta página viene del archivo <code>api/contenidos/{archivo}</code> del repositorio.</>}>
+      <p>
+        Lo que guardes aquí se mantiene hasta que alguien actualice ese archivo con una fecha de revisión más
+        reciente. En ese momento, el archivo reemplaza tus cambios y vuelve a publicar la página, aunque la
+        hayas despublicado.
+      </p>
+      <p>Para que un cambio sea permanente, hazlo también en el archivo.</p>
+    </AvisoArchivo>
   );
 }
 
@@ -184,73 +138,34 @@ function NotaSlugFijo({ seccion, slug }) {
 }
 
 function FormularioContenido({ inicial }) {
-  const navigate = useNavigate();
-  const { pathname, state } = useLocation();
   const idPrevia = useId();
-  const resumen = useRef(null);
-  const [contenido, setContenido] = useState(inicial);
-  const [formulario, setFormulario] = useState(() => aFormulario(inicial));
-  const [errores, setErrores] = useState(null);
-  // Al crear se llega aquí con el mensaje del resultado: va arriba, junto al h1 que recibe el foco.
-  const [avisoCreacion, setAvisoCreacion] = useState(state?.mensaje ?? null);
-  const [resultado, setResultado] = useState(null);
   const [verPrevia, setVerPrevia] = useState(false);
-  const [enviando, setEnviando] = useState(false);
+  const editor = useEditor({
+    inicial,
+    aFormulario,
+    aDatos,
+    rutaApi: RUTA_API,
+    rutaEditor: RUTA_EDITOR,
+    ordenCampos: ORDEN_CAMPOS,
+    textoDeExito
+  });
+  const { registro: contenido, formulario, setFormulario, cambiar, errores, resultado, enviando, guardar } = editor;
 
   const publicado = contenido.estado === PUBLICADO;
   const deArchivo = Boolean(contenido.archivo);
-  const hoy = hoyEnColombia();
   const porCampo = errores?.porCampo ?? {};
-  const listaErrores = errores ? listaDelResumen(errores, formulario.fuentes) : [];
+  const listaErrores = errores
+    ? listaDelResumen(errores, formulario.fuentes, { orden: ORDEN_CAMPOS, ids: ID, etiquetas: ETIQUETAS })
+    : [];
 
   useEffect(precargarMarkdown, []);
-  useEffect(() => {
-    if (errores) resumen.current?.focus();
-  }, [errores]);
-  // El mensaje no se repite si se recarga la página.
-  useEffect(() => {
-    if (state?.mensaje) navigate(pathname, { replace: true, state: null });
-  }, [state, pathname, navigate]);
-
-  const cambiar = (campo) => (evento) => setFormulario((anterior) => ({ ...anterior, [campo]: evento.target.value }));
-
-  async function guardar(estado) {
-    if (enviando) return;
-    setEnviando(true);
-    setErrores(null);
-    setResultado(null);
-    setAvisoCreacion(null);
-    const { datos, filasEnviadas } = aDatos(formulario, estado);
-    try {
-      const guardado = contenido._id
-        ? await pedirAdmin(`/api/admin/contenidos/${contenido._id}`, { metodo: 'PATCH', datos })
-        : await pedirAdmin('/api/admin/contenidos', { metodo: 'POST', datos });
-      const mensaje = textoDeExito(contenido.estado, guardado.estado);
-      if (!contenido._id) {
-        navigate(`/admin/contenidos/${guardado._id}`, { replace: true, state: { mensaje } });
-        return;
-      }
-      setContenido(guardado);
-      setFormulario(aFormulario(guardado));
-      setResultado(mensaje);
-    } catch (error) {
-      // Sesión vencida: SesionVencida toma el foco y lo escrito se conserva.
-      if (error instanceof ErrorAdmin && error.estado === 401) return;
-      const campos = error instanceof ErrorAdmin ? error.campos : {};
-      const repartidos = repartirErrores(campos, filasEnviadas);
-      if (Object.keys(campos).length === 0) repartidos.otros.push(mensajeDeError(error));
-      setErrores(repartidos);
-    } finally {
-      setEnviando(false);
-    }
-  }
 
   const rutaPublica = publicado ? rutaDeContenido(contenido) : null;
 
   return (
     <>
-      {avisoCreacion && <p className="mensaje mensaje--exito">{avisoCreacion}</p>}
-      {deArchivo && <AvisoArchivo archivo={contenido.archivo} />}
+      {editor.avisoCreacion && <p className="mensaje mensaje--exito">{editor.avisoCreacion}</p>}
+      {deArchivo && <AvisoArchivoContenido archivo={contenido.archivo} />}
 
       <p className="editor__estado">
         Estado: <EtiquetaEstado estado={contenido.estado} />
@@ -264,7 +179,7 @@ function FormularioContenido({ inicial }) {
 
       {errores && (
         <ResumenErrores
-          ref={resumen}
+          ref={editor.resumen}
           titulo={listaErrores.length > 1 ? `No se pudo guardar: revisa ${listaErrores.length} campos` : 'No se pudo guardar'}
           errores={listaErrores}
         />
@@ -372,76 +287,34 @@ function FormularioContenido({ inicial }) {
           erroresFilas={errores?.porFila}
         />
 
-        <Campo
+        <CampoFechaRevision
           id={ID.fechaRevision}
-          etiqueta="Fecha de revisión"
-          indicacion="(obligatoria para publicar)"
+          valor={formulario.fechaRevision}
+          alCambiar={(fecha) => setFormulario((anterior) => ({ ...anterior, fechaRevision: fecha }))}
           error={porCampo.fechaRevision}
-          pista="Día en que se revisó el texto contra sus fuentes. No puede ser posterior a hoy."
-        >
-          {(props) => (
-            <div className="campo__fila">
-              <input
-                {...props}
-                className="campo__control campo__control--fecha"
-                type="date"
-                max={hoy}
-                value={formulario.fechaRevision}
-                onChange={cambiar('fechaRevision')}
-              />
-              <button
-                type="button"
-                className="boton boton-secundario"
-                onClick={() => setFormulario((anterior) => ({ ...anterior, fechaRevision: hoy }))}
-              >
-                <CalendarCheck aria-hidden="true" />
-                Usar la fecha de hoy
-              </button>
-            </div>
-          )}
-        </Campo>
+        />
 
-        <div className="editor__acciones">
-          <p className="campo__pista">
-            {publicado
+        <AccionesEditor
+          publicado={publicado}
+          pista={
+            publicado
               ? '«Guardar cambios» mantiene la página publicada. «Despublicar» guarda y la pasa a borrador: deja de aparecer en el sitio.'
-              : '«Publicar» guarda y la muestra en el sitio; exige fuente y fecha de revisión. «Guardar borrador» la guarda sin publicarla.'}
-          </p>
-          <div className="acciones">
-            <button type="button" className="boton boton-primario" onClick={() => guardar(PUBLICADO)}>
-              {publicado ? 'Guardar cambios' : 'Publicar'}
-            </button>
-            <button type="button" className="boton boton-secundario" onClick={() => guardar(BORRADOR)}>
-              {publicado ? 'Despublicar' : 'Guardar borrador'}
-            </button>
-          </div>
-          <p className="campo__pista">
-            La sesión se cierra si pasan 30 minutos sin guardar ni abrir otra página del panel. Si pasa, lo que
-            escribiste se conserva aquí y puedes volver a entrar para guardarlo.
-          </p>
-          <div role="status" className="editor__resultado">
-            {enviando && <p>Guardando…</p>}
-            {resultado && <p className="mensaje mensaje--exito">{resultado}</p>}
-          </div>
-        </div>
+              : '«Publicar» guarda y la muestra en el sitio; exige fuente y fecha de revisión. «Guardar borrador» la guarda sin publicarla.'
+          }
+          enviando={enviando}
+          resultado={resultado}
+          alPublicar={() => guardar(PUBLICADO)}
+          alGuardarBorrador={() => guardar(BORRADOR)}
+        />
       </form>
     </>
   );
 }
 
 export default function EditorContenido() {
-  const { id } = useParams();
   const { estado: estadoSesion } = useSesion();
-  const nuevo = !id;
+  const { esNuevo: nuevo, inicial, estado, reintentar } = useCargaEditor(RUTA_API, NUEVO);
   useTituloPagina(nuevo ? 'Nuevo contenido · Panel' : 'Editar contenido · Panel');
-  const { estado, datos, reintentar } = useDatosAdmin(nuevo ? null : `/api/admin/contenidos/${id}`);
-
-  // Lo que se cargó primero se conserva aunque los datos se vuelvan a pedir
-  // (por ejemplo, al iniciar sesión de nuevo): así no se pierde lo escrito.
-  const [inicial, setInicial] = useState(nuevo ? NUEVO : null);
-  useEffect(() => {
-    if (estado === ESTADOS.LISTO && datos && inicial?._id !== datos._id) setInicial(datos);
-  }, [estado, datos, inicial]);
 
   return (
     <div className="contenedor pagina pagina-admin">

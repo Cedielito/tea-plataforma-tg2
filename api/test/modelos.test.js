@@ -2,16 +2,18 @@
 const mongoose = require('mongoose');
 const { levantar, limpiar, bajar } = require('./ayudas/baseEnMemoria');
 const datos = require('./ayudas/datos');
-const { COLECCIONES, Administrador, Contenido, PreguntaFrecuente, Recurso } = require('../src/datos/modelos');
+const { COLECCIONES, Administrador, Contenido, PasoRuta, PreguntaFrecuente, Recurso } = require('../src/datos/modelos');
 const { MENSAJE_ESCRITURA_DIRECTA } = require('../src/datos/modelos/comunes');
 const { MENSAJES } = require('../src/dominio/publicacion');
 const repoContenidos = require('../src/datos/repositorios/contenidos');
 const repoPreguntas = require('../src/datos/repositorios/preguntas');
 const repoRecursos = require('../src/datos/repositorios/recursos');
+const repoPasosRuta = require('../src/datos/repositorios/pasosRuta');
+const { LISTAS, MENSAJES: MENSAJES_PASOS } = require('../src/dominio/pasosRuta');
 
 beforeAll(async () => {
   await levantar();
-  await Promise.all([Contenido.init(), PreguntaFrecuente.init(), Recurso.init(), Administrador.init()]);
+  await Promise.all([Contenido.init(), PreguntaFrecuente.init(), Recurso.init(), PasoRuta.init(), Administrador.init()]);
 });
 afterEach(limpiar);
 afterAll(bajar);
@@ -29,7 +31,8 @@ async function erroresAlGuardar(promesa) {
 const MODELOS = [
   ['contenido', Contenido, repoContenidos, datos.contenido],
   ['pregunta_frecuente', PreguntaFrecuente, repoPreguntas, datos.pregunta],
-  ['recurso', Recurso, repoRecursos, datos.recurso]
+  ['recurso', Recurso, repoRecursos, datos.recurso],
+  ['paso_ruta', PasoRuta, repoPasosRuta, datos.pasoRuta]
 ];
 
 describe.each(MODELOS)('RCN-01 y RCN-02 al guardar en la coleccion %s', (_nombre, Modelo, repo, ejemplo) => {
@@ -233,6 +236,75 @@ describe('RS-05 esquema de administrador', () => {
   test('el usuario es unico y se guarda en minusculas', async () => {
     expect((await nuevo('  Equipo.TEA ')).usuario).toBe('equipo.tea');
     await expect(nuevo('equipo.tea')).rejects.toMatchObject({ code: 11000 });
+  });
+});
+
+describe('Esquema de paso de la ruta', () => {
+  test('guarda los datos del paso y genera el slug a partir del titulo', async () => {
+    const doc = await repoPasosRuta.crear(datos.pasoRuta({ titulo: 'Habla con el niño, la niña o el adolescente' }));
+    expect(doc.slug).toBe('habla-con-el-nino-la-nina-o-el-adolescente');
+    expect(doc.toObject()).toMatchObject({
+      perfiles: ['familia'],
+      tramos: ['4-7', '8-12', '13-17'],
+      regimenes: ['contributivo', 'subsidiado', 'sin-afiliacion'],
+      orden: 40,
+      tiposEntidad: ['salud']
+    });
+  });
+
+  test('titulo y texto son obligatorios, aun en borrador', async () => {
+    const errores = await erroresAlGuardar(
+      repoPasosRuta.crear(datos.pasoRuta({ titulo: '', texto: '  ', slug: 'paso', estado: 'borrador' }))
+    );
+    expect(errores.titulo.message).toBe('El título es obligatorio.');
+    expect(errores.texto.message).toBe('El texto es obligatorio.');
+  });
+
+  test.each(['perfiles', 'tramos', 'regimenes'])('RF-04 %s necesita al menos un valor, aun en borrador', async (campo) => {
+    const errores = await erroresAlGuardar(repoPasosRuta.crear(datos.pasoRuta({ [campo]: [], estado: 'borrador' })));
+    expect(errores[campo].message).toBe(LISTAS[campo].vacia);
+  });
+
+  test.each([
+    ['perfiles', ['familia', 'estudiante']],
+    ['tramos', ['0-3']],
+    ['regimenes', ['especial']],
+    ['tiposEntidad', ['clinica-privada']]
+  ])('RF-04 %s solo acepta valores del catalogo', async (campo, valor) => {
+    const errores = await erroresAlGuardar(repoPasosRuta.crear(datos.pasoRuta({ [campo]: valor })));
+    expect(errores[campo].message).toBe(LISTAS[campo].invalida);
+  });
+
+  test('los tipos de entidad son opcionales', async () => {
+    const { tiposEntidad: _tipos, ...sinTipos } = datos.pasoRuta();
+    expect((await repoPasosRuta.crear(sinTipos)).tiposEntidad).toEqual([]);
+    expect((await repoPasosRuta.crear(datos.pasoRuta({ titulo: 'Otro', tiposEntidad: [] }))).tiposEntidad).toEqual([]);
+  });
+
+  test.each([
+    [null, MENSAJES_PASOS.ORDEN_OBLIGATORIO],
+    [-10, MENSAJES_PASOS.ORDEN_NEGATIVO],
+    [15.5, MENSAJES_PASOS.ORDEN_ENTERO]
+  ])('el orden %p se rechaza', async (orden, mensaje) => {
+    const errores = await erroresAlGuardar(repoPasosRuta.crear(datos.pasoRuta({ orden })));
+    expect(errores.orden.message).toBe(mensaje);
+  });
+
+  test('el slug es unico', async () => {
+    await repoPasosRuta.crear(datos.pasoRuta({ slug: 'familia-cita-eps' }));
+    await expect(repoPasosRuta.crear(datos.pasoRuta({ slug: 'familia-cita-eps' }))).rejects.toMatchObject({
+      code: 11000
+    });
+  });
+
+  test('listarPublicados devuelve solo lo publicado, por orden y sin _id', async () => {
+    await repoPasosRuta.crear(datos.pasoRuta({ titulo: 'Segundo', orden: 20 }));
+    await repoPasosRuta.crear(datos.pasoRuta({ titulo: 'Primero', orden: 10 }));
+    await repoPasosRuta.crear(datos.pasoRuta({ titulo: 'Borrador', orden: 5, estado: 'borrador' }));
+    const lista = await repoPasosRuta.listarPublicados();
+    expect(lista.map((paso) => paso.titulo)).toEqual(['Primero', 'Segundo']);
+    expect(lista[0]).not.toHaveProperty('_id');
+    expect(lista[0]).not.toHaveProperty('estado');
   });
 });
 

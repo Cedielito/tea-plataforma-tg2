@@ -100,7 +100,8 @@ textarea, select { font: inherit; color: inherit; }
 }
 textarea.campo__control { resize: vertical; }
 .campo__control--cuerpo { min-height: var(--alto-cuerpo-editor); }
-.campo__control--fecha { width: auto; max-width: var(--ancho-campo-fecha); }
+.campo__control--fecha,
+.campo__control--corto { width: auto; max-width: var(--ancho-campo-fecha); }
 .campo__control[readonly] { background: var(--color-superficie-suave); }
 .campo__control[aria-invalid="true"] {
   border: var(--borde-medio) solid var(--color-aviso-borde);
@@ -123,6 +124,9 @@ textarea.campo__control { resize: vertical; }
 .casilla input { width: var(--icono-pequeno); height: var(--icono-pequeno); accent-color: var(--color-primario); }
 
 .formulario .boton { align-self: flex-start; }
+
+/* Grupo de casillas (editor de pasos de la ruta): una fila que se parte si no cabe */
+.grupo-casillas__opciones { display: flex; flex-wrap: wrap; gap: 0 var(--espacio-3); }
 
 /* Inicio de sesión */
 .pagina-acceso .formulario-acceso {

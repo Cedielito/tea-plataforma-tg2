@@ -34,7 +34,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T2 ✅ | `feat/api-contenidos` | Modelos y API de contenidos, preguntas y recursos con fuente y fecha obligatorias | RCN-01, RCN-02, RF-10 | 1 |
 | T3 ✅ | `feat/paginas-contenido` | Páginas S1 a S5, filtro por edad y buscador | M-02, RF-02, RF-03, RCN-03, RCN-04 | 1 |
 | T4 ✅ | `feat/admin-auth` | Login del administrador y editor de contenidos | M-08, RF-09, RF-10, RS-05 | 1 |
-| T5 | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
+| T5 ✅ | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
 | T6 | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
 | T7 | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
 | T8 | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
@@ -50,6 +50,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T5 | La guía de la ruta muestra los pasos sin entidades. Con T6, mostrar junto a cada paso las entidades del directorio de sus `tiposEntidad` (`web/src/ruta/PasosParaTuCaso.jsx`); la guía no pregunta la ciudad, así que hay que decidir cómo filtrarlas sin enviar ni guardar respuestas (RS-01). | M-03, M-04, RF-04, RF-05 |
 | T4 | Las páginas de S1, S3, S4 y S5 muestran un solo contenido, con un slug fijo (`web/src/secciones.js`). Un contenido nuevo en esas secciones, creado desde el panel, no aparece en el sitio: el buscador lo encuentra, pero su enlace lleva a la página fija de la sección. Por ahora el editor lo avisa. Resolver antes de cargar contenidos nuevos en esas secciones (por ejemplo, una ruta `/contenidos/:slug` o mostrar todos los contenidos de la sección). | M-02, RF-01, RF-02, RF-10 |
 
 ---
@@ -144,7 +145,13 @@ Dependencias que autorizo: bcrypt (o bcryptjs) y cookie-parser.
 Propón el plan antes de escribir código.
 ```
 
-### T5 — Ruta de atención interactiva
+### T5 — Ruta de atención interactiva ✅
+Hecha. Cambios frente al prompt: la guía va arriba en `/ruta-de-atencion`, antes del
+texto de S4; el `id` de cada paso se guarda como `slug`, igual que en contenidos (T6 y
+T7 siguen el mismo patrón con `crearCargaDeLista` de `api/src/datos/sincronizacionListas.js`);
+los docentes tienen «No lo sé» en la pregunta del régimen, que muestra los pasos de todos
+los regímenes. Las entidades junto a cada paso quedan para T6. La lógica pura de `web/`
+se prueba con `node --test`, que corre con `npm test`.
 ```
 Lee CLAUDE.md y api/contenidos/README.md. Tarea T5, rama feat/ruta-atencion.
 
