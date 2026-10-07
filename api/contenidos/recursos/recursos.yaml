@@ -1,0 +1,70 @@
+# Recursos descargables y enlaces oficiales (M-05, RF-06). Colección recurso.
+#
+# - tipo: archivo (se descarga, por ejemplo un PDF) | enlace (página oficial)
+# - perfiles: familia | docente (al menos uno), para filtrar por perfil destinatario
+# Todos son documentos oficiales; la fuente es la entidad que los publica.
+- id: protocolo-minsalud-tea
+  titulo: "Protocolo clínico del Ministerio de Salud sobre el TEA"
+  descripcion: "Documento oficial de 2015 con los pasos para detectar, diagnosticar y atender el TEA en Colombia. Está escrito para profesionales de la salud."
+  tipo: archivo
+  url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  perfiles: [familia, docente]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: orientaciones-mineducacion
+  titulo: "Orientaciones para la atención educativa a estudiantes con discapacidad"
+  descripcion: "Guía del Ministerio de Educación sobre educación inclusiva, ajustes razonables y PIAR. Desde la página se descarga el documento en PDF, que es un archivo grande."
+  tipo: enlace
+  url: "https://www.mineducacion.gov.co/portal/men/Publicaciones/Guias/360293:Documento-de-orientaciones-tecnicas-administrativas-y-pedagogicas-para-la-atencion-educativa-a-estudiantes-con-discapacidad-en-el-marco-de-la-educacion-inclusiva"
+  perfiles: [docente, familia]
+  fuentes:
+    - texto: "Ministerio de Educación Nacional. Documento de orientaciones técnicas, administrativas y pedagógicas para la atención educativa a estudiantes con discapacidad en el marco de la educación inclusiva. Actualizado en 2020."
+      url: "https://www.mineducacion.gov.co/portal/men/Publicaciones/Guias/360293:Documento-de-orientaciones-tecnicas-administrativas-y-pedagogicas-para-la-atencion-educativa-a-estudiantes-con-discapacidad-en-el-marco-de-la-educacion-inclusiva"
+  fechaRevision: 2026-10-06
+
+- id: decreto-1421
+  titulo: "Decreto 1421 de 2017: educación inclusiva"
+  descripcion: "Norma que regula la atención educativa de estudiantes con discapacidad: matrícula, ajustes razonables y PIAR."
+  tipo: enlace
+  url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  perfiles: [docente, familia]
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: ley-2628
+  titulo: "Ley 2628 de 2026: atención integral de las personas con TEA"
+  descripcion: "Texto completo de la ley sancionada el 26 de agosto de 2026, con las medidas en salud, educación y apoyo a las familias."
+  tipo: enlace
+  url: "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=194131&dt=S"
+  perfiles: [familia, docente]
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 2628 de 2026, por medio de la cual se establecen medidas, servicios y mecanismos de atención integral para la protección e inclusión de las personas con TEA."
+      url: "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=194131&dt=S"
+  fechaRevision: 2026-10-06
+
+- id: oms-autismo
+  titulo: "Autismo: nota descriptiva de la OMS"
+  descripcion: "Información básica de la Organización Mundial de la Salud sobre el autismo: características, causas, intervenciones y derechos."
+  tipo: enlace
+  url: "https://www.who.int/es/news-room/fact-sheets/detail/autism-spectrum-disorders"
+  perfiles: [familia, docente]
+  fuentes:
+    - texto: "Organización Mundial de la Salud (OMS). Autismo. Nota descriptiva, 2025."
+      url: "https://www.who.int/es/news-room/fact-sheets/detail/autism-spectrum-disorders"
+  fechaRevision: 2026-10-06
+
+- id: lineas-salud-mental
+  titulo: "Líneas de atención en salud mental por departamento"
+  descripcion: "Directorio del Ministerio de Salud (agosto de 2025) con las líneas de orientación en salud mental de cada departamento."
+  tipo: archivo
+  url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  perfiles: [familia, docente]
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia. Agosto de 2025."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaRevision: 2026-10-06

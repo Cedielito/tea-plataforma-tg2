@@ -1,0 +1,126 @@
+# Preguntas frecuentes (M-05, RF-07). Colección pregunta_frecuente.
+#
+# Se muestran de menor a mayor `orden` (de 10 en 10, para poder intercalar) y
+# aparecen en el buscador (RF-02). Respuestas breves y literales (RCN-06), cada una
+# con su fuente y su fecha de revisión (RCN-01, RCN-02).
+- id: a-quien-consultar-primero
+  orden: 10
+  pregunta: "¿A quién debo consultar primero?"
+  respuesta: "Pide una cita en tu EPS, con medicina general o en la consulta de valoración integral, y cuenta lo que observas. No necesitas un diagnóstico para pedirla. Si hay señales de alerta, el protocolo del Ministerio de Salud recomienda remitir a pediatría y, si se mantiene la sospecha, a neuropediatría o a psiquiatría infantil."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+    - texto: "Ministerio de Salud y Protección Social. Resolución 3280 de 2018, lineamientos de la Ruta Integral de Atención para la Promoción y Mantenimiento de la Salud."
+      url: "https://normograma.supersalud.gov.co/compilacion/docs/resolucion_minsaludps_3280_2018.htm"
+  fechaRevision: 2026-10-06
+
+- id: la-plataforma-diagnostica
+  orden: 20
+  pregunta: "¿Esta plataforma puede decir si un niño o una niña es autista?"
+  respuesta: "No. Esta plataforma informa y orienta, pero no hace diagnósticos ni pruebas. Según el protocolo del Ministerio de Salud, el diagnóstico lo confirma un neuropediatra o un psiquiatra infantil, con la valoración de un psicólogo clínico y de un terapeuta de lenguaje."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social; IETS. Protocolo clínico para el diagnóstico, tratamiento y ruta de atención integral de niños y niñas con trastornos del espectro autista. 2015."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/DE/CA/Protocolo-TEA-final.pdf"
+  fechaRevision: 2026-10-06
+
+- id: sin-eps
+  orden: 30
+  pregunta: "¿Qué hago si el niño o la niña no tiene EPS?"
+  respuesta: "Pide la afiliación en la secretaría de salud de tu municipio, o en la IPS (clínica, hospital o centro de salud) cuando busques atención. Deben hacerla aunque no tengas la encuesta del SISBÉN: la encuesta se aplica después."
+  fuentes:
+    - texto: "Presidencia de la República de Colombia; Ministerio de Salud y Protección Social. Decreto 064 de 2020, sobre afiliados al régimen subsidiado y afiliación de oficio. Artículo 2.1.5.4 del Decreto 780 de 2016."
+      url: "https://normograma.supersalud.gov.co/compilacion/docs/decreto_0064_2020.htm"
+  fechaRevision: 2026-10-06
+
+- id: eps-niega-o-demora
+  orden: 40
+  pregunta: "¿Qué hago si la EPS niega o demora una cita o un tratamiento?"
+  respuesta: "Presenta un derecho de petición (una solicitud formal) a la EPS: por regla general, debe responder en 15 días hábiles. Si no responde o no se resuelve, presenta una queja ante la Superintendencia Nacional de Salud. Si está en riesgo un derecho fundamental, puedes presentar una acción de tutela a nombre del niño, la niña o el adolescente."
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 1755 de 2015, que regula el derecho fundamental de petición."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=65334"
+    - texto: "Congreso de la República de Colombia. Ley 4 de 1913, Código de Régimen Político y Municipal. Artículo 62: los plazos de días no cuentan los feriados."
+      url: "https://normas.cra.gov.co/Gestor/Docs/ley_0004_1913.htm"
+    - texto: "Superintendencia Nacional de Salud. Contáctenos."
+      url: "https://www.supersalud.gov.co/es-co/atencion-ciudadano/contactenos"
+    - texto: "Constitución Política de Colombia, 1991. Artículo 86 (acción de tutela)."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=4125"
+    - texto: "Congreso de la República de Colombia. Ley Estatutaria 1751 de 2015, que regula el derecho fundamental a la salud. Artículos 11 y 14."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=60733"
+  fechaRevision: 2026-10-06
+
+- id: colegio-niega-cupo
+  orden: 50
+  pregunta: "¿Un colegio puede negar el cupo a un estudiante autista?"
+  respuesta: "No por su discapacidad. Ningún colegio puede negar la matrícula de un estudiante por su situación de discapacidad ni negarse a hacer los ajustes razonables (cambios y apoyos para que pueda aprender) que necesite."
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: diagnostico-para-ajustes
+  orden: 60
+  pregunta: "¿Se necesita un diagnóstico para que el colegio haga ajustes?"
+  respuesta: "Para la matrícula, no: si el estudiante no tiene diagnóstico, el colegio lo matricula con la información que da la familia, y la secretaría de educación coordina con el sector salud para que se establezca el diagnóstico en un plazo máximo de tres meses. Los ajustes razonables se definen a partir de una valoración pedagógica y social del estudiante."
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: que-es-el-piar
+  orden: 70
+  pregunta: "¿Qué es el PIAR?"
+  respuesta: "Es el Plan Individual de Ajustes Razonables: la herramienta que reúne los apoyos y ajustes que un estudiante necesita para aprender, a partir de una valoración pedagógica y social. Lo elaboran los docentes de aula con el docente de apoyo, la familia y el estudiante, en el primer trimestre del año escolar, y se actualiza cada año."
+  fuentes:
+    - texto: "Presidencia de la República de Colombia. Decreto 1421 de 2017, atención educativa a la población con discapacidad en el marco de la educación inclusiva."
+      url: "https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=87040"
+  fechaRevision: 2026-10-06
+
+- id: vacunas
+  orden: 80
+  pregunta: "¿Las vacunas causan autismo?"
+  respuesta: "No. En diciembre de 2025, el comité de expertos en seguridad de las vacunas de la OMS revisó los estudios disponibles y reafirmó que no existe relación entre las vacunas y el autismo, incluidas las vacunas que contienen tiomersal o aluminio."
+  fuentes:
+    - texto: "Organización Mundial de la Salud (OMS). Un nuevo análisis de un grupo de expertos de la OMS confirma que no existe ninguna relación entre las vacunas y el autismo. 11 de diciembre de 2025."
+      url: "https://www.who.int/es/news/item/11-12-2025-who-expert-group-s-new-analysis-reaffirms-there-is-no-link-between-vaccines-and-autism"
+  fechaRevision: 2026-10-06
+
+- id: se-cura
+  orden: 90
+  pregunta: "¿El autismo se cura?"
+  respuesta: "El autismo no es una enfermedad: es una condición del neurodesarrollo que dura toda la vida. No se trata de curarlo. Algunas intervenciones basadas en evidencia pueden mejorar la comunicación, las habilidades sociales y el bienestar."
+  fuentes:
+    - texto: "National Health Service (NHS). What is autism? 2026."
+      url: "https://www.nhs.uk/conditions/autism/what-is-autism/"
+    - texto: "Confederación Autismo España. ¿Qué es el autismo?"
+      url: "https://autismo.org.es/el-autismo/que-es-el-autismo/"
+    - texto: "Organización Mundial de la Salud (OMS). Autismo. Nota descriptiva, 2025."
+      url: "https://www.who.int/es/news-room/fact-sheets/detail/autism-spectrum-disorders"
+  fechaRevision: 2026-10-06
+
+- id: certificado-discapacidad
+  orden: 100
+  pregunta: "¿Dónde se pide el certificado de discapacidad y cuánto cuesta?"
+  respuesta: "Se pide en la secretaría de salud del municipio o distrito donde vive la persona, con la historia clínica que tenga el diagnóstico. El trámite es gratuito."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Resolución 1197 de 2024, procedimiento de certificación de discapacidad."
+      url: "https://normativa.colpensiones.gov.co/compilacion/docs/resolucion_minsaludps_1197_2024.htm"
+  fechaRevision: 2026-10-06
+
+- id: ley-2628
+  orden: 110
+  pregunta: "¿Qué cambia con la Ley 2628 de 2026?"
+  respuesta: "Es la ley de atención integral e inclusión de las personas con TEA, sancionada el 26 de agosto de 2026. Ordena al Ministerio de Salud crear una política pública de atención en un plazo no mayor a un año y establecer una Ruta de Atención Médica clara y pública. También crea el Certificado Único de Trastorno del Neurodesarrollo, pide a las secretarías de educación definir un mínimo de cupos escolares y ordena programas de formación para docentes."
+  fuentes:
+    - texto: "Congreso de la República de Colombia. Ley 2628 de 2026, por medio de la cual se establecen medidas, servicios y mecanismos de atención integral para la protección e inclusión de las personas con TEA."
+      url: "https://www.alcaldiabogota.gov.co/sisjur/normas/Norma1.jsp?i=194131&dt=S"
+  fechaRevision: 2026-10-06
+
+- id: apoyo-emocional
+  orden: 120
+  pregunta: "¿Dónde puedo recibir apoyo emocional como familia o cuidador?"
+  respuesta: "La Línea 106 del Ministerio de Salud ofrece escucha, apoyo emocional y orientación en salud mental. Es gratuita, confidencial y atiende las 24 horas: marca 106 desde un teléfono fijo o celular."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Línea 106."
+      url: "https://www.minsalud.gov.co/salud/publica/salud-mental/Paginas/linea-106.aspx"
+  fechaRevision: 2026-10-06

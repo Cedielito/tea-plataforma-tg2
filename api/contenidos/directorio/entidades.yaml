@@ -1,0 +1,350 @@
+# Directorio de orientación (M-04, RF-05, RS-07). Colección entidad_directorio.
+#
+# Solo datos institucionales públicos: líneas, correos y sedes oficiales. Ningún
+# dato personal ni profesionales independientes (esProfesional: false en todas).
+# Cada contacto se verificó en la página oficial que aparece en `fuentes`, en la
+# fecha de `fechaVerificacion`. Antes de cambiar un dato, verifícalo en su fuente
+# oficial y actualiza la fecha. Formato y tipos: api/contenidos/README.md.
+- id: supersalud
+  nombre: "Superintendencia Nacional de Salud (Supersalud)"
+  tipo: quejas-salud
+  ciudad: Nacional
+  descripcion: "Recibe peticiones, quejas, reclamos y denuncias (PQRD) por barreras en el acceso a los servicios de salud, por ejemplo con la EPS."
+  contacto:
+    telefonos: ["01 8000 513 700", "(601) 483 7000"]
+    web: "https://www.supersalud.gov.co/es-co/atencion-ciudadano/contactenos"
+    direccion: "Centro de Atención al Ciudadano: Carrera 13 N.º 28-08, locales 21 y 22, Bogotá D.C."
+    horario: "Atención presencial para radicar PQRD: lunes a viernes, 8:00 a.m. a 4:00 p.m."
+  fuentes:
+    - texto: "Superintendencia Nacional de Salud. Contáctenos. Consultada el 6 de octubre de 2026."
+      url: "https://www.supersalud.gov.co/es-co/atencion-ciudadano/contactenos"
+    - texto: "Superintendencia Nacional de Salud. Preguntas frecuentes. Consultada el 6 de octubre de 2026."
+      url: "https://www.supersalud.gov.co/es-co/atencion-ciudadano/preguntas-frecuentes"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: minsalud
+  nombre: "Ministerio de Salud y Protección Social"
+  tipo: salud
+  ciudad: Nacional
+  descripcion: "Recibe consultas, peticiones y quejas sobre el sistema de salud. La línea 01 8000 es para llamadas desde fuera de Bogotá."
+  contacto:
+    telefonos: ["(601) 330 5000", "01 8000 960 020"]
+    correo: "correo@minsalud.gov.co"
+    web: "https://minsalud.gov.co/Atencion-y-servicios-a-la-ciudadania/Paginas/atencion.aspx"
+    direccion: "Carrera 13 No. 32-76, piso 1, Bogotá"
+    horario: "Atención presencial: lunes a viernes, 8:00 a.m. a 4:00 p.m., jornada continua."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Atención y Servicios a la Ciudadanía. Consultada el 6 de octubre de 2026."
+      url: "https://minsalud.gov.co/Atencion-y-servicios-a-la-ciudadania/Paginas/atencion.aspx"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: minsalud-linea-106
+  nombre: "Línea 106 de salud mental – Ministerio de Salud y Protección Social"
+  tipo: linea-apoyo
+  ciudad: Nacional
+  descripcion: "Línea gratuita y confidencial de orientación en salud mental. Ofrece escucha, apoyo emocional e intervención en crisis. Se marca desde teléfono fijo o celular."
+  contacto:
+    telefonos: ["106"]
+    web: "https://www.minsalud.gov.co/salud/publica/salud-mental/Paginas/linea-106.aspx"
+    horario: "24 horas, todos los días."
+  fuentes:
+    - texto: "Ministerio de Salud y Protección Social. Línea 106. Consultada el 6 de octubre de 2026."
+      url: "https://www.minsalud.gov.co/salud/publica/salud-mental/Paginas/linea-106.aspx"
+    - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia (agosto de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: icbf-linea-141
+  nombre: "Línea 141 – Instituto Colombiano de Bienestar Familiar (ICBF)"
+  tipo: proteccion
+  ciudad: Nacional
+  descripcion: "Línea gratuita nacional para proteger a niñas, niños y adolescentes. Atiende emergencias, casos de violencia o riesgo y da orientación."
+  contacto:
+    telefonos: ["141"]
+    web: "https://www.icbf.gov.co/linea-141"
+    horario: "24 horas."
+  fuentes:
+    - texto: "Instituto Colombiano de Bienestar Familiar. Línea 141. Consultada el 6 de octubre de 2026."
+      url: "https://www.icbf.gov.co/linea-141"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: icbf
+  nombre: "Instituto Colombiano de Bienestar Familiar (ICBF) – atención al ciudadano"
+  tipo: proteccion
+  ciudad: Nacional
+  descripcion: "Consultas, trámites y peticiones sobre los servicios del ICBF. Para emergencias de niñas, niños o adolescentes, use la Línea 141."
+  contacto:
+    telefonos: ["01 8000 918 080", "(601) 437 7630"]
+    correo: "atencionalciudadano@icbf.gov.co"
+    web: "https://www.icbf.gov.co"
+    direccion: "Av. Carrera 68 # 64C-75, Bogotá"
+    horario: "Línea gratuita y conmutador: lunes a viernes, 8:00 a.m. a 5:00 p.m."
+  fuentes:
+    - texto: "Instituto Colombiano de Bienestar Familiar. Línea 141 (canales de atención y sede). Consultada el 6 de octubre de 2026."
+      url: "https://www.icbf.gov.co/linea-141"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: defensoria-del-pueblo
+  nombre: "Defensoría del Pueblo"
+  tipo: proteccion
+  ciudad: Nacional
+  descripcion: "Entidad que protege los derechos humanos. Recibe quejas, solicitudes y asesorías sobre situaciones que afectan esos derechos."
+  contacto:
+    telefonos: ["01 8000 914 814", "(601) 314 4000", "(601) 314 7300"]
+    web: "https://www.defensoria.gov.co/orientacion-al-ciudadano"
+    direccion: "Sede principal: Calle 55 No. 10-32, Bogotá D.C. Atención al ciudadano: Carrera 9 No. 16-21."
+  fuentes:
+    - texto: "Defensoría del Pueblo. Atención y Servicios a las Ciudadanías. Consultada el 6 de octubre de 2026."
+      url: "https://www.defensoria.gov.co/orientacion-al-ciudadano"
+    - texto: "Defensoría del Pueblo. Mecanismos para atención al ciudadano. Consultada el 6 de octubre de 2026."
+      url: "https://www.defensoria.gov.co/mecanismos-para-atencion-al-ciudadano"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: mineducacion
+  nombre: "Ministerio de Educación Nacional"
+  tipo: educacion
+  ciudad: Nacional
+  descripcion: "Recibe consultas, peticiones y quejas sobre el servicio educativo en el país."
+  contacto:
+    telefonos: ["01 8000 910 122", "(601) 307 8079", "(601) 222 2800"]
+    web: "https://www.mineducacion.gov.co/portal/atencion-al-ciudadano/Transparencia-y-acceso-a-informacion-publica/138651:Canales-de-atencion"
+    direccion: "Calle 43 No. 57-14, CAN, Bogotá"
+    horario: "Línea gratuita y línea Bogotá: lunes a viernes, 7:00 a.m. a 7:00 p.m."
+  fuentes:
+    - texto: "Ministerio de Educación Nacional. Canales físicos y electrónicos para atención al público (actualizada el 14 de agosto de 2026). Consultada el 6 de octubre de 2026."
+      url: "https://www.mineducacion.gov.co/portal/atencion-al-ciudadano/Transparencia-y-acceso-a-informacion-publica/138651:Canales-de-atencion"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: liga-colombiana-de-autismo
+  nombre: "Liga Colombiana de Autismo (LICA)"
+  tipo: organizacion
+  ciudad: Nacional
+  descripcion: "Organización social de personas con autismo, sus familias y profesionales. Acompaña a las familias, comparte información sobre el TEA y trabaja por sus derechos."
+  contacto:
+    telefonos: ["(601) 357 5260"]
+    web: "https://ligautismo.org/"
+    direccion: "Calle 39 A # 26-42, barrio La Soledad, Bogotá"
+  fuentes:
+    - texto: "Liga Colombiana de Autismo (LICA). Página de inicio, sección Contáctanos. Consultada el 6 de octubre de 2026."
+      url: "https://ligautismo.org/"
+    - texto: "Liga Colombiana de Autismo (LICA). LICA: quiénes somos. Consultada el 6 de octubre de 2026."
+      url: "https://ligautismo.org/lica/"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-salud-bogota
+  nombre: "Secretaría Distrital de Salud de Bogotá"
+  tipo: salud
+  ciudad: Bogotá
+  descripcion: "Orienta a la ciudadanía sobre los servicios de salud en Bogotá y recibe peticiones, quejas y reclamos."
+  contacto:
+    telefonos: ["(601) 329 5090", "(601) 364 9090"]
+    correo: "contactenos@saludcapital.gov.co"
+    web: "https://www.saludcapital.gov.co"
+    direccion: "Carrera 32 No. 12-81, Bogotá"
+    horario: "Línea de servicio a la ciudadanía: lunes a viernes, 7:00 a.m. a 5:00 p.m.; sábados, 7:00 a.m. a 12:00 m."
+  fuentes:
+    - texto: "Secretaría Distrital de Salud de Bogotá. TIPS Bogotá: Atención y servicio a la ciudadanía. Consultada el 6 de octubre de 2026."
+      url: "https://tipsbogota.saludcapital.gov.co/atencion-y-servicio-a-la-ciudadania/"
+    - texto: "Secretaría Distrital de Salud de Bogotá. Informe de resultados Gestión de Orientación e Información, II trimestre de 2025. Consultada el 6 de octubre de 2026."
+      url: "https://www.saludcapital.gov.co/Inf_goi/2025/Inf_GOI_II_trim_2025.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: linea-106-bogota
+  nombre: "Línea 106 «El poder de ser escuchado» – Bogotá"
+  tipo: linea-apoyo
+  ciudad: Bogotá
+  descripcion: "Línea de la Secretaría Distrital de Salud para personas de todas las edades. Ofrece escucha, apoyo emocional y orientación, también en momentos de crisis."
+  contacto:
+    telefonos: ["106", "300 754 8933 (WhatsApp)"]
+    correo: "linea106@saludcapital.gov.co"
+    web: "https://bogota.gov.co/mi-ciudad/salud/linea-106-para-apoyo-psicologico-y-mas-en-bogota-este-2025"
+    horario: "24 horas, todos los días."
+  fuentes:
+    - texto: "Alcaldía de Bogotá. Bogotá refuerza su apoyo en el Día Mundial para la Prevención del Suicidio (10 de septiembre de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://bogota.gov.co/mi-ciudad/salud/linea-106-para-apoyo-psicologico-y-mas-en-bogota-este-2025"
+    - texto: "Canal Capital. Línea 106 en Bogotá: ¿Qué es, cómo funciona y cuál es su balance? (15 de mayo de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://www.canalcapital.gov.co/actualidad/linea-106-en-bogota-que-es-como-funciona-y-cual-es-su-balance/"
+    - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia (agosto de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-educacion-bogota
+  nombre: "Secretaría de Educación del Distrito (Bogotá)"
+  tipo: educacion
+  ciudad: Bogotá
+  descripcion: "Recibe consultas, peticiones y quejas sobre el servicio educativo en Bogotá."
+  contacto:
+    telefonos: ["(601) 324 1000", "195"]
+    correo: "contactenos@educacionbogota.edu.co"
+    web: "https://www.educacionbogota.edu.co/portal_institucional/transparencia/mecanismos-para-la-atencion-al-ciudadano"
+    direccion: "Av. El Dorado No. 66-63, Bogotá"
+    horario: "Sede administrativa: lunes a viernes, 7:00 a.m. a 4:30 p.m. Línea 195: 24 horas."
+  fuentes:
+    - texto: "Secretaría de Educación del Distrito. Servicio al público, normas, formularios y protocolos de atención. Consultada el 6 de octubre de 2026."
+      url: "https://www.educacionbogota.edu.co/portal_institucional/transparencia/mecanismos-para-la-atencion-al-ciudadano"
+    - texto: "Secretaría de Educación del Distrito. Localización física, sucursales o regionales, horarios y días de atención al público. Consultada el 6 de octubre de 2026."
+      url: "https://educacionbogota.edu.co/portal_institucional/transparencia/localizacion-fisica-sucursales"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-salud-medellin
+  nombre: "Secretaría de Salud de Medellín"
+  tipo: salud
+  ciudad: Medellín
+  descripcion: "Dirige y coordina el sector salud en Medellín. Atiende a la ciudadanía por la Línea Única de Atención y el correo de la Alcaldía."
+  contacto:
+    telefonos: ["(604) 444 4144", "(604) 385 5555"]
+    correo: "atencion.ciudadana@medellin.gov.co"
+    web: "https://www.medellin.gov.co/es/secretaria-de-salud/"
+    direccion: "Calle 44 # 52-165, Centro Administrativo La Alpujarra, Medellín"
+    horario: "Lunes a jueves, 7:30 a.m. a 12:00 m. y 1:30 p.m. a 5:00 p.m.; viernes, 7:30 a.m. a 12:00 m. y 1:30 p.m. a 4:00 p.m."
+  fuentes:
+    - texto: "Alcaldía de Medellín. Secretaría de Salud. Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.gov.co/es/secretaria-de-salud/"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-educacion-medellin
+  nombre: "Secretaría de Educación de Medellín"
+  tipo: educacion
+  ciudad: Medellín
+  descripcion: "Atiende consultas, peticiones y quejas sobre el servicio educativo. Su Unidad de Atención Integral (UAI) apoya a colegios oficiales en la atención de estudiantes con discapacidad."
+  contacto:
+    telefonos: ["(604) 444 4144"]
+    correo: "atencion.ciudadana@medellin.gov.co"
+    web: "https://www.medellin.edu.co/secretaria/atencion-al-ciudadano/"
+    direccion: "Edificio Bulevar de San Juan, Calle 44 # 51-50, piso 3, Medellín"
+    horario: "Lunes a jueves, 8:15 a.m. a 12:30 p.m. y 1:30 p.m. a 5:30 p.m.; viernes, 8:00 a.m. a 12:30 p.m. y 1:30 p.m. a 4:00 p.m."
+  fuentes:
+    - texto: "Secretaría de Educación de Medellín. Atención al ciudadano (actualizada el 2 de octubre de 2026). Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.edu.co/secretaria/atencion-al-ciudadano/"
+    - texto: "Alcaldía de Medellín. Secretaría de Educación. Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.gov.co/es/secretaria-de-educacion/"
+    - texto: "Secretaría de Educación de Medellín. La Alcaldía de Medellín invierte más de $15.700 millones para impulsar la educación inclusiva en la ciudad (2 de agosto de 2026). Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.edu.co/la-alcaldia-de-medellin-invierte-mas-de-15-700-millones-para-impulsar-la-educacion-inclusiva-en-la-ciudad/"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: linea-amiga-medellin
+  nombre: "Línea Amiga Saludable – Alcaldía de Medellín"
+  tipo: linea-apoyo
+  ciudad: Medellín
+  descripcion: "Orientación psicológica gratuita de la Secretaría de Salud para todos los habitantes de Medellín. En WhatsApp, elija la opción «Salud»."
+  contacto:
+    telefonos: ["(604) 444 4448", "106", "301 604 4444 (WhatsApp)"]
+    web: "https://www.medellin.gov.co/es/secretaria-de-salud/linea-amiga/"
+    horario: "24 horas, los 7 días de la semana."
+  fuentes:
+    - texto: "Alcaldía de Medellín. Línea Amiga. Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.gov.co/es/secretaria-de-salud/linea-amiga/"
+    - texto: "Alcaldía de Medellín. Secretaría de Salud. Consultada el 6 de octubre de 2026."
+      url: "https://www.medellin.gov.co/es/secretaria-de-salud/"
+    - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia (agosto de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: personeria-cali
+  nombre: "Personería Distrital de Santiago de Cali"
+  tipo: proteccion
+  ciudad: Cali
+  descripcion: "Brinda orientación y acompañamiento jurídico para defender derechos, por ejemplo con acciones de tutela y derechos de petición."
+  contacto:
+    telefonos: ["(602) 661 7999", "318 335 5722"]
+    correo: "atencionalciudadano@personeriacali.gov.co"
+    web: "https://personeriacali.gov.co/"
+    direccion: "Centro Administrativo Municipal CAM, Torre Alcaldía, piso 13, Avenida 2 Norte No. 10-70, Cali"
+    horario: "Línea 318 335 5722: 24 horas."
+  fuentes:
+    - texto: "Personería Distrital de Santiago de Cali. Puntos de atención (actualizada el 13 de agosto de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://personeriacali.gov.co/puntos-de-atencion-mecanismos/"
+    - texto: "Personería Distrital de Santiago de Cali. Página de inicio (datos de contacto). Consultada el 6 de octubre de 2026."
+      url: "https://personeriacali.gov.co/"
+    - texto: "Personería Distrital de Santiago de Cali. Servicios: acompañamiento jurídico. Consultada el 6 de octubre de 2026."
+      url: "https://personeriacali.gov.co/servicios-acompanamiento-juridico/"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: sac-salud-barranquilla
+  nombre: "Secretaría Distrital de Salud de Barranquilla – Servicio de Atención a la Comunidad (SAC)"
+  tipo: salud
+  ciudad: Barranquilla
+  descripcion: "Oficina de la Secretaría de Salud que atiende a los usuarios de servicios de salud y a sus familias: peticiones, quejas y reclamos."
+  contacto:
+    telefonos: ["(605) 339 9542", "312 219 5227 (WhatsApp)"]
+    correo: "sac@barranquilla.gov.co"
+    web: "https://barranquilla.gov.co/salud/servicio-de-atencion-a-la-comunidad-sac"
+    direccion: "Calle 34 No. 43-41, al lado de la Alcaldía, Paseo Bolívar, ventanilla 11, Barranquilla"
+    horario: "Punto Centro Histórico: 7:00 a.m. a 12:00 m. y 1:00 p.m. a 5:00 p.m."
+  fuentes:
+    - texto: "Alcaldía de Barranquilla, Secretaría Distrital de Salud. Servicio de Atención a la Comunidad (SAC) (actualizada el 22 de mayo de 2026). Consultada el 6 de octubre de 2026."
+      url: "https://barranquilla.gov.co/salud/servicio-de-atencion-a-la-comunidad-sac"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: secretaria-educacion-barranquilla
+  nombre: "Secretaría Distrital de Educación de Barranquilla"
+  tipo: educacion
+  ciudad: Barranquilla
+  descripcion: "Atiende solicitudes sobre el servicio educativo, incluida la educación inclusiva. Se contacta por los canales de atención de la Alcaldía de Barranquilla."
+  contacto:
+    telefonos: ["195", "(605) 401 0205", "(605) 316 1400"]
+    correo: "atencionalciudadano@barranquilla.gov.co"
+    web: "https://barranquilla.gov.co/educacion"
+    direccion: "Calle 34 No. 43-31, Barranquilla (sede principal de la Alcaldía)"
+    horario: "Atención presencial: lunes a viernes, 8:00 a.m. a 4:00 p.m."
+  fuentes:
+    - texto: "Alcaldía de Barranquilla. Secretaría Distrital de Educación (actualizada el 24 de septiembre de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://barranquilla.gov.co/educacion"
+    - texto: "Alcaldía de Barranquilla. Mecanismos de contacto (actualizada el 28 de abril de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://barranquilla.gov.co/atencion-al-ciudadano/canales-de-atencion/mecanismos-de-contacto"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: personeria-barranquilla
+  nombre: "Personería Distrital de Barranquilla"
+  tipo: proteccion
+  ciudad: Barranquilla
+  descripcion: "Atiende a la ciudadanía en temas como salud, educación y población vulnerable. Recibe peticiones, quejas y reclamos (PQRSD)."
+  contacto:
+    telefonos: ["(605) 313 3730"]
+    correo: "perbarranquilla@personeriadebarranquilla.gov.co"
+    web: "https://personeriadebarranquilla.gov.co/contactanos/"
+    direccion: "Sede Centro, Centro de Atención Ciudadana: Carrera 45 # 38-01, Barranquilla"
+    horario: "Lunes a viernes, 8:30 a.m. a 4:00 p.m."
+  fuentes:
+    - texto: "Personería Distrital de Barranquilla. Contáctanos. Consultada el 6 de octubre de 2026."
+      url: "https://personeriadebarranquilla.gov.co/contactanos/"
+    - texto: "Personería Distrital de Barranquilla. Servicios en línea. Consultada el 6 de octubre de 2026."
+      url: "https://personeriadebarranquilla.gov.co/atencion-al-ciudadano/servicios/"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false
+
+- id: linea-de-la-vida-barranquilla
+  nombre: "Línea de la Vida – Barranquilla"
+  tipo: linea-apoyo
+  ciudad: Barranquilla
+  descripcion: "Línea distrital de orientación y atención inmediata en salud mental. La atienden profesionales de psicología y trabajo social."
+  contacto:
+    telefonos: ["(605) 339 9999"]
+    web: "https://barranquilla.gov.co/salud/salud-mental"
+    horario: "24 horas, todos los días."
+  fuentes:
+    - texto: "Alcaldía de Barranquilla, Secretaría Distrital de Salud. Salud mental (actualizada el 9 de septiembre de 2024). Consultada el 6 de octubre de 2026."
+      url: "https://barranquilla.gov.co/salud/salud-mental"
+    - texto: "Alcaldía de Barranquilla. Con ‘Hablemos’ y ‘Línea de la Vida’, Distrito atiende la salud mental de los barranquilleros (5 de septiembre de 2023). Consultada el 6 de octubre de 2026."
+      url: "https://barranquilla.gov.co/mi-barranquilla/con-hablemos-y-linea-de-la-vida-distrito-atiende-la-salud-mental-de-los-barranquilleros"
+    - texto: "Ministerio de Salud y Protección Social. Directorio nacional de líneas territoriales de atención en salud mental en Colombia (agosto de 2025). Consultada el 6 de octubre de 2026."
+      url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VS/PP/ET/directorio-salud-mental-prevencion-suicidio-minsalud.pdf"
+  fechaVerificacion: 2026-10-06
+  esProfesional: false

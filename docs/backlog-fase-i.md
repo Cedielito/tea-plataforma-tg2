@@ -17,10 +17,11 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 
 | Tarea | Responsable | Plazo | Bloquea |
 |---|---|---|---|
-| Textos de S1 a S5 a partir de las fuentes oficiales (MinSalud, OMS, DSM-5-TR), con fuente y fecha | Santiago (Claude puede redactar borradores para revisar) | 10 oct | T3 |
-| Lista de 15 a 30 entidades públicas para el directorio (EPS, ICBF, secretarías de salud, líneas oficiales) con fuente | Santiago | 14 oct | T6 |
-| Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Santiago | 13 oct | T5 |
-| 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Santiago | 15 oct | T7 |
+| ✅ Textos de S1 a S5 a partir de las fuentes oficiales (MinSalud, OMS, DSM-5-TR), con fuente y fecha | Hechos (`api/contenidos/`); Santiago los revisa | 10 oct | T3 |
+| ✅ Lista de 15 a 30 entidades públicas para el directorio con fuente | Hecha: 19 verificadas (`api/contenidos/directorio/`); Santiago revisa y completa Cali y las Personerías de Bogotá y Medellín | 14 oct | T6 |
+| ✅ Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Hechos: 18 pasos (`api/contenidos/ruta/`); Santiago los revisa | 13 oct | T5 |
+| ✅ 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Hechos: 6 recursos y 12 preguntas (`api/contenidos/recursos/` y `preguntas/`); Santiago los revisa | 15 oct | T7 |
+| Completar los `COMPLETAR` de `api/contenidos/paginas/` (nombres, correo, dirección y teléfono del responsable, fecha de vigencia) | Ambos | Antes de fusionar T8 | T8 |
 | Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
 | Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
 
@@ -145,16 +146,20 @@ Propón el plan antes de escribir código.
 
 ### T5 — Ruta de atención interactiva
 ```
-Lee CLAUDE.md. Tarea T5, rama feat/ruta-atencion.
+Lee CLAUDE.md y api/contenidos/README.md. Tarea T5, rama feat/ruta-atencion.
 
-Modelo paso_ruta (perfil familia|docente, tramo de edad, régimen
-contributivo|subsidiado|sin afiliación, orden, texto, entidad enlazada opcional,
-fuente) con su administración en el panel. En web/, asistente de 3 preguntas
+Modelo paso_ruta (perfiles familia|docente, tramos, regímenes
+contributivo|subsidiado|sin-afiliacion, orden, título, texto, tipos de entidad
+enlazados, fuentes, fecha de revisión) con su administración en el panel. Los 18
+pasos ya están en api/contenidos/ruta/pasos.yaml: cárgalos al arrancar la API como
+T3 carga los contenidos, buscando por id. En web/, asistente de 3 preguntas
 (una por pantalla, con «Paso X de 3», Anterior/Siguiente y teclado) que al final
 muestra los pasos ordenados y las entidades del directorio. Las respuestas se
 procesan en el navegador y NO se envían a la API (RF-04, RS-01): la web descarga
 todos los pasos publicados y filtra localmente. Texto visible: «Tus respuestas no
-se guardan». Las preguntas nunca indagan por conductas ni síntomas.
+se guardan». Las preguntas nunca indagan por conductas ni síntomas. Al final,
+enlaza a las señales de alerta del tramo elegido. Si T6 aún no está, muestra los
+pasos sin las entidades.
 Propón el plan antes de escribir código.
 ```
 
@@ -166,7 +171,10 @@ Modelo entidad_directorio (nombre, tipo, ciudad, contacto, fuente, fecha de
 verificación, es_profesional, constancia_autorizacion). Regla con prueba: si
 es_profesional, no se publica sin constancia (RS-07). Página pública con filtros
 por ciudad y tipo, tarjetas accesibles y «Verificado el dd/mm/aaaa».
-Administración en el panel. Seed con 3 entidades públicas de ejemplo.
+Administración en el panel. Las 19 entidades verificadas ya están en
+api/contenidos/directorio/entidades.yaml (lee api/contenidos/README.md): cárgalas
+al arrancar, buscando por id. Las entidades nacionales aparecen con cualquier
+ciudad que se elija.
 Propón el plan antes de escribir código.
 ```
 
@@ -177,6 +185,10 @@ Lee CLAUDE.md. Tarea T7, rama feat/recursos-faq.
 Página de recursos (descarga o enlace oficial, con fuente y perfil destinatario)
 y página de preguntas frecuentes con acordeón accesible (button + aria-expanded),
 ambas administrables desde el panel. Las preguntas aparecen en el buscador.
+Las 12 preguntas y los 6 recursos ya están en api/contenidos/preguntas/ y
+api/contenidos/recursos/ (lee api/contenidos/README.md): cárgalos al arrancar como
+T3, buscando por id; los modelos de T2 necesitan ese campo identificador.
+«¿A quién debo consultar primero?» es la tarea T7 de la prueba de usabilidad.
 Propón el plan antes de escribir código.
 ```
 
@@ -187,10 +199,13 @@ Lee CLAUDE.md. Tarea T8, rama feat/contacto.
 Formulario de contacto con solo correo y mensaje y casilla obligatoria de
 autorización de tratamiento de datos que enlaza a /privacidad (RS-02, RS-03);
 el servidor rechaza el envío sin autorización y guarda la versión de la política
-aceptada. Páginas /privacidad y /acerca-de con el texto que te paso aparte.
+aceptada. Páginas /privacidad y /acerca-de con los textos de
+api/contenidos/paginas/: la política (versión 1.0) trae en su encabezado el texto
+de la casilla (textoAutorizacion). No publiques un archivo que diga COMPLETAR.
 Bandeja de mensajes en el panel con opción de eliminar (RF-11) y tarea que
 suprime mensajes de más de 6 meses (RS-04), con pruebas. Protección básica
-contra abuso (límite de envíos por IP) sin servicios de terceros.
+contra abuso (límite de envíos por IP) sin servicios de terceros: según la
+política, la IP se usa por poco tiempo y no se guarda con el mensaje.
 Propón el plan antes de escribir código.
 ```
 

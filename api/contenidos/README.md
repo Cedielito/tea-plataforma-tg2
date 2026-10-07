@@ -79,3 +79,69 @@ No hay que instalar nada: basta con editar el archivo en GitHub y fusionar el PR
 Las pruebas (`npm test`) cargan todos estos archivos en una base en memoria: si uno
 tiene un error de formato, le falta la fuente o la fecha, o la fecha es posterior a
 hoy, el CI del PR queda en rojo antes de fusionar.
+
+## Datos de la semana 2 (T5 a T8)
+
+Además de las páginas de S1 a S5, esta carpeta guarda en subcarpetas los datos que
+cargan las tareas T5 a T8. La carga actual solo lee los `.md` de este primer nivel,
+así que las subcarpetas no afectan lo que ya está publicado. Cada tarea agrega su
+propia carga, con las mismas reglas: buscar por `id` o `slug`, crear lo que falta,
+actualizar solo si la fecha del archivo es más reciente y nunca borrar.
+
+| Carpeta | Colección (Cuadro 13) | Tarea | Contenido |
+|---|---|---|---|
+| `ruta/pasos.yaml` | `paso_ruta` | T5 | 18 pasos: 12 para familias y 6 para docentes |
+| `directorio/entidades.yaml` | `entidad_directorio` | T6 | 19 entidades públicas verificadas |
+| `preguntas/preguntas.yaml` | `pregunta_frecuente` | T7 | 12 preguntas frecuentes |
+| `recursos/recursos.yaml` | `recurso` | T7 | 6 documentos y enlaces oficiales |
+| `paginas/privacidad.md` | página fija (M-06) | T8 | Política de tratamiento de datos, versión 1.0 |
+| `paginas/acerca-de.md` | página fija (M-06, RF-12) | T8 | Propósito, alcance y aviso de no diagnóstico |
+
+Todos los archivos `.yaml` son listas. Cada elemento tiene un `id` único en
+minúsculas con guiones, sus `fuentes` (texto y enlace) y su fecha (`fechaRevision`,
+o `fechaVerificacion` en el directorio). Los comentarios al inicio de cada archivo
+explican sus campos.
+
+### Ruta de atención (`ruta/pasos.yaml`)
+
+Cada paso dice a qué respuestas aplica: `perfiles` (familia, docente), `tramos`
+(4-7, 8-12, 13-17) y `regimenes` (contributivo, subsidiado, sin-afiliacion). La guía
+muestra, en `orden`, los pasos que coinciden con las tres respuestas, y junto a cada
+paso las entidades del directorio de los `tiposEntidad` indicados. Contributivo y
+subsidiado comparten los pasos, porque en los dos el camino empieza en la EPS. Sin
+afiliación agrega primero la afiliación de oficio. Cada `texto` tiene dos frases como
+máximo (RCN-06).
+
+### Directorio (`directorio/entidades.yaml`)
+
+Solo datos institucionales públicos (RS-07): ningún profesional independiente, así
+que `esProfesional` es `false` en todas. Valores de `tipo`:
+
+| `tipo` | Etiqueta para el filtro |
+|---|---|
+| `salud` | Salud |
+| `educacion` | Educación |
+| `proteccion` | Protección de derechos |
+| `quejas-salud` | Quejas sobre servicios de salud |
+| `linea-apoyo` | Líneas de orientación y apoyo emocional |
+| `organizacion` | Organizaciones de familias y personas autistas |
+
+Ciudades: Nacional, Bogotá, Medellín, Cali y Barranquilla. Las entidades nacionales
+deben aparecer con cualquier ciudad que se elija. Los números de WhatsApp van en
+`telefonos` con el sufijo «(WhatsApp)».
+
+Pendientes por verificar, sin publicar, porque sus sitios oficiales no respondieron
+el 6 de octubre de 2026: Personería de Bogotá, Personería de Medellín, Secretaría de
+Salud Pública de Cali y Secretaría de Educación de Cali. Se agregan cuando se
+verifiquen en su página oficial.
+
+### Páginas fijas (`paginas/`)
+
+Markdown con el mismo encabezado de los contenidos. La política de privacidad agrega
+`version` (la que se guarda con cada mensaje, RS-02), `vigenteDesde` y
+`textoAutorizacion` (el texto de la casilla del formulario de contacto).
+
+**Antes de publicar, reemplazar todos los textos `COMPLETAR`**: nombres de los
+integrantes, correo, dirección y teléfono del responsable (Decreto 1377 de 2013,
+art. 13) y la fecha de vigencia. La carga de T8 debe rechazar un archivo que todavía
+diga `COMPLETAR`.
