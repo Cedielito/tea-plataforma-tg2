@@ -6,8 +6,9 @@ const { validarCambioDeSlug } = require('../../dominio/edicionContenido');
 
 /**
  * Rutas del panel para una coleccion que se carga desde una lista YAML de
- * api/contenidos: pasos de la ruta (T5) y directorio (T6). Van bajo
- * /api/admin, asi que pasan antes por exigirSesion (servidor.js).
+ * api/contenidos: pasos de la ruta (T5), directorio (T6), preguntas
+ * frecuentes y recursos (T7). Van bajo /api/admin, asi que pasan antes por
+ * exigirSesion (servidor.js).
  * M-08, RF-10, RS-05, RCN-01, RCN-02
  *
  * - GET    /       todos, publicados y borradores

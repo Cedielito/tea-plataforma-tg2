@@ -86,15 +86,18 @@ Además de las páginas de S1 a S5, esta carpeta guarda en subcarpetas los datos
 cargan las tareas T5 a T8. La carga de las páginas solo lee los `.md` de este primer
 nivel. Cada tarea agrega su propia carga, con las mismas reglas: buscar por `id` o
 `slug`, crear lo que falta, actualizar solo si la fecha del archivo es más reciente y
-nunca borrar. Ya se cargan los pasos de la ruta (T5) y el directorio (T6); las demás
-subcarpetas todavía no afectan lo publicado.
+nunca borrar. Ya se cargan los pasos de la ruta (T5), el directorio (T6), las
+preguntas frecuentes y los recursos (T7); las páginas fijas de `paginas/` todavía no
+afectan lo publicado.
 
 Las listas `.yaml` se cargan con `api/src/datos/sincronizacionListas.js`: el `id` de
 cada elemento se guarda en la base como `slug`, para no confundirlo con el `_id` de
 MongoDB que usan el panel y sus rutas. Un elemento con errores queda en los logs de
 Render, con el archivo y su `id`, y los demás se cargan:
-`Pasos de la ruta: 18 creados, 0 actualizados, 0 sin cambios, 0 con errores.` y
-`Directorio: 23 creados, 0 actualizados, 0 sin cambios, 0 con errores.`
+`Pasos de la ruta: 18 creados, 0 actualizados, 0 sin cambios, 0 con errores.`,
+`Directorio: 23 creados, 0 actualizados, 0 sin cambios, 0 con errores.`,
+`Preguntas frecuentes: 12 creados, 0 actualizados, 0 sin cambios, 0 con errores.` y
+`Recursos: 6 creados, 0 actualizados, 0 sin cambios, 0 con errores.`
 
 | Carpeta | Colección (Cuadro 13) | Tarea | Contenido |
 |---|---|---|---|
@@ -169,6 +172,29 @@ Las secretarías de Salud Pública y de Educación de Cali aparecen con los cana
 generales de atención de la Alcaldía de Santiago de Cali, porque sus páginas propias
 no respondieron el 6 de octubre de 2026. Cuando se puedan consultar, se cambian por
 sus canales propios y se actualiza `fechaVerificacion`.
+
+### Preguntas frecuentes (`preguntas/preguntas.yaml`)
+
+Cada pregunta tiene `orden` (obligatorio, de 10 en 10), `pregunta`, `respuesta`,
+`fuentes` y `fechaRevision`. Se muestran en `/preguntas-frecuentes` de menor a mayor
+orden, en un acordeón: cada pregunta se abre por separado con su respuesta, sus
+fuentes y «Revisado el dd/mm/aaaa». El `id` es el ancla de la pregunta:
+`/preguntas-frecuentes#a-quien-consultar-primero` la abre, y así enlazan los
+resultados del buscador. Por eso **el `id` de una pregunta publicada no se cambia**:
+los enlaces que ya se compartieron dejarían de abrirla. Las pruebas comprueban que las
+12 se cargan sin errores, que la primera es «¿A quién debo consultar primero?» (tarea
+T7 de la prueba de usabilidad) y que los órdenes no se repiten.
+
+### Recursos (`recursos/recursos.yaml`)
+
+Cada recurso tiene `titulo`, `descripcion`, `tipo` (`archivo` para descargar o
+`enlace` a una página oficial), `url`, `perfiles` (familia, docente; al menos uno),
+`fuentes` y `fechaRevision`. En `/recursos` se muestran en el orden del archivo. El
+botón de cada tarjeta dice qué abre y en qué sitio, con el dominio del enlace sin
+«www.»: «Descargar PDF (minsalud.gov.co)» si es un `archivo` cuya dirección termina
+en `.pdf`, y «Abrir página oficial (who.int)» si es un `enlace`. Las pruebas comprueban
+que los 6 se cargan sin errores, que hay recursos para docentes (tarea T6 de la prueba)
+y para familias, y que cada `archivo` es un PDF con enlace https.
 
 ### Páginas fijas (`paginas/`)
 

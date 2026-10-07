@@ -1,0 +1,66 @@
+/* Recursos (M-05, RF-06) en /recursos. RA-01 a RA-11: contraste, foco visible,
+   320 px, zoom al 200 % y objetivos táctiles de 44 px. Sin animaciones. Solo
+   variables de tokens.css. */
+
+/* Una columna en móvil; más columnas cuando caben tarjetas de 20 rem */
+.lista-recursos {
+  list-style: none;
+  margin: var(--espacio-4) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ancho-tarjeta-entidad)), 1fr));
+  gap: var(--espacio-3);
+}
+.recurso { display: flex; min-width: 0; }
+.recurso__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  width: 100%;
+  padding: var(--espacio-3) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-top: var(--borde-grueso) solid var(--color-acento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-suave);
+}
+@media (min-width: 40em) {
+  .recurso__cuerpo { padding: var(--espacio-3); }
+}
+.recurso__cuerpo > * { margin: 0; }
+.recurso__titulo { font-size: var(--tipo-h3); }
+
+/* Para quién es y qué tipo de recurso es: etiquetas con texto */
+.recurso__datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  font-size: var(--tipo-pequeno);
+}
+.recurso__dato {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: 0 var(--espacio-1);
+  background: var(--color-superficie-suave);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-pequeno);
+  font-weight: var(--peso-negrita);
+}
+.recurso__dato svg { width: var(--icono-mini); height: var(--icono-mini); color: var(--color-primario); }
+
+/* El enlace se parte en dos líneas si el dominio es largo */
+.recurso__enlace {
+  align-self: flex-start;
+  max-width: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.recurso__enlace svg { flex-shrink: 0; }
+
+/* Revisión y fuentes siempre al final de la tarjeta */
+.recurso__pie {
+  margin-top: auto;
+  padding-top: var(--espacio-2);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}

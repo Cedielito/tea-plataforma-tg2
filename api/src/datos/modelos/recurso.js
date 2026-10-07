@@ -2,11 +2,14 @@
 const mongoose = require('mongoose');
 const { TIPOS_RECURSO, PERFILES } = require('../../dominio/catalogos');
 const { esUrlSegura } = require('../../dominio/publicacion');
-const { texto, publicable } = require('./comunes');
+const { texto, campoSlug, slugDesdeTitulo, publicable } = require('./comunes');
 
 /**
  * Coleccion `recurso` (Cuadro 13): guias para descargar (`archivo`) o enlaces
  * a guias oficiales (`enlace`). M-05, RF-06, RF-10, RCN-01, RCN-02
+ *
+ * `slug` es el `id` del recurso en api/contenidos/recursos/recursos.yaml; si
+ * no llega, se genera a partir del titulo.
  *
  * La URL puede ser absoluta (http o https) o una ruta del mismo sitio, como
  * /recursos/guia.pdf, para los archivos que sirve la web.
@@ -14,6 +17,7 @@ const { texto, publicable } = require('./comunes');
 const esquema = new mongoose.Schema(
   {
     titulo: texto({ required: [true, 'El título es obligatorio.'] }),
+    slug: campoSlug(),
     descripcion: texto({ required: [true, 'La descripción es obligatoria.'] }),
     tipo: {
       type: String,
@@ -41,5 +45,6 @@ const esquema = new mongoose.Schema(
 );
 
 esquema.plugin(publicable);
+esquema.plugin(slugDesdeTitulo);
 
 module.exports = mongoose.model('Recurso', esquema);

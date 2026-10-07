@@ -1,9 +1,11 @@
 'use strict';
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { EntidadDirectorio, PasoRuta } = require('./modelos');
+const { EntidadDirectorio, PasoRuta, PreguntaFrecuente, Recurso } = require('./modelos');
 const pasosRuta = require('./repositorios/pasosRuta');
 const entidadesDirectorio = require('./repositorios/entidadesDirectorio');
+const preguntas = require('./repositorios/preguntas');
+const recursos = require('./repositorios/recursos');
 const { DIRECTORIO_CONTENIDOS } = require('./sincronizacionContenidos');
 const { describirError, resumirInforme } = require('./informeCarga');
 const { ACCIONES, decidirAccion } = require('../dominio/archivoContenido');
@@ -13,7 +15,7 @@ const { erroresDeContactoEnArchivo } = require('../dominio/directorio');
 /**
  * Carga de las listas YAML de api/contenidos a su coleccion al arrancar la
  * API, con las mismas reglas que los textos de S1 a S5 (T3). M-03, M-04,
- * RF-04, RF-05, RF-10, RCN-01, RCN-02, RCN-05, RS-07
+ * M-05, RF-04, RF-05, RF-06, RF-07, RF-10, RCN-01, RCN-02, RCN-05, RS-07
  *
  * - Cada elemento tiene un `id`, que se guarda como `slug`, y se busca por ese
  *   slug. Crea lo que falta y actualiza solo si la fecha del archivo es mas
@@ -27,8 +29,8 @@ const { erroresDeContactoEnArchivo } = require('../dominio/directorio');
  * - Cada elemento se procesa por separado: uno con errores queda en el
  *   informe y los demas se cargan. Ningun error detiene el arranque.
  *
- * Carga ruta/pasos.yaml (T5) y directorio/entidades.yaml (T6). La tarea T7
- * agrega aqui sus listas con crearCargaDeLista.
+ * Carga ruta/pasos.yaml (T5), directorio/entidades.yaml (T6),
+ * preguntas/preguntas.yaml y recursos/recursos.yaml (T7).
  */
 
 /**
@@ -182,4 +184,36 @@ const cargaEntidades = crearCargaDeLista({
   revisar: erroresDeContactoEnArchivo
 });
 
-module.exports = { crearCargaDeLista, CAMPOS_PASO_RUTA, cargaPasosRuta, CAMPOS_ENTIDAD, cargaEntidades };
+const CAMPOS_PREGUNTA = Object.freeze(['orden', 'pregunta', 'respuesta', 'fuentes', 'fechaRevision']);
+
+const cargaPreguntas = crearCargaDeLista({
+  nombre: 'Preguntas frecuentes',
+  archivo: 'preguntas/preguntas.yaml',
+  Modelo: PreguntaFrecuente,
+  repositorio: preguntas,
+  campos: CAMPOS_PREGUNTA,
+  repetido: 'Ya existe otra pregunta con el mismo id.'
+});
+
+const CAMPOS_RECURSO = Object.freeze(['titulo', 'descripcion', 'tipo', 'url', 'perfiles', 'fuentes', 'fechaRevision']);
+
+const cargaRecursos = crearCargaDeLista({
+  nombre: 'Recursos',
+  archivo: 'recursos/recursos.yaml',
+  Modelo: Recurso,
+  repositorio: recursos,
+  campos: CAMPOS_RECURSO,
+  repetido: 'Ya existe otro recurso con el mismo id.'
+});
+
+module.exports = {
+  crearCargaDeLista,
+  CAMPOS_PASO_RUTA,
+  cargaPasosRuta,
+  CAMPOS_ENTIDAD,
+  cargaEntidades,
+  CAMPOS_PREGUNTA,
+  cargaPreguntas,
+  CAMPOS_RECURSO,
+  cargaRecursos
+};

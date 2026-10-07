@@ -69,29 +69,29 @@ describe('RCN-01 y RCN-02 las rutas publicas solo devuelven lo publicado, con fu
     expect((await request(app).get('/api/contenidos/Con%20Espacios')).status).toBe(404);
   });
 
-  test('GET /api/preguntas no incluye borradores y trae fuentes y fecha', async () => {
+  test('GET /api/preguntas no incluye borradores y trae slug, fuentes y fecha, sin _id ni estado', async () => {
     await repoPreguntas.crear(datos.pregunta({ pregunta: '¿Publicada?' }));
     await repoPreguntas.crear(datos.pregunta({ pregunta: '¿En borrador?', ...borrador }));
     const res = await request(app).get('/api/preguntas');
     expect(res.status).toBe(200);
     expect(res.body).toHaveLength(1);
-    expect(res.body[0]).toMatchObject({
+    expect(res.body[0]).toEqual({
+      slug: 'publicada',
       pregunta: '¿Publicada?',
       respuesta: expect.any(String),
       fuentes: [datos.FUENTE],
-      fechaRevision: expect.any(String)
+      fechaRevision: `${datos.FECHA_REVISION}T00:00:00.000Z`
     });
-    expect(res.body[0]).not.toHaveProperty('estado');
   });
 
-  test('GET /api/recursos no incluye borradores y trae fuentes y fecha', async () => {
+  test('GET /api/recursos no incluye borradores y trae slug, fuentes y fecha, sin _id ni estado', async () => {
     await repoRecursos.crear(datos.recurso({ titulo: 'Publicado' }));
     await repoRecursos.crear(datos.recurso({ titulo: 'En borrador', ...borrador }));
     const res = await request(app).get('/api/recursos');
     expect(res.status).toBe(200);
     expect(res.body).toEqual([
       {
-        _id: expect.any(String),
+        slug: 'publicado',
         titulo: 'Publicado',
         descripcion: expect.any(String),
         tipo: 'enlace',
@@ -234,14 +234,15 @@ describe('RF-02 buscador de contenidos y preguntas frecuentes', () => {
     ]);
   });
 
-  test('las preguntas encontradas traen su respuesta, fuentes y fecha', async () => {
+  test('las preguntas encontradas traen su slug (el ancla en la web), respuesta, fuentes y fecha', async () => {
     const res = await request(app).get('/api/buscar?q=equipo');
-    expect(res.body.preguntas[0]).toMatchObject({
+    expect(res.body.preguntas[0]).toEqual({
+      slug: 'quien-hace-el-diagnostico',
+      pregunta: '¿Quién hace el DIAGNÓSTICO?',
       respuesta: 'Un equipo especializado.',
       fuentes: [datos.FUENTE],
-      fechaRevision: expect.any(String)
+      fechaRevision: `${datos.FECHA_REVISION}T00:00:00.000Z`
     });
-    expect(res.body.preguntas[0]).not.toHaveProperty('estado');
   });
 
   test('con varias palabras, todas deben aparecer', async () => {

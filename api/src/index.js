@@ -2,14 +2,15 @@
 const { crearServidor } = require('./api/servidor');
 const { conectar, MENSAJE_SIN_URI } = require('./datos/conexion');
 const { cargarContenidos } = require('./datos/sincronizacionContenidos');
-const { cargaEntidades, cargaPasosRuta } = require('./datos/sincronizacionListas');
+const { cargaEntidades, cargaPasosRuta, cargaPreguntas, cargaRecursos } = require('./datos/sincronizacionListas');
 const { prepararAdministradorInicial } = require('./datos/administradorInicial');
 
 /**
  * Arranque: conecta, crea el primer administrador si hace falta (M-08), carga
- * los textos (M-02), los pasos de la ruta (M-03) y el directorio (M-04) de
- * api/contenidos y luego escucha, para que una version nueva reciba trafico con los datos ya
- * cargados. Ni el administrador ni las cargas detienen el arranque; su
+ * los textos (M-02), los pasos de la ruta (M-03), el directorio (M-04) y las
+ * preguntas frecuentes y los recursos (M-05) de api/contenidos y luego
+ * escucha, para que una version nueva reciba trafico con los datos ya cargados.
+ * Ni el administrador ni las cargas detienen el arranque; su
  * resultado queda en el registro.
  */
 async function principal() {
@@ -18,6 +19,8 @@ async function principal() {
   await cargarContenidos();
   await cargaPasosRuta.cargar();
   await cargaEntidades.cargar();
+  await cargaPreguntas.cargar();
+  await cargaRecursos.cargar();
   const app = crearServidor();
   const puerto = process.env.PORT || 3000;
   app.listen(puerto, () => console.log('API en el puerto ' + puerto));

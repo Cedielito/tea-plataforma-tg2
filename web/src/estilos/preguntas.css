@@ -1,0 +1,61 @@
+/* Preguntas frecuentes (M-05, RF-07) en /preguntas-frecuentes: acordeón con
+   botones. RA-01 a RA-11: contraste, foco visible, 320 px, zoom al 200 % y
+   objetivos táctiles de 44 px. Sin animaciones. Solo variables de tokens.css. */
+
+.acordeon {
+  list-style: none;
+  max-width: var(--ancho-lectura);
+  margin: var(--espacio-4) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+.acordeon__elemento {
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-suave);
+}
+.acordeon__titulo { margin: 0; font-size: var(--tipo-h3); }
+.acordeon__boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  width: 100%;
+  min-height: var(--objetivo-tactil);
+  padding: var(--espacio-2);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radio);
+  color: var(--color-texto);
+  font: inherit;
+  line-height: var(--interlineado-titulos);
+  text-align: left;
+  cursor: pointer;
+}
+@media (min-width: 40em) {
+  .acordeon__boton { padding: var(--espacio-2) var(--espacio-3); }
+}
+.acordeon__boton:hover { color: var(--color-primario-hover); }
+.acordeon__boton[aria-expanded="true"] { color: var(--color-primario); }
+.acordeon__pregunta { min-width: 0; overflow-wrap: anywhere; }
+.acordeon__icono { flex-shrink: 0; width: var(--icono); height: var(--icono); color: var(--color-primario); }
+
+.acordeon__panel {
+  padding: 0 var(--espacio-2) var(--espacio-3);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}
+@media (min-width: 40em) {
+  .acordeon__panel { padding-inline: var(--espacio-3); }
+}
+.acordeon__respuesta { padding-top: var(--espacio-2); }
+.acordeon__respuesta p:last-child { margin-bottom: 0; }
+.acordeon__fuentes {
+  margin-top: var(--espacio-2);
+  padding: var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border-radius: var(--radio-pequeno);
+}
+.acordeon__fuentes-titulo { margin: 0 0 var(--espacio-1); font-size: var(--tipo-base); }

@@ -4,7 +4,8 @@ const { MENSAJES: MENSAJES_PUBLICACION, CAMPOS_FECHA } = require('../dominio/pub
 
 /**
  * Respuesta del panel cuando el modelo rechaza guardar. M-08, RF-10, RCN-01, RCN-02
- * La usan los editores de contenidos, de pasos de la ruta y del directorio.
+ * La usan los editores de contenidos, pasos de la ruta, directorio, preguntas
+ * frecuentes y recursos.
  *
  * Devuelve un mensaje por campo ({ campos: { fuentes: '...' } }) para que el
  * editor lo muestre junto a cada uno. Los mensajes son los de los esquemas y
@@ -17,6 +18,8 @@ const MENSAJES = Object.freeze({
   SLUG_REPETIDO: 'Ya existe otro contenido con este slug. Escribe uno distinto.',
   SLUG_REPETIDO_PASO: 'Ya existe otro paso con este slug. Escribe uno distinto.',
   SLUG_REPETIDO_ENTIDAD: 'Ya existe otra entidad con este slug. Escribe uno distinto.',
+  SLUG_REPETIDO_PREGUNTA: 'Ya existe otra pregunta con este slug. Escribe uno distinto.',
+  SLUG_REPETIDO_RECURSO: 'Ya existe otro recurso con este slug. Escribe uno distinto.',
   VALOR_INVALIDO: 'El valor no es válido.'
 });
 

@@ -2,8 +2,9 @@
  * Rutas de la zona pública (M-01 a M-06) y del panel (M-08). Las secciones con
  * contenido de la API (S1 a S5) usan la plantilla de contenido; Señales de
  * alerta tiene sus pestañas por edad; Ruta de atención (S4) lleva arriba la
- * guía de tres preguntas (M-03); Directorio tiene sus filtros (M-04); las
- * demás siguen siendo páginas provisionales hasta su tarea del backlog.
+ * guía de tres preguntas (M-03); Directorio tiene sus filtros (M-04);
+ * Recursos y Preguntas frecuentes (M-05) tienen sus tarjetas y su acordeón;
+ * privacidad y «Acerca de» siguen siendo páginas provisionales hasta T8.
  *
  * El panel (/admin) va fuera del layout público y se descarga aparte, solo al
  * entrar a esa dirección.
@@ -17,9 +18,11 @@ import PaginaSeccion from './paginas/PaginaSeccion.jsx';
 import SenalesDeAlerta from './paginas/SenalesDeAlerta.jsx';
 import GuiaRuta from './ruta/GuiaRuta.jsx';
 import Directorio from './directorio/Directorio.jsx';
+import Recursos from './recursos/Recursos.jsx';
+import PreguntasFrecuentes from './preguntas/PreguntasFrecuentes.jsx';
 import Busqueda from './paginas/Busqueda.jsx';
 import NoEncontrada from './paginas/NoEncontrada.jsx';
-import { PAGINAS_PIE, RUTA_DIRECTORIO_WEB, SECCIONES } from './secciones.js';
+import { PAGINAS_PIE, RUTA_DIRECTORIO_WEB, RUTA_PREGUNTAS_WEB, RUTA_RECURSOS_WEB, SECCIONES } from './secciones.js';
 
 const AppAdmin = lazy(() => import('./admin/AppAdmin.jsx'));
 
@@ -42,6 +45,8 @@ function paginaDe(seccion) {
   }
   if (seccion.slug) return <PaginaContenido key={ruta} seccion={seccion} />;
   if (ruta === RUTA_DIRECTORIO_WEB) return <Directorio key={ruta} seccion={seccion} />;
+  if (ruta === RUTA_RECURSOS_WEB) return <Recursos key={ruta} seccion={seccion} />;
+  if (ruta === RUTA_PREGUNTAS_WEB) return <PreguntasFrecuentes key={ruta} seccion={seccion} />;
   return (
     <PaginaSeccion key={ruta} titulo={titulo} descripcion={descripcion} avisoNoDiagnostico={avisoNoDiagnostico} />
   );

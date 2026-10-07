@@ -95,13 +95,16 @@ api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
-                     slug (datos/sincronizacionListas.js); igual directorio/entidades.yaml
+                     slug (datos/sincronizacionListas.js); igual directorio/entidades.yaml,
+                     preguntas/preguntas.yaml y recursos/recursos.yaml
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
 web/src/ruta/        guía de la ruta (M-03): preguntas, filtro en el navegador y final
 web/src/directorio/  directorio (M-04): página, tarjetas, filtros y entidades por paso
+web/src/recursos/    recursos (M-05): página, tarjetas y texto de cada enlace
+web/src/preguntas/   preguntas frecuentes (M-05): acordeón y ancla #slug
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error
@@ -167,7 +170,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T6 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T7 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -253,4 +256,17 @@ filtros en la dirección (`?ciudad=bogota&tipo=salud`) y tarjetas con todos los 
 una vez y muestra junto a cada paso las entidades nacionales de sus `tiposEntidad` y,
 si se elige una ciudad opcional, las de esa ciudad; la ciudad vive solo en el estado
 de React. Panel: `/admin/directorio`.
-Siguiente: T7 (`feat/recursos-faq`). Ver `docs/backlog-fase-i.md`.
+
+Recursos y preguntas (T7, M-05): `pregunta_frecuente` y `recurso` tienen `slug` (el
+`id` del YAML; si no llega, sale de la pregunta o del título) y el `orden` de las
+preguntas es obligatorio. Las 12 preguntas de `preguntas/preguntas.yaml` y los 6
+recursos de `recursos/recursos.yaml` se cargan al arrancar (`cargaPreguntas`,
+`cargaRecursos`). `/api/preguntas`, `/api/recursos` y `/api/buscar` identifican cada
+pregunta y recurso por `slug`, sin `_id`. `/preguntas-frecuentes` es un acordeón
+WAI-ARIA (botón en h2 con `aria-expanded`); el ancla `#slug` abre la pregunta y pone
+el foco en su botón (`preguntas/anclaPregunta.js`), y cada pregunta del buscador
+enlaza ahí. `/recursos` muestra tarjetas con un botón «Descargar PDF (dominio)» o
+«Abrir página oficial (dominio)» (`recursos/enlaceRecurso.js`). Panel:
+`/admin/preguntas` y `/admin/recursos`, sobre `/api/admin/preguntas` y
+`/api/admin/recursos` (fábrica de `adminLista.js`).
+Siguiente: T8 (`feat/contacto`). Ver `docs/backlog-fase-i.md`.

@@ -84,6 +84,12 @@ export default function LayoutAdmin() {
                   <NavLink to="/admin/directorio" className="navegacion__enlace">Directorio</NavLink>
                 </li>
                 <li>
+                  <NavLink to="/admin/preguntas" className="navegacion__enlace">Preguntas frecuentes</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/admin/recursos" className="navegacion__enlace">Recursos</NavLink>
+                </li>
+                <li>
                   <Link to="/" className="navegacion__enlace">Ir al sitio público</Link>
                 </li>
               </ul>

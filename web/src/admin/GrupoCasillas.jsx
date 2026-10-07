@@ -1,9 +1,9 @@
 /**
  * Grupo de casillas del panel (M-08, RF-10; RA-03, RA-11): <fieldset> con
  * <legend> visible, pista opcional y el mensaje del servidor junto al grupo,
- * igual que Campo.jsx. Cada casilla es un objetivo táctil de 44 px. Lo usa el
+ * igual que Campo.jsx. Cada casilla es un objetivo táctil de 44 px. Lo usan el
  * editor de pasos de la ruta para perfiles, tramos, regímenes y tipos de
- * entidad.
+ * entidad, y el de recursos para los perfiles destinatarios.
  */
 import { MensajeError } from './Campo.jsx';
 
