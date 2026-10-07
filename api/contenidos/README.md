@@ -141,7 +141,7 @@ Markdown con el mismo encabezado de los contenidos. La política de privacidad a
 `version` (la que se guarda con cada mensaje, RS-02), `vigenteDesde` y
 `textoAutorizacion` (el texto de la casilla del formulario de contacto).
 
-**Antes de publicar, reemplazar todos los textos `COMPLETAR`**: dirección y teléfono
-del responsable (Decreto 1377 de 2013, art. 13) y la fecha de vigencia. Los nombres
-y el correo ya están. La carga de T8 debe rechazar un archivo que todavía diga
-`COMPLETAR`.
+**Antes de publicar, reemplazar el texto `COMPLETAR` que queda**: la fecha de
+vigencia, en `vigenteDesde` y en la frase «Vigente desde…». Los datos del
+responsable que pide el Decreto 1377 de 2013, art. 13, ya están completos. La carga
+de T8 debe rechazar un archivo que todavía diga `COMPLETAR`.

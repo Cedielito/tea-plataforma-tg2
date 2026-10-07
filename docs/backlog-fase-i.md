@@ -21,7 +21,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | ✅ Lista de 15 a 30 entidades públicas para el directorio con fuente | Hecha: 23 verificadas (`api/contenidos/directorio/`); Santiago las revisa | 14 oct | T6 |
 | ✅ Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Hechos: 18 pasos (`api/contenidos/ruta/`); Santiago los revisa | 13 oct | T5 |
 | ✅ 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Hechos: 6 recursos y 12 preguntas (`api/contenidos/recursos/` y `preguntas/`); Santiago los revisa | 15 oct | T7 |
-| Completar los `COMPLETAR` de `api/contenidos/paginas/` (dirección y teléfono del responsable, fecha de vigencia) | Ambos | Antes de fusionar T8 | T8 |
+| Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Ambos | Antes de fusionar T8 | T8 |
 | Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
 | Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
 
@@ -201,7 +201,9 @@ autorización de tratamiento de datos que enlaza a /privacidad (RS-02, RS-03);
 el servidor rechaza el envío sin autorización y guarda la versión de la política
 aceptada. Páginas /privacidad y /acerca-de con los textos de
 api/contenidos/paginas/: la política (versión 1.0) trae en su encabezado el texto
-de la casilla (textoAutorizacion). No publiques un archivo que diga COMPLETAR.
+de la casilla (textoAutorizacion). Solo falta su fecha de vigencia (COMPLETAR en
+vigenteDesde y en «Vigente desde…»): pídela al equipo. No publiques un archivo
+que diga COMPLETAR.
 Bandeja de mensajes en el panel con opción de eliminar (RF-11) y tarea que
 suprime mensajes de más de 6 meses (RS-04), con pruebas. Protección básica
 contra abuso (límite de envíos por IP) sin servicios de terceros: según la

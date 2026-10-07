@@ -21,9 +21,9 @@ La plataforma es un proyecto académico: el trabajo de grado de dos estudiantes 
 
 - **Nombres:** Lucas Cediel Alarcón y Santiago Cárdenas Rubio.
 - **Domicilio:** Bogotá D. C., Colombia.
-- **Dirección de correspondencia:** COMPLETAR: dirección de correspondencia.
+- **Dirección de correspondencia:** Calle 19A # 120-9, Fontibón San Pablo, Bogotá D. C.
 - **Correo electrónico:** lcediel46@ucatolica.edu.co
-- **Teléfono:** COMPLETAR: teléfono de contacto.
+- **Teléfono:** 301 461 6524
 
 ## Qué datos recogemos
 
