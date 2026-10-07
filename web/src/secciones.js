@@ -18,6 +18,9 @@ import {
   Scale
 } from 'lucide-react';
 
+/** Página del directorio (M-04); la guía de la ruta enlaza aquí, sin filtros. */
+export const RUTA_DIRECTORIO_WEB = '/directorio';
+
 export const SECCIONES = [
   {
     ruta: '/que-es-el-tea',
@@ -66,7 +69,7 @@ export const SECCIONES = [
     slug: 'derechos'
   },
   {
-    ruta: '/directorio',
+    ruta: RUTA_DIRECTORIO_WEB,
     nav: 'Directorio',
     titulo: 'Directorio',
     descripcion: 'Entidades públicas de orientación, por ciudad y tipo.',

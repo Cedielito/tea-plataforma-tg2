@@ -62,9 +62,28 @@ function pasoRuta(cambios = {}) {
   };
 }
 
+/**
+ * Entidad del directorio: la fecha de RCN-02 se llama fechaVerificacion.
+ * Institucional (esProfesional: false), como las de directorio/entidades.yaml.
+ */
+function entidad(cambios = {}) {
+  const { fechaRevision: _sinRevision, ...publicada } = publicable();
+  return {
+    nombre: 'Secretaría Distrital de Salud de Bogotá',
+    tipo: 'salud',
+    ciudad: 'Bogotá',
+    descripcion: 'Orienta sobre los servicios de salud en Bogotá.',
+    contacto: { telefonos: ['(601) 329 5090'], correo: 'contactenos@saludcapital.gov.co', web: 'https://www.saludcapital.gov.co' },
+    esProfesional: false,
+    ...publicada,
+    fechaVerificacion: FECHA_REVISION,
+    ...cambios
+  };
+}
+
 /** Un dia despues de hoy, en formato AAAA-MM-DD. */
 function fechaFutura() {
   return new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
-module.exports = { FUENTE, FECHA_REVISION, contenido, pregunta, recurso, pasoRuta, fechaFutura };
+module.exports = { FUENTE, FECHA_REVISION, contenido, pregunta, recurso, pasoRuta, entidad, fechaFutura };

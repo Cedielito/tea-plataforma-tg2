@@ -128,6 +128,15 @@ textarea.campo__control { resize: vertical; }
 /* Grupo de casillas (editor de pasos de la ruta): una fila que se parte si no cabe */
 .grupo-casillas__opciones { display: flex; flex-wrap: wrap; gap: 0 var(--espacio-3); }
 
+/* Contacto de una entidad del directorio (M-04): sus campos van agrupados */
+.grupo-contacto {
+  gap: var(--espacio-2);
+  padding: var(--espacio-2);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+}
+.grupo-contacto > legend { padding-inline: var(--espacio-1); }
+
 /* Inicio de sesión */
 .pagina-acceso .formulario-acceso {
   max-width: var(--ancho-buscador-pagina);

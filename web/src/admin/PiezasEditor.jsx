@@ -1,11 +1,12 @@
 /**
- * Piezas comunes de los editores del panel: contenidos y pasos de la ruta
- * (M-08, RF-10; RCN-01, RCN-02; RA-03, RA-10, RA-11).
+ * Piezas comunes de los editores del panel: contenidos, pasos de la ruta y
+ * directorio (M-08, RF-10; RCN-01, RCN-02; RA-03, RA-10, RA-11).
  *
  * - EtiquetaEstado: «Publicado» o «Borrador», con texto y forma, no solo color.
  * - AvisoArchivo: el registro viene de api/contenidos y el archivo puede
  *   reemplazar lo que se guarde en el panel.
  * - CampoFechaRevision: fecha con máximo hoy y botón «Usar la fecha de hoy».
+ *   El directorio la usa como «Fecha de verificación» (`etiqueta` y `pista`).
  * - AccionesEditor: Publicar o Guardar cambios, Guardar borrador o
  *   Despublicar, y el resultado anunciado (role="status"). Los botones no
  *   cambian de lugar: el foco se queda en el que se presionó.
@@ -39,16 +40,17 @@ export function AvisoArchivo({ titulo, children }) {
   );
 }
 
-export function CampoFechaRevision({ id, valor, alCambiar, error }) {
+export function CampoFechaRevision({
+  id,
+  valor,
+  alCambiar,
+  error,
+  etiqueta = 'Fecha de revisión',
+  pista = 'Día en que se revisó el texto contra sus fuentes. No puede ser posterior a hoy.'
+}) {
   const hoy = hoyEnColombia();
   return (
-    <Campo
-      id={id}
-      etiqueta="Fecha de revisión"
-      indicacion="(obligatoria para publicar)"
-      error={error}
-      pista="Día en que se revisó el texto contra sus fuentes. No puede ser posterior a hoy."
-    >
+    <Campo id={id} etiqueta={etiqueta} indicacion="(obligatoria para publicar)" error={error} pista={pista}>
       {(props) => (
         <div className="campo__fila">
           <input

@@ -8,10 +8,11 @@ const contenidos = require('../../datos/repositorios/contenidos');
 const preguntas = require('../../datos/repositorios/preguntas');
 const recursos = require('../../datos/repositorios/recursos');
 const pasosRuta = require('../../datos/repositorios/pasosRuta');
+const entidadesDirectorio = require('../../datos/repositorios/entidadesDirectorio');
 
 /**
- * Rutas publicas de solo lectura. M-01, M-02, M-03, M-05, RF-02, RF-03, RF-04,
- * RF-06, RF-07, RCN-01, RCN-02, RS-01
+ * Rutas publicas de solo lectura. M-01, M-02, M-03, M-04, M-05, RF-02, RF-03,
+ * RF-04, RF-05, RF-06, RF-07, RCN-01, RCN-02, RS-01, RS-07
  *
  * Solo devuelven lo publicado, con sus fuentes y su fecha de revision. No piden
  * registro ni guardan nada de quien consulta. Las rutas de escritura van en
@@ -20,6 +21,11 @@ const pasosRuta = require('../../datos/repositorios/pasosRuta');
  * /pasos-ruta devuelve todos los pasos publicados y no recibe respuestas: la
  * guia elige en el navegador los que corresponden (RF-04, RS-01). Si llegan
  * parametros en la consulta, se ignoran.
+ *
+ * /directorio devuelve todas las entidades publicadas, sin filtros: la web
+ * filtra por ciudad y tipo en el navegador, asi que la ciudad que elige la
+ * persona en la guia de la ruta no llega a la API (RF-04, RS-01). Sin la
+ * constancia de autorizacion de los profesionales (RS-07).
  */
 
 const NO_ENCONTRADO = 'Contenido no encontrado.';
@@ -64,6 +70,13 @@ function crearRutasPublicas() {
     '/pasos-ruta',
     envolver(async (_req, res) => {
       res.json(await pasosRuta.listarPublicados());
+    })
+  );
+
+  rutas.get(
+    '/directorio',
+    envolver(async (_req, res) => {
+      res.json(await entidadesDirectorio.listarPublicadas());
     })
   );
 

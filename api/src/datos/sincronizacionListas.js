@@ -1,44 +1,60 @@
 'use strict';
 const fs = require('node:fs/promises');
 const path = require('node:path');
-const { PasoRuta } = require('./modelos');
+const { EntidadDirectorio, PasoRuta } = require('./modelos');
 const pasosRuta = require('./repositorios/pasosRuta');
+const entidadesDirectorio = require('./repositorios/entidadesDirectorio');
 const { DIRECTORIO_CONTENIDOS } = require('./sincronizacionContenidos');
 const { describirError, resumirInforme } = require('./informeCarga');
 const { ACCIONES, decidirAccion } = require('../dominio/archivoContenido');
 const { leerArchivoLista } = require('../dominio/archivoLista');
+const { erroresDeContactoEnArchivo } = require('../dominio/directorio');
 
 /**
  * Carga de las listas YAML de api/contenidos a su coleccion al arrancar la
- * API, con las mismas reglas que los textos de S1 a S5 (T3). M-03, RF-04,
- * RF-10, RCN-01, RCN-02, RCN-05
+ * API, con las mismas reglas que los textos de S1 a S5 (T3). M-03, M-04,
+ * RF-04, RF-05, RF-10, RCN-01, RCN-02, RCN-05, RS-07
  *
  * - Cada elemento tiene un `id`, que se guarda como `slug`, y se busca por ese
- *   slug. Crea lo que falta y actualiza solo si la fecha de revision del
- *   archivo es mas reciente que la de la base.
+ *   slug. Crea lo que falta y actualiza solo si la fecha del archivo es mas
+ *   reciente que la de la base: la de revision o, en el directorio, la de
+ *   verificacion (`campoFecha`).
  * - Escribe con el repositorio, asi que el modelo rechaza publicar sin fuentes
- *   ni fecha (RCN-01, RCN-02).
+ *   ni fecha (RCN-01, RCN-02), y en el directorio, a un profesional sin
+ *   constancia de autorizacion (RS-07).
  * - Nunca borra ni despublica: quitar un elemento del archivo no lo quita de
  *   la base.
  * - Cada elemento se procesa por separado: uno con errores queda en el
  *   informe y los demas se cargan. Ningun error detiene el arranque.
  *
- * Por ahora carga ruta/pasos.yaml (T5). Las tareas T6 y T7 agregan aqui sus
- * listas con crearCargaDeLista.
+ * Carga ruta/pasos.yaml (T5) y directorio/entidades.yaml (T6). La tarea T7
+ * agrega aqui sus listas con crearCargaDeLista.
  */
 
 /**
  * @param {{nombre: string, archivo: string, Modelo: import('mongoose').Model,
  *   repositorio: {crear: Function, actualizar: Function}, campos: string[],
- *   repetido: string}} configuracion `nombre` encabeza la linea del registro;
- *   `archivo` es la ruta dentro de api/contenidos; `campos`, los permitidos
- *   ademas de `id`; `repetido`, el mensaje si el slug ya existe
+ *   repetido: string, campoFecha?: string, revisar?: Function}} configuracion
+ *   `nombre` encabeza la linea del registro; `archivo` es la ruta dentro de
+ *   api/contenidos; `campos`, los permitidos ademas de `id`; `repetido`, el
+ *   mensaje si el slug ya existe; `campoFecha`, la fecha de RCN-02 con la que
+ *   se compara (por defecto fechaRevision); `revisar`, errores de formato
+ *   propios de la lista (dominio/archivoLista.js)
  */
-function crearCargaDeLista({ nombre, archivo, Modelo, repositorio, campos, repetido }) {
+function crearCargaDeLista({
+  nombre,
+  archivo,
+  Modelo,
+  repositorio,
+  campos,
+  repetido,
+  campoFecha = 'fechaRevision',
+  revisar = null
+}) {
   const rutaPorDefecto = path.join(DIRECTORIO_CONTENIDOS, archivo);
 
   async function leer(ruta) {
-    return leerArchivoLista(await fs.readFile(ruta, 'utf8'), { campos });
+    return leerArchivoLista(await fs.readFile(ruta, 'utf8'), { campos, campoFecha, revisar });
   }
 
   /**
@@ -56,13 +72,13 @@ function crearCargaDeLista({ nombre, archivo, Modelo, repositorio, campos, repet
     informe.errores.push(...leido.errores.map(({ nombre: elemento, mensaje }) => ({ elemento, mensaje })));
 
     const existentes = await Modelo.find({ slug: { $in: leido.elementos.map(({ datos }) => datos.slug) } })
-      .select('slug fechaRevision')
+      .select(`slug ${campoFecha}`)
       .lean();
     const existentePorSlug = new Map(existentes.map((doc) => [doc.slug, doc]));
 
     for (const { nombre: elemento, datos } of leido.elementos) {
       const existente = existentePorSlug.get(datos.slug) || null;
-      const accion = decidirAccion(datos.fechaRevision, existente);
+      const accion = decidirAccion(datos[campoFecha], existente, campoFecha);
       if (accion === ACCIONES.OMITIR) {
         informe.sinCambios.push(elemento);
         continue;
@@ -143,4 +159,27 @@ const cargaPasosRuta = crearCargaDeLista({
   repetido: 'Ya existe otro paso con el mismo id.'
 });
 
-module.exports = { crearCargaDeLista, CAMPOS_PASO_RUTA, cargaPasosRuta };
+const CAMPOS_ENTIDAD = Object.freeze([
+  'nombre',
+  'tipo',
+  'ciudad',
+  'descripcion',
+  'contacto',
+  'esProfesional',
+  'constanciaAutorizacion',
+  'fuentes',
+  'fechaVerificacion'
+]);
+
+const cargaEntidades = crearCargaDeLista({
+  nombre: 'Directorio',
+  archivo: 'directorio/entidades.yaml',
+  Modelo: EntidadDirectorio,
+  repositorio: entidadesDirectorio,
+  campos: CAMPOS_ENTIDAD,
+  repetido: 'Ya existe otra entidad con el mismo id.',
+  campoFecha: 'fechaVerificacion',
+  revisar: erroresDeContactoEnArchivo
+});
+
+module.exports = { crearCargaDeLista, CAMPOS_PASO_RUTA, cargaPasosRuta, CAMPOS_ENTIDAD, cargaEntidades };

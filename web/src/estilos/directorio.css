@@ -1,0 +1,193 @@
+/* Directorio de orientación (M-04, RF-05) en /directorio y entidades junto a los
+   pasos de la guía de la ruta (M-03). RA-01 a RA-11: contraste, foco visible,
+   320 px, zoom al 200 % y objetivos táctiles de 44 px. Sin animaciones. Solo
+   variables de tokens.css. */
+
+/* ---------- Notas de la página ---------- */
+.nota-directorio {
+  display: flex;
+  gap: var(--espacio-2);
+  align-items: flex-start;
+  max-width: var(--ancho-lectura);
+  padding: var(--espacio-2);
+  background: var(--color-primario-suave);
+  border: var(--borde-fino) solid var(--color-primario);
+  border-radius: var(--radio);
+}
+.nota-directorio svg { width: var(--icono); height: var(--icono); margin-top: 0.1em; color: var(--color-primario); }
+.nota-directorio p { margin: 0; }
+
+/* ---------- Filtros ---------- */
+.filtros {
+  max-width: var(--ancho-lectura);
+  margin-top: var(--espacio-3);
+  padding: var(--espacio-3) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra-suave);
+}
+@media (min-width: 40em) {
+  .filtros { padding: var(--espacio-3); }
+}
+.filtros__titulo { font-size: var(--tipo-h3); margin-bottom: var(--espacio-2); }
+.filtros__campos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--espacio-2);
+}
+.filtro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  flex: 1 1 var(--ancho-buscador-minimo);
+  min-width: 0;
+}
+.filtro__etiqueta { font-weight: var(--peso-negrita); }
+.filtros__nota {
+  margin: var(--espacio-2) 0 0;
+  font-size: var(--tipo-pequeno);
+  color: var(--color-texto-secundario);
+}
+
+.directorio__resumen {
+  max-width: var(--ancho-lectura);
+  margin-block: var(--espacio-3) 0;
+  font-size: var(--tipo-destacado);
+  font-weight: var(--peso-negrita);
+}
+/* Vacía mientras carga: sin espacio, pero presente para que se anuncien los cambios */
+.directorio__resumen:empty { margin: 0; }
+.directorio__vacio { max-width: var(--ancho-lectura); margin-top: var(--espacio-2); }
+
+/* ---------- Grupos y tarjetas ---------- */
+.grupo-entidades { margin-top: var(--espacio-4); }
+.grupo-entidades > h2 {
+  padding-top: var(--espacio-3);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}
+
+/* Una columna en móvil; más columnas cuando caben tarjetas de 20 rem */
+.entidades {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--ancho-tarjeta-entidad)), 1fr));
+  gap: var(--espacio-3);
+}
+.entidad { display: flex; min-width: 0; }
+.entidad__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  width: 100%;
+  padding: var(--espacio-3) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-top: var(--borde-grueso) solid var(--color-acento);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-suave);
+}
+@media (min-width: 40em) {
+  .entidad__cuerpo { padding: var(--espacio-3); }
+}
+.entidad__cuerpo > * { margin: 0; }
+.entidad__nombre { font-size: var(--tipo-h3); }
+.entidad__profesional {
+  padding: var(--espacio-1) var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border-radius: var(--radio-pequeno);
+  font-size: var(--tipo-pequeno);
+  font-weight: var(--peso-negrita);
+}
+/* Verificación y fuentes siempre al final de la tarjeta */
+.entidad__pie {
+  margin-top: auto;
+  padding-top: var(--espacio-2);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}
+
+/* Tipo y lugar: dos etiquetas con texto, no solo color */
+.tipo-lugar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  font-size: var(--tipo-pequeno);
+}
+.tipo-lugar__dato {
+  padding: 0 var(--espacio-1);
+  background: var(--color-superficie-suave);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-pequeno);
+  font-weight: var(--peso-negrita);
+}
+
+/* ---------- Datos de contacto ---------- */
+.contacto { display: flex; flex-direction: column; gap: var(--espacio-1); margin: 0; }
+.contacto__dato { min-width: 0; }
+.contacto__etiqueta {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  font-size: var(--tipo-pequeno);
+  font-weight: var(--peso-negrita);
+  color: var(--color-texto-secundario);
+}
+.contacto__etiqueta svg { width: var(--icono-mini); height: var(--icono-mini); }
+.contacto__valor { margin: 0; overflow-wrap: anywhere; }
+.contacto__telefonos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--espacio-3);
+}
+.contacto__enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  min-height: var(--objetivo-tactil);
+  overflow-wrap: anywhere;
+}
+.contacto__enlace svg { width: var(--icono-pequeno); height: var(--icono-pequeno); }
+.contacto__texto { display: inline-flex; align-items: center; min-height: var(--objetivo-tactil); }
+
+.verificacion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  margin: 0;
+  font-size: var(--tipo-pequeno);
+  font-weight: var(--peso-negrita);
+}
+.verificacion svg { width: var(--icono-pequeno); height: var(--icono-pequeno); color: var(--color-primario); }
+
+/* ---------- Entidades junto a cada paso de la guía (M-03) ---------- */
+.entidades-paso {
+  margin-block: var(--espacio-1);
+  padding: var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+}
+/* En pantallas angostas usa todo el ancho del paso, también bajo el número */
+@media (max-width: 39.99em) {
+  .paso-ruta > .entidades-paso { grid-column: 1 / -1; }
+}
+.entidades-paso__titulo { margin: 0 0 var(--espacio-1); font-weight: var(--peso-negrita); }
+.entidades-paso__lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.entidad-breve { display: flex; flex-direction: column; gap: var(--espacio-1); padding-block: var(--espacio-2); }
+.entidad-breve:first-child { padding-top: 0; }
+.entidad-breve:last-child { padding-bottom: 0; }
+.entidad-breve + .entidad-breve { border-top: var(--borde-fino) solid var(--color-borde); }
+.entidad-breve > * { margin: 0; }
+.entidad-breve__nombre { font-weight: var(--peso-negrita); line-height: var(--interlineado-titulos); }

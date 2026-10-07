@@ -1,12 +1,13 @@
 'use strict';
 const { Schema } = require('mongoose');
 const { ESTADOS } = require('../../dominio/catalogos');
-const { MENSAJES, esUrlSegura, validarPublicacion } = require('../../dominio/publicacion');
+const { MENSAJES, esUrlSegura, mensajesDeFecha, validarPublicacion } = require('../../dominio/publicacion');
 const { PATRON_SLUG, LARGO_MAXIMO, generarSlug } = require('../../dominio/slug');
 
 /**
  * Piezas comunes de los esquemas que se publican: contenido,
- * pregunta_frecuente, recurso y paso_ruta (Cuadro 13). RCN-01, RCN-02, RF-10
+ * pregunta_frecuente, recurso, paso_ruta y entidad_directorio (Cuadro 13).
+ * RCN-01, RCN-02, RF-05, RF-10
  */
 
 /**
@@ -17,6 +18,13 @@ const aNFC = (valor) => (typeof valor === 'string' ? valor.normalize('NFC') : va
 
 function texto(opciones = {}) {
   return { type: String, trim: true, set: aNFC, ...opciones };
+}
+
+const sinVacio = (valor) => (typeof valor === 'string' && valor.trim() === '' ? undefined : valor);
+
+/** Texto que se puede dejar vacio: un texto vacio no se guarda. */
+function textoOpcional(opciones = {}) {
+  return texto({ set: (valor) => sinVacio(aNFC(valor)), ...opciones });
 }
 
 /**
@@ -36,14 +44,15 @@ function campoSlug() {
   };
 }
 
-/** Plugin: si no llega un slug, se genera a partir del título. */
-function slugDesdeTitulo(schema) {
+/**
+ * Plugin: si no llega un slug, se genera a partir del título (o del campo que
+ * se indique, como el nombre de una entidad del directorio).
+ */
+function slugDesdeTitulo(schema, { campo = 'titulo' } = {}) {
   schema.pre('validate', function completarSlug() {
-    if (!this.slug && this.titulo) this.slug = generarSlug(this.titulo);
+    if (!this.slug && this[campo]) this.slug = generarSlug(this[campo]);
   });
 }
-
-const sinVacio = (valor) => (typeof valor === 'string' && valor.trim() === '' ? undefined : valor);
 
 /** Una fuente: texto que la identifica y enlace opcional (un libro puede no tenerlo). */
 const esquemaFuente = new Schema(
@@ -75,11 +84,14 @@ const MENSAJE_ESCRITURA_DIRECTA =
 /**
  * Plugin: agrega fuentes, fecha de revision y estado, y rechaza guardar como
  * publicado lo que no cumple las reglas de dominio/publicacion.js.
+ * @param {{campoFecha?: string}} opciones nombre del campo de fecha de RCN-02:
+ *   `fechaRevision` (por defecto) o `fechaVerificacion` en el directorio
  */
-function publicable(schema) {
+function publicable(schema, { campoFecha = 'fechaRevision' } = {}) {
+  mensajesDeFecha(campoFecha);
   schema.add({
     fuentes: { type: [esquemaFuente], default: [] },
-    fechaRevision: { type: Date, default: null },
+    [campoFecha]: { type: Date, default: null },
     estado: {
       type: String,
       required: true,
@@ -90,7 +102,7 @@ function publicable(schema) {
 
   schema.pre('validate', function aplicarReglasDePublicacion() {
     const porCampo = new Map();
-    for (const { campo, mensaje } of validarPublicacion(this)) {
+    for (const { campo, mensaje } of validarPublicacion(this, new Date(), { campoFecha })) {
       porCampo.set(campo, [...(porCampo.get(campo) || []), mensaje]);
     }
     for (const [campo, mensajes] of porCampo) this.invalidate(campo, mensajes.join(' '));
@@ -103,6 +115,8 @@ function publicable(schema) {
 
 module.exports = {
   texto,
+  textoOpcional,
+  sinVacio,
   campoSlug,
   slugDesdeTitulo,
   esquemaFuente,

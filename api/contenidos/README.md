@@ -86,14 +86,15 @@ Además de las páginas de S1 a S5, esta carpeta guarda en subcarpetas los datos
 cargan las tareas T5 a T8. La carga de las páginas solo lee los `.md` de este primer
 nivel. Cada tarea agrega su propia carga, con las mismas reglas: buscar por `id` o
 `slug`, crear lo que falta, actualizar solo si la fecha del archivo es más reciente y
-nunca borrar. Ya se cargan los pasos de la ruta (T5); las demás subcarpetas todavía
-no afectan lo publicado.
+nunca borrar. Ya se cargan los pasos de la ruta (T5) y el directorio (T6); las demás
+subcarpetas todavía no afectan lo publicado.
 
 Las listas `.yaml` se cargan con `api/src/datos/sincronizacionListas.js`: el `id` de
 cada elemento se guarda en la base como `slug`, para no confundirlo con el `_id` de
 MongoDB que usan el panel y sus rutas. Un elemento con errores queda en los logs de
 Render, con el archivo y su `id`, y los demás se cargan:
-`Pasos de la ruta: 18 creados, 0 actualizados, 0 sin cambios, 0 con errores.`
+`Pasos de la ruta: 18 creados, 0 actualizados, 0 sin cambios, 0 con errores.` y
+`Directorio: 23 creados, 0 actualizados, 0 sin cambios, 0 con errores.`
 
 | Carpeta | Colección (Cuadro 13) | Tarea | Contenido |
 |---|---|---|---|
@@ -129,20 +130,40 @@ dos frases como máximo.
 ### Directorio (`directorio/entidades.yaml`)
 
 Solo datos institucionales públicos (RS-07): ningún profesional independiente, así
-que `esProfesional` es `false` en todas. Valores de `tipo`:
+que `esProfesional` es `false` en todas. Si algún día se agrega un profesional, necesita
+`constanciaAutorizacion` (dónde está archivada su autorización firmada y su fecha):
+sin ella no se publica, y la constancia nunca sale por la API pública.
+
+La fecha se llama `fechaVerificacion`, como en el Cuadro 13: es la fecha de RCN-02 del
+directorio y cumple las mismas reglas que `fechaRevision` (obligatoria para publicar,
+no posterior a hoy y, para que un cambio llegue a la base, más reciente que la de la
+base). Una entidad con `fechaRevision` se rechaza. `contacto` admite `telefonos`,
+`correo`, `web`, `direccion` y `horario`, con al menos un teléfono, correo o sitio
+web; un campo mal escrito (por ejemplo `telefono:`) queda como error.
+
+Valores de `tipo`:
 
 | `tipo` | Etiqueta para el filtro |
 |---|---|
 | `salud` | Salud |
 | `educacion` | Educación |
-| `proteccion` | Protección de derechos |
+| `proteccion` | Protección de derechos (Defensoría y Personerías) |
+| `proteccion-ninez` | Protección de niñas, niños y adolescentes (ICBF) |
 | `quejas-salud` | Quejas sobre servicios de salud |
 | `linea-apoyo` | Líneas de orientación y apoyo emocional |
 | `organizacion` | Organizaciones de familias y personas autistas |
 
 Ciudades: Nacional, Bogotá, Medellín, Cali y Barranquilla. Las entidades nacionales
-deben aparecer con cualquier ciudad que se elija. Los números de WhatsApp van en
-`telefonos` con el sufijo «(WhatsApp)».
+aparecen con cualquier ciudad que se elija. Los números de WhatsApp van en
+`telefonos` con el sufijo «(WhatsApp)»: la web los enlaza a `https://wa.me/57` más el
+número. Un teléfono con «, ext. 300» se marca al número principal.
+
+En `/directorio` los filtros van en la dirección sin tildes (`?ciudad=bogota&tipo=salud`).
+La guía de la ruta muestra junto a cada paso las entidades nacionales de sus
+`tiposEntidad` y, si la persona elige su ciudad, también las de esa ciudad; esa ciudad
+no se envía, no se guarda y no va en la dirección (RF-04, RS-01). Las pruebas cargan
+este archivo y comprueban que no tenga errores, que haya entidades de cada ciudad y
+que cada tipo que usan los pasos tenga al menos una entidad nacional.
 
 Las secretarías de Salud Pública y de Educación de Cali aparecen con los canales
 generales de atención de la Alcaldía de Santiago de Cali, porque sus páginas propias

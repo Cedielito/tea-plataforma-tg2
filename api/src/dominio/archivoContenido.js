@@ -112,10 +112,12 @@ function diaGuardado(fecha) {
  *
  * @param {string|null} fechaArchivo AAAA-MM-DD
  * @param {{fechaRevision: Date|null}|null} existente documento de la base
+ * @param {string} campoFecha campo del documento con la fecha que se compara
+ *   (`fechaVerificacion` en el directorio)
  */
-function decidirAccion(fechaArchivo, existente) {
+function decidirAccion(fechaArchivo, existente, campoFecha = 'fechaRevision') {
   if (!existente) return ACCIONES.CREAR;
-  const fechaBase = diaGuardado(existente.fechaRevision);
+  const fechaBase = diaGuardado(existente[campoFecha]);
   if (!fechaArchivo || !fechaBase) return ACCIONES.ACTUALIZAR;
   return fechaArchivo > fechaBase ? ACCIONES.ACTUALIZAR : ACCIONES.OMITIR;
 }

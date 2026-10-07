@@ -1,4 +1,5 @@
-/* Guía de la ruta de atención (M-03, RF-04) en /ruta-de-atencion. RA-01 a RA-11:
+/* Guía de la ruta de atención (M-03, RF-04) en /ruta-de-atencion. Las entidades
+   junto a cada paso usan los estilos de directorio.css (M-04). RA-01 a RA-11:
    contraste, foco visible, 320 px, zoom al 200 % y objetivos táctiles de 44 px.
    Sin animaciones. Solo variables de tokens.css. */
 
@@ -183,21 +184,31 @@
 }
 .paso-ruta__texto { margin-bottom: var(--espacio-1); }
 
-/* Fuentes de cada paso (RCN-01, RCN-02): se abren con Enter o Espacio */
-.paso-ruta__fuentes summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--objetivo-tactil);
-  color: var(--color-primario);
-  font-weight: var(--peso-negrita);
-  cursor: pointer;
+
+/* Ciudad opcional para ver entidades cercanas (M-04): no es una pregunta más,
+   así que va en un bloque suave y sin número */
+.guia__ciudad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  padding: var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
 }
-/* El triángulo es decorativo: el texto alternativo vacío lo oculta al lector de pantalla */
-.paso-ruta__fuentes summary::before { content: "▸"; content: "▸" / ""; margin-right: var(--espacio-1); }
-.paso-ruta__fuentes[open] summary::before { content: "▾"; content: "▾" / ""; }
-.paso-ruta__fuentes summary::-webkit-details-marker { display: none; }
-.paso-ruta__fuentes summary { list-style: none; }
-.paso-ruta__fuentes .fuentes__lista { margin-top: var(--espacio-1); }
+.guia__ciudad > p { margin: 0; }
+.guia__ciudad-etiqueta {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-1);
+  font-weight: var(--peso-negrita);
+}
+.guia__ciudad-etiqueta svg { width: var(--icono-pequeno); height: var(--icono-pequeno); margin-top: 0.2em; color: var(--color-primario); }
+.guia__opcional { font-weight: normal; color: var(--color-texto-secundario); }
+.guia__ciudad-pista,
+.guia__ciudad-nota { font-size: var(--tipo-pequeno); }
+.guia__ciudad-nota { color: var(--color-texto-secundario); }
+.guia__directorio { margin: 0; }
 
 /* Recuadro hacia las señales de alerta del tramo elegido */
 .guia__senales { margin-top: 0; border-radius: var(--radio); }

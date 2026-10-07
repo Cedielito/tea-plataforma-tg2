@@ -8,9 +8,9 @@ const { crearRutasAdmin } = require('./rutas/admin');
 
 /**
  * Servidor HTTP de la Fase I: estado del servicio, rutas publicas de
- * contenidos, preguntas frecuentes, recursos y buscador (T2), inicio de sesion
- * y panel de administracion (T4). Las rutas de directorio y contacto se
- * agregan en sus tareas del backlog (T5 a T8).
+ * contenidos, preguntas frecuentes, recursos y buscador (T2), pasos de la
+ * ruta (T5) y directorio (T6), inicio de sesion y panel de administracion
+ * (T4). Las rutas de contacto se agregan en su tarea del backlog (T8).
  *
  * RS-05: todo /api/admin/* pasa primero por exigirSesion, sin excepciones
  * (tambien las rutas que no existen responden 401 sin sesion). El inicio de

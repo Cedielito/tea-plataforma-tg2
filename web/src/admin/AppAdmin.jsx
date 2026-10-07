@@ -1,8 +1,9 @@
 /**
  * Panel de administración (M-08): rutas bajo /admin, con su sesión y sus
- * estilos. Contenidos de S1 a S5 (/admin y /admin/contenidos) y pasos de la
- * ruta de atención (/admin/ruta, M-03). Se descarga aparte (React.lazy en rutas.jsx): quien visita la zona
- * pública no lo baja. No hay enlaces a /admin desde la navegación pública.
+ * estilos. Contenidos de S1 a S5 (/admin y /admin/contenidos), pasos de la
+ * ruta de atención (/admin/ruta, M-03) y directorio (/admin/directorio, M-04).
+ * Se descarga aparte (React.lazy en rutas.jsx): quien visita la zona pública
+ * no lo baja. No hay enlaces a /admin desde la navegación pública.
  */
 import { Link, Route, Routes } from 'react-router-dom';
 import '../estilos/admin.css';
@@ -13,6 +14,8 @@ import ListaContenidos from './ListaContenidos.jsx';
 import EditorContenido from './EditorContenido.jsx';
 import ListaPasosRuta from './ListaPasosRuta.jsx';
 import EditorPasoRuta from './EditorPasoRuta.jsx';
+import ListaEntidades from './ListaEntidades.jsx';
+import EditorEntidad from './EditorEntidad.jsx';
 
 function NoEncontradaAdmin() {
   useTituloPagina('Página no encontrada · Panel');
@@ -37,6 +40,9 @@ export default function AppAdmin() {
           <Route path="ruta" element={<ListaPasosRuta />} />
           <Route path="ruta/nuevo" element={<EditorPasoRuta key="nuevo" />} />
           <Route path="ruta/:id" element={<EditorPasoRuta key="existente" />} />
+          <Route path="directorio" element={<ListaEntidades />} />
+          <Route path="directorio/nueva" element={<EditorEntidad key="nueva" />} />
+          <Route path="directorio/:id" element={<EditorEntidad key="existente" />} />
           <Route path="*" element={<NoEncontradaAdmin />} />
         </Route>
       </Routes>
