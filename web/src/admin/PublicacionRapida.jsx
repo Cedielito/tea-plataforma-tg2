@@ -1,6 +1,7 @@
 /**
  * «Publicar» y «Despublicar» desde las tarjetas de las listas del panel:
- * contenidos y pasos de la ruta (M-08, RF-10, HU-13; RCN-01, RCN-02; RA-11).
+ * contenidos, pasos de la ruta y directorio (M-08, RF-10, HU-13; RCN-01,
+ * RCN-02, RS-07; RA-11).
  *
  * Si el servidor no deja publicar (falta la fuente o la fecha), sus mensajes
  * aparecen en la tarjeta con un enlace al editor. El resultado se anuncia en

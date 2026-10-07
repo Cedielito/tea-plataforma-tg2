@@ -1,6 +1,6 @@
 /**
- * Lógica común de los editores del panel: contenidos y pasos de la ruta
- * (M-08, RF-10; RCN-01, RCN-02; RA-03, RA-11).
+ * Lógica común de los editores del panel: contenidos, pasos de la ruta y
+ * directorio (M-08, RF-10; RCN-01, RCN-02; RA-03, RA-11).
  *
  * - Fuentes: filas del formulario ↔ datos para la API.
  * - Errores del servidor: un mensaje por campo y por fila de fuente, y la
