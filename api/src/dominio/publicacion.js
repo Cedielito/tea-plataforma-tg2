@@ -2,16 +2,19 @@
 const { ESTADOS } = require('./catalogos');
 
 /**
- * Reglas para publicar contenidos, preguntas frecuentes y recursos.
- * RCN-01, RCN-02, RF-10
+ * Reglas para publicar contenidos, preguntas frecuentes, recursos, pasos de la
+ * ruta y entidades del directorio. RCN-01, RCN-02, RF-05, RF-10
  *
  * - RCN-01: no se publica sin al menos una fuente que la identifique.
  * - RCN-02: no se publica sin fecha de revision, ni con una fecha posterior a hoy.
+ *   En el directorio esa fecha se llama fecha de verificacion
+ *   (`fechaVerificacion`, Cuadro 13): la regla es la misma y cambian el campo
+ *   y el texto de los mensajes (CAMPOS_FECHA).
  * - Un borrador puede guardarse sin fuentes ni fecha: las reglas se exigen al
  *   publicar.
  *
  * Funciones puras: los esquemas de Mongoose las aplican al guardar (ver
- * datos/modelos/reglasPublicacion.js) y el panel de T4 puede usarlas para
+ * datos/modelos/comunes.js) y el panel de T4 puede usarlas para
  * avisar antes de enviar.
  */
 
@@ -21,8 +24,35 @@ const MENSAJES = Object.freeze({
   FUENTE_URL_INSEGURA: 'El enlace de una fuente debe empezar por http:// o https://.',
   SIN_FECHA: 'Para publicar hace falta la fecha de revisión.',
   FECHA_INVALIDA: 'La fecha de revisión no es válida.',
-  FECHA_FUTURA: 'La fecha de revisión no puede ser posterior a hoy.'
+  FECHA_FUTURA: 'La fecha de revisión no puede ser posterior a hoy.',
+  SIN_FECHA_VERIFICACION: 'Para publicar hace falta la fecha de verificación.',
+  FECHA_VERIFICACION_INVALIDA: 'La fecha de verificación no es válida.',
+  FECHA_VERIFICACION_FUTURA: 'La fecha de verificación no puede ser posterior a hoy.'
 });
+
+/**
+ * Campos de fecha que cumplen RCN-02 y los mensajes de cada uno. Los modelos
+ * eligen su campo con el plugin `publicable` (datos/modelos/comunes.js).
+ */
+const CAMPOS_FECHA = Object.freeze({
+  fechaRevision: Object.freeze({
+    sinFecha: MENSAJES.SIN_FECHA,
+    invalida: MENSAJES.FECHA_INVALIDA,
+    futura: MENSAJES.FECHA_FUTURA
+  }),
+  fechaVerificacion: Object.freeze({
+    sinFecha: MENSAJES.SIN_FECHA_VERIFICACION,
+    invalida: MENSAJES.FECHA_VERIFICACION_INVALIDA,
+    futura: MENSAJES.FECHA_VERIFICACION_FUTURA
+  })
+});
+
+/** Mensajes del campo de fecha; un nombre que no esta en CAMPOS_FECHA es un error de programacion. */
+function mensajesDeFecha(campoFecha) {
+  const mensajes = CAMPOS_FECHA[campoFecha];
+  if (!mensajes) throw new Error(`Campo de fecha desconocido: ${campoFecha}`);
+  return mensajes;
+}
 
 const ZONA_HORARIA = 'America/Bogota';
 const formatoDia = new Intl.DateTimeFormat('en-CA', {
@@ -80,30 +110,38 @@ function hoyEnColombia(ahora = new Date()) {
   return formatoDia.format(ahora);
 }
 
-function validarFechaRevision(fecha, ahora = new Date()) {
-  if (fecha === undefined || fecha === null || fecha === '') return [MENSAJES.SIN_FECHA];
+/**
+ * @param {string} campoFecha `fechaRevision` (por defecto) o `fechaVerificacion`:
+ *   solo cambia el texto de los mensajes
+ */
+function validarFechaRevision(fecha, ahora = new Date(), campoFecha = 'fechaRevision') {
+  const mensajes = mensajesDeFecha(campoFecha);
+  if (fecha === undefined || fecha === null || fecha === '') return [mensajes.sinFecha];
   const valor = fecha instanceof Date ? fecha : new Date(fecha);
-  if (Number.isNaN(valor.getTime())) return [MENSAJES.FECHA_INVALIDA];
+  if (Number.isNaN(valor.getTime())) return [mensajes.invalida];
   const hoy = new Date(`${hoyEnColombia(ahora)}T00:00:00Z`);
-  if (numeroDeDia(valor) > numeroDeDia(hoy)) return [MENSAJES.FECHA_FUTURA];
+  if (numeroDeDia(valor) > numeroDeDia(hoy)) return [mensajes.futura];
   return [];
 }
 
 /**
  * Errores que impiden guardar el documento con su estado actual. Un borrador
  * no tiene que cumplir las reglas de publicacion.
+ * @param {{campoFecha?: string}} opciones campo de la fecha de RCN-02
  * @returns {{campo: string, mensaje: string}[]}
  */
-function validarPublicacion(doc, ahora = new Date()) {
+function validarPublicacion(doc, ahora = new Date(), { campoFecha = 'fechaRevision' } = {}) {
   if (!doc || doc.estado !== ESTADOS.PUBLICADO) return [];
   return [
     ...validarFuentes(doc.fuentes).map((mensaje) => ({ campo: 'fuentes', mensaje })),
-    ...validarFechaRevision(doc.fechaRevision, ahora).map((mensaje) => ({ campo: 'fechaRevision', mensaje }))
+    ...validarFechaRevision(doc[campoFecha], ahora, campoFecha).map((mensaje) => ({ campo: campoFecha, mensaje }))
   ];
 }
 
 module.exports = {
   MENSAJES,
+  CAMPOS_FECHA,
+  mensajesDeFecha,
   esUrlSegura,
   validarFuentes,
   validarFechaRevision,

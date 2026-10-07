@@ -59,7 +59,7 @@
 
 - id: icbf-linea-141
   nombre: "Línea 141 – Instituto Colombiano de Bienestar Familiar (ICBF)"
-  tipo: proteccion
+  tipo: proteccion-ninez
   ciudad: Nacional
   descripcion: "Línea gratuita nacional para proteger a niñas, niños y adolescentes. Atiende emergencias, casos de violencia o riesgo y da orientación."
   contacto:
@@ -74,7 +74,7 @@
 
 - id: icbf
   nombre: "Instituto Colombiano de Bienestar Familiar (ICBF) – atención al ciudadano"
-  tipo: proteccion
+  tipo: proteccion-ninez
   ciudad: Nacional
   descripcion: "Consultas, trámites y peticiones sobre los servicios del ICBF. Para emergencias de niñas, niños o adolescentes, use la Línea 141."
   contacto:
