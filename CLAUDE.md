@@ -95,12 +95,13 @@ api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
-                     slug (datos/sincronizacionListas.js)
+                     slug (datos/sincronizacionListas.js); igual directorio/entidades.yaml
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
 web/src/ruta/        guía de la ruta (M-03): preguntas, filtro en el navegador y final
+web/src/directorio/  directorio (M-04): página, tarjetas, filtros y entidades por paso
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error
@@ -166,7 +167,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T5 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T6 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -233,5 +234,23 @@ sessionStorage) y `filtroPasos.js` elige los pasos en el navegador. Los docentes
 «No lo sé» en el régimen. Panel: `/admin/ruta` (lista y editor) sobre
 `GET|POST /api/admin/pasos-ruta` y `GET|PATCH /api/admin/pasos-ruta/:id`; los dos
 editores comparten `admin/edicion.js` y `admin/PiezasEditor.jsx`. Las entidades junto a
-cada paso llegan con T6.
-Siguiente: T6 (`feat/directorio`). Ver `docs/backlog-fase-i.md`.
+cada paso llegaron con T6.
+
+Directorio (T6, M-04): colección `entidad_directorio` (`slug`, nombre, `tipo`, `ciudad`,
+descripción, `contacto {telefonos, correo, web, direccion, horario}`, `esProfesional`,
+`constanciaAutorizacion`, fuentes, `fechaVerificacion` y estado). `fechaVerificacion` es
+la fecha de RCN-02 del directorio: `publicable`, `validarPublicacion` y
+`crearCargaDeLista` reciben `campoFecha` (por defecto `fechaRevision`). Reglas en
+`dominio/directorio.js`: RS-07 (un profesional no se publica sin constancia, que nunca
+sale por la API pública) y al menos un teléfono, correo o web. Catálogos: tipos con
+`proteccion-ninez` (ICBF) y `CIUDADES` (Nacional, Bogotá, Medellín, Cali, Barranquilla).
+Las 23 entidades de `directorio/entidades.yaml` se cargan al arrancar (`cargaEntidades`).
+`GET /api/directorio` devuelve todo lo publicado sin filtrar; el panel usa
+`/api/admin/directorio` y las rutas de pasos y directorio salen de
+`api/rutas/adminLista.js`. En la web, `/directorio` filtra en el navegador con los
+filtros en la dirección (`?ciudad=bogota&tipo=salud`) y tarjetas con todos los datos
+(teléfonos `tel:`, WhatsApp a `wa.me/57`). La guía de la ruta descarga el directorio
+una vez y muestra junto a cada paso las entidades nacionales de sus `tiposEntidad` y,
+si se elige una ciudad opcional, las de esa ciudad; la ciudad vive solo en el estado
+de React. Panel: `/admin/directorio`.
+Siguiente: T7 (`feat/recursos-faq`). Ver `docs/backlog-fase-i.md`.

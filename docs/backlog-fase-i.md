@@ -35,7 +35,7 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T3 ✅ | `feat/paginas-contenido` | Páginas S1 a S5, filtro por edad y buscador | M-02, RF-02, RF-03, RCN-03, RCN-04 | 1 |
 | T4 ✅ | `feat/admin-auth` | Login del administrador y editor de contenidos | M-08, RF-09, RF-10, RS-05 | 1 |
 | T5 ✅ | `feat/ruta-atencion` | Ruta de atención interactiva | M-03, RF-04, RS-01 | 2 |
-| T6 | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
+| T6 ✅ | `feat/directorio` | Directorio con filtros + administración | M-04, RF-05, RS-07 | 2 |
 | T7 | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
 | T8 | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
 | T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
@@ -50,7 +50,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
-| T5 | La guía de la ruta muestra los pasos sin entidades. Con T6, mostrar junto a cada paso las entidades del directorio de sus `tiposEntidad` (`web/src/ruta/PasosParaTuCaso.jsx`); la guía no pregunta la ciudad, así que hay que decidir cómo filtrarlas sin enviar ni guardar respuestas (RS-01). | M-03, M-04, RF-04, RF-05 |
+| T6 | El documento debe reflejar lo que cambió con T6. En el Cuadro B.1, la tarea T4 de la prueba de usabilidad («Aplica el filtro de ciudad y abre un registro») ya no aplica: el directorio no tiene página de detalle y cada tarjeta muestra todos los datos (lo ajusta el equipo). En el Cuadro 13, `entidad_directorio` lleva además descripción, fuentes, estado de publicación y la marca de profesional independiente. | M-04, RF-05, RS-07 |
 | T4 | Las páginas de S1, S3, S4 y S5 muestran un solo contenido, con un slug fijo (`web/src/secciones.js`). Un contenido nuevo en esas secciones, creado desde el panel, no aparece en el sitio: el buscador lo encuentra, pero su enlace lleva a la página fija de la sección. Por ahora el editor lo avisa. Resolver antes de cargar contenidos nuevos en esas secciones (por ejemplo, una ruta `/contenidos/:slug` o mostrar todos los contenidos de la sección). | M-02, RF-01, RF-02, RF-10 |
 
 ---
@@ -170,7 +170,19 @@ pasos sin las entidades.
 Propón el plan antes de escribir código.
 ```
 
-### T6 — Directorio
+### T6 — Directorio ✅
+Hecha. Cambios frente al prompt: la fecha de verificación se llama `fechaVerificacion`
+en el YAML, la base, la API y la web, y RCN-02 se le aplica parametrizando el campo de
+fecha (`publicable`, `validarPublicacion` y `crearCargaDeLista` reciben `campoFecha`).
+Cada entidad necesita al menos un teléfono, correo o sitio web (HU-14). Agregamos el tipo
+`proteccion-ninez` para el ICBF, aparte de `proteccion` (Defensoría y Personerías). En
+`/directorio` los filtros van en la dirección sin tildes (`?ciudad=bogota&tipo=salud`) y
+las tarjetas muestran todos los datos, sin página de detalle; WhatsApp enlaza a
+`wa.me/57`. La guía de la ruta descarga todo el directorio una sola vez y muestra junto
+a cada paso las entidades nacionales de sus tipos y, si la persona elige su ciudad en
+un selector opcional, también las de esa ciudad: la ciudad no se envía, no se guarda y
+no va en la dirección. Las rutas del panel de pasos y directorio salen de una fábrica
+común (`api/src/api/rutas/adminLista.js`), que T7 puede reutilizar.
 ```
 Lee CLAUDE.md. Tarea T6, rama feat/directorio.
 
