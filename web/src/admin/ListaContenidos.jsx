@@ -19,48 +19,21 @@ import { fechaRevision } from '../utilidades/formato.js';
 import SesionVencida from './SesionVencida.jsx';
 import useDatosAdmin from './useDatosAdmin.js';
 import { SESION, useSesion } from './ContextoSesion.jsx';
-import { ErrorAdmin, mensajeDeError, pedirAdmin } from './clienteAdmin.js';
+import { EtiquetaEstado } from './PiezasEditor.jsx';
+import { ResultadoPublicacion, usePublicacionRapida } from './PublicacionRapida.jsx';
 import { SECCIONES_CONTENIDO, etiquetaTramo, nombreSeccion } from './catalogos.js';
 
-const PUBLICADO = 'publicado';
-
-export function EtiquetaEstado({ estado }) {
-  const publicado = estado === PUBLICADO;
-  return (
-    <span className={`etiqueta etiqueta--${publicado ? 'publicado' : 'borrador'}`}>
-      {publicado ? 'Publicado' : 'Borrador'}
-    </span>
-  );
-}
+const TEXTOS_PUBLICACION = {
+  publicado: 'Publicado: ya aparece en el sitio.',
+  despublicado: 'Despublicado: ya no aparece en el sitio.'
+};
 
 function TarjetaContenido({ contenido, alCambiar }) {
   const { _id, titulo, tramoEdad, estado, archivo } = contenido;
-  const [mensaje, setMensaje] = useState(null);
-  const [enviando, setEnviando] = useState(false);
-  const publicado = estado === PUBLICADO;
+  const ruta = `/api/admin/contenidos/${_id}`;
+  const { publicado, mensaje, alternar } = usePublicacionRapida({ ruta, estado, alCambiar, textos: TEXTOS_PUBLICACION });
   const revision = fechaRevision(contenido.fechaRevision);
   const tramo = etiquetaTramo(tramoEdad);
-
-  async function alternarPublicacion() {
-    if (enviando) return;
-    setEnviando(true);
-    setMensaje(null);
-    try {
-      const nuevo = publicado ? 'borrador' : PUBLICADO;
-      const actualizado = await pedirAdmin(`/api/admin/contenidos/${_id}`, { metodo: 'PATCH', datos: { estado: nuevo } });
-      alCambiar(actualizado);
-      setMensaje({
-        tipo: 'exito',
-        texto: nuevo === PUBLICADO ? 'Publicado: ya aparece en el sitio.' : 'Despublicado: ya no aparece en el sitio.'
-      });
-    } catch (error) {
-      if (error instanceof ErrorAdmin && error.estado === 401) return;
-      const campos = Object.values(error.campos ?? {});
-      setMensaje({ tipo: 'error', texto: campos.length > 0 ? campos.join(' ') : mensajeDeError(error), editar: campos.length > 0 });
-    } finally {
-      setEnviando(false);
-    }
-  }
 
   return (
     <li className="tarjeta-admin">
@@ -86,26 +59,12 @@ function TarjetaContenido({ contenido, alCambiar }) {
         <Link to={`/admin/contenidos/${_id}`} className="boton boton-secundario">
           Editar<span className="solo-lector"> «{titulo}»</span>
         </Link>
-        <button type="button" className="boton boton-secundario" onClick={alternarPublicacion}>
+        <button type="button" className="boton boton-secundario" onClick={alternar}>
           {publicado ? 'Despublicar' : 'Publicar'}
           <span className="solo-lector"> «{titulo}»</span>
         </button>
       </div>
-      {/* Región siempre presente para que el lector de pantalla anuncie el resultado */}
-      <div role="status" className="tarjeta-admin__resultado">
-        {mensaje && (
-          <p className={`mensaje mensaje--${mensaje.tipo}`}>
-            {mensaje.tipo === 'error' && 'No se pudo publicar. '}
-            {mensaje.texto}
-            {mensaje.editar && (
-              <>
-                {' '}
-                <Link to={`/admin/contenidos/${_id}`}>Completar en el editor</Link>
-              </>
-            )}
-          </p>
-        )}
-      </div>
+      <ResultadoPublicacion mensaje={mensaje} rutaEditor={`/admin/contenidos/${_id}`} />
     </li>
   );
 }
