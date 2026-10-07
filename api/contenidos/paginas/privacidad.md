@@ -47,7 +47,7 @@ La ley protege de forma especial los datos de niños, niñas y adolescentes. Tam
 - Los mensajes se guardan en una base de datos del servicio MongoDB Atlas. La plataforma funciona con los servicios Vercel y Render.
 - Los servidores de estos proveedores están fuera de Colombia. Al aceptar esta política en el formulario, autorizas de forma expresa que tus datos se guarden y se procesen en esos servidores.
 - Los datos se envían cifrados (HTTPS). Solo el equipo, con usuario y contraseña, puede leer los mensajes.
-- Cada mensaje se elimina de forma automática seis meses después de recibido, o antes si lo pides.
+- Cada mensaje se elimina de forma automática a más tardar seis meses después de recibido, o antes si lo pides.
 - La base de datos de mensajes estará vigente mientras la plataforma funcione como proyecto académico.
 
 ## Tus derechos

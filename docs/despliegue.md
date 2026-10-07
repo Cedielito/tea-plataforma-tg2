@@ -170,9 +170,12 @@ de prueba en la base real: se borran después desde la bandeja.
    sexto debe decir «Ya se enviaron varios mensajes desde tu conexión…».
 2. En ese mismo momento, desde otro dispositivo en otra red (por ejemplo, el Wi-Fi de
    la casa), envía 1 mensaje. Debe llegar.
-3. Si el paso 2 también recibe el aviso, todos los visitantes comparten la misma IP
-   para la API: en Render, agrega `SALTOS_PROXY` = `1` o `3`, despliega y repite. Si
-   en el paso 1 el sexto mensaje llega, también hay que ajustarlo.
+3. Si el paso 2 también recibe el aviso, la API está contando menos saltos de los
+   reales y toma la IP de un proxy, compartida por todos los visitantes. En Render,
+   agrega `SALTOS_PROXY` = `3`, despliega y repite. **Nunca lo bajes a `1`**: Vercel
+   sobrescribe `X-Forwarded-For` con la IP del visitante, así que contar más saltos
+   de los reales no hace daño (la dirección de más a la izquierda sigue siendo la que
+   escribió Vercel), y contar menos devuelve la IP de un proxy.
 4. Elimina los mensajes de prueba desde `/admin/mensajes`.
 
 **Supresión automática de mensajes (RS-04).** Un índice TTL de MongoDB sobre `fecha`
