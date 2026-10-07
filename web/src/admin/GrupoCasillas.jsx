@@ -5,7 +5,7 @@
  * editor de pasos de la ruta para perfiles, tramos, regímenes y tipos de
  * entidad, y el de recursos para los perfiles destinatarios.
  */
-import { MensajeError } from './Campo.jsx';
+import { MensajeError } from '../componentes/Campo.jsx';
 
 /** id de la casilla de un valor: el resumen de errores enlaza a la primera. */
 export const idCasilla = (id, valor) => `${id}-${valor}`;

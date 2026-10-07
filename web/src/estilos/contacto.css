@@ -1,0 +1,69 @@
+/* Contacto (M-06; RF-08, RS-02, RS-03) y enlace a él desde Preguntas frecuentes.
+   RA-01 a RA-11: contraste, foco visible, 320 px, zoom al 200 % y objetivos táctiles
+   de 44 px. Sin animaciones. Solo variables de tokens.css. */
+
+.formulario-contacto { margin-top: var(--espacio-3); }
+.campo__control--mensaje { min-height: var(--alto-mensaje-contacto); }
+.campo__pista strong { color: var(--color-texto); }
+
+/* Casilla de autorización: la etiqueta es el texto de la política, puede ocupar varias
+   líneas; toda la fila es el objetivo táctil. */
+.autorizacion { max-width: var(--ancho-lectura); }
+.autorizacion__casilla {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+  padding: var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-texto-secundario);
+  border-radius: var(--radio-pequeno);
+}
+.campo--con-error .autorizacion__casilla { border: var(--borde-medio) solid var(--color-aviso-borde); }
+.autorizacion__casilla input {
+  flex: none;
+  width: var(--icono);
+  height: var(--icono);
+  margin: 0.15em 0 0;
+  accent-color: var(--color-primario);
+  cursor: pointer;
+}
+.autorizacion__casilla label { min-height: var(--objetivo-tactil); cursor: pointer; }
+.autorizacion__enlace { margin: 0; }
+.autorizacion__enlace a { display: inline-flex; align-items: center; min-height: var(--objetivo-tactil); }
+
+/* Confirmación del envío */
+.confirmacion-contacto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+  align-items: flex-start;
+  max-width: var(--ancho-lectura);
+  margin-top: var(--espacio-3);
+  padding: var(--espacio-3);
+  background: var(--color-primario-suave);
+  border: var(--borde-fino) solid var(--color-primario);
+  border-radius: var(--radio-grande);
+}
+.confirmacion-contacto > div { flex: 1 1 var(--ancho-buscador-minimo); }
+.confirmacion-contacto h2 { font-size: var(--tipo-h3); margin-bottom: var(--espacio-1); }
+.confirmacion-contacto__icono { flex: none; width: var(--icono); height: var(--icono); color: var(--color-primario); }
+
+/* Enlace al final de Preguntas frecuentes */
+.enlace-contacto {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  max-width: var(--ancho-lectura);
+  margin-top: var(--espacio-4);
+  padding: var(--espacio-2) var(--espacio-3);
+  background: var(--color-primario-suave);
+  border: var(--borde-fino) solid var(--color-primario);
+  border-radius: var(--radio-grande);
+}
+.enlace-contacto svg { flex: none; width: var(--icono); height: var(--icono); color: var(--color-primario); }
+.enlace-contacto a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--objetivo-tactil);
+  font-weight: var(--peso-negrita);
+}

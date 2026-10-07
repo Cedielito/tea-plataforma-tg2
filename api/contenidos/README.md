@@ -87,8 +87,8 @@ cargan las tareas T5 a T8. La carga de las páginas solo lee los `.md` de este p
 nivel. Cada tarea agrega su propia carga, con las mismas reglas: buscar por `id` o
 `slug`, crear lo que falta, actualizar solo si la fecha del archivo es más reciente y
 nunca borrar. Ya se cargan los pasos de la ruta (T5), el directorio (T6), las
-preguntas frecuentes y los recursos (T7); las páginas fijas de `paginas/` todavía no
-afectan lo publicado.
+preguntas frecuentes y los recursos (T7). Las páginas fijas de `paginas/` (T8) no van
+a la base: la API las lee al arrancar y las sirve tal como están en el repositorio.
 
 Las listas `.yaml` se cargan con `api/src/datos/sincronizacionListas.js`: el `id` de
 cada elemento se guarda en la base como `slug`, para no confundirlo con el `_id` de
@@ -202,7 +202,27 @@ Markdown con el mismo encabezado de los contenidos. La política de privacidad a
 `version` (la que se guarda con cada mensaje, RS-02), `vigenteDesde` y
 `textoAutorizacion` (el texto de la casilla del formulario de contacto).
 
-**Antes de publicar, reemplazar el texto `COMPLETAR` que queda**: la fecha de
-vigencia, en `vigenteDesde` y en la frase «Vigente desde…». Los datos del
-responsable que pide el Decreto 1377 de 2013, art. 13, ya están completos. La carga
-de T8 debe rechazar un archivo que todavía diga `COMPLETAR`.
+No van a la base ni se editan desde el panel: **la política cambia con una versión
+nueva en el repositorio**, revisada en un PR. Al arrancar, la API lee la carpeta
+(`api/src/datos/paginasFijas.js`), deja en los logs de Render
+`Páginas fijas: 2 cargadas, 0 con errores.` y las sirve en `/api/paginas/privacidad`
+y `/api/paginas/acerca-de`. En la web se ven en `/privacidad` y `/acerca-de`, con sus
+fuentes y «Revisado el dd/mm/aaaa»; el formulario de `/contacto` toma de la política
+el texto de la casilla y la versión que se guarda con cada mensaje.
+
+Reglas (`api/src/dominio/archivoPagina.js`):
+
+- Un archivo que todavía dice `COMPLETAR` no se publica, y una prueba falla si alguno
+  lo dice: el CI queda en rojo antes de fusionar.
+- Fuentes y `fechaRevision` obligatorias, sin fecha posterior a hoy (RCN-01, RCN-02).
+- `vigenteDesde` es el día en que se fusiona el cambio (AAAA-MM-DD). Solo se valida
+  el formato, porque puede ser posterior al día en que se escribe.
+- La versión debe aparecer igual en `version`, en `textoAutorizacion`
+  («(versión 1.0)») y en el cuerpo («**Versión 1.0.**»).
+- Sin la política, el formulario de contacto no recibe mensajes (responde 503).
+
+Para publicar una versión nueva de la política: cambiar `version` en los tres
+lugares, el texto, `vigenteDesde` y la frase «Vigente desde…» con la fecha de la
+fusión, y `fechaRevision`. Quien tenga el formulario abierto con la versión anterior
+recibe un aviso para leer y aceptar la nueva antes de enviar. Si el cambio es
+importante, la política promete avisar por correo a quienes tengan mensajes guardados.

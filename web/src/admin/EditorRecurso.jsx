@@ -23,10 +23,10 @@ import useTituloPagina from '../componentes/useTituloPagina.js';
 import { fechaRevision } from '../utilidades/formato.js';
 import { RUTA_RECURSOS_WEB } from '../secciones.js';
 import { enlaceDeRecurso } from '../recursos/enlaceRecurso.js';
-import Campo from './Campo.jsx';
+import Campo from '../componentes/Campo.jsx';
 import EditorFuentes from './EditorFuentes.jsx';
 import GrupoCasillas, { idCasilla } from './GrupoCasillas.jsx';
-import ResumenErrores from './ResumenErrores.jsx';
+import ResumenErrores from '../componentes/ResumenErrores.jsx';
 import SesionVencida from './SesionVencida.jsx';
 import { AccionesEditor, AvisoArchivo, CampoFechaRevision, EtiquetaEstado } from './PiezasEditor.jsx';
 import {

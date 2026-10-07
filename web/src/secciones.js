@@ -1,5 +1,5 @@
 /**
- * Secciones públicas de la plataforma. M-01 (navegación, RF-01), M-02 a M-05.
+ * Secciones públicas de la plataforma. M-01 (navegación, RF-01), M-02 a M-06.
  * Fuente única para la navegación, las tarjetas del inicio, las rutas y los
  * enlaces de los resultados del buscador. El orden es el del Cuadro 11.
  *
@@ -27,6 +27,12 @@ export const RUTA_PREGUNTAS_WEB = '/preguntas-frecuentes';
 
 /** Pregunta frecuente dentro de su página: el ancla #slug la abre (RF-07). */
 export const rutaDePregunta = (slug) => `${RUTA_PREGUNTAS_WEB}#${slug}`;
+
+/** Contacto y páginas fijas (M-06): formulario, política de privacidad y «Acerca de». */
+export const RUTA_CONTACTO_WEB = '/contacto';
+export const RUTA_PRIVACIDAD_WEB = '/privacidad';
+export const RUTA_API_CONTACTO = '/api/contacto';
+export const RUTA_API_POLITICA = '/api/paginas/privacidad';
 
 export const SECCIONES = [
   {
@@ -98,16 +104,28 @@ export const SECCIONES = [
   }
 ];
 
+/**
+ * Páginas del pie (M-06, RF-08, RF-12). La política y «Acerca de» vienen de
+ * api/contenidos/paginas por /api/paginas/:slug (`api`) y usan la plantilla
+ * de contenido; Contacto tiene su formulario.
+ */
 export const PAGINAS_PIE = [
   {
-    ruta: '/privacidad',
+    ruta: RUTA_CONTACTO_WEB,
+    titulo: 'Contacto',
+    descripcion: 'Escríbenos una pregunta o una sugerencia.'
+  },
+  {
+    ruta: RUTA_PRIVACIDAD_WEB,
     titulo: 'Política de privacidad',
-    descripcion: 'Cómo tratamos los datos personales, según la Ley 1581 de 2012.'
+    descripcion: 'Cómo tratamos los datos personales, según la Ley 1581 de 2012.',
+    api: RUTA_API_POLITICA
   },
   {
     ruta: '/acerca-de',
     titulo: 'Acerca de',
-    descripcion: 'Quiénes hacen esta plataforma y con qué propósito.'
+    descripcion: 'Quiénes hacen esta plataforma y con qué propósito.',
+    api: '/api/paginas/acerca-de'
   }
 ];
 

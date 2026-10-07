@@ -58,3 +58,32 @@ export function unirConY(partes) {
 export function caracteresBuscables(texto) {
   return texto.normalize('NFD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]/gu, '').length;
 }
+
+const formatoFechaHoraColombia = new Intl.DateTimeFormat('es-CO', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'America/Bogota'
+});
+
+const formatoDiaColombiaVisible = new Intl.DateTimeFormat('es-CO', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  timeZone: 'America/Bogota'
+});
+
+/**
+ * Un instante (no una fecha de calendario), como la llegada de un mensaje de
+ * contacto (RF-11), en hora de Colombia.
+ * @param {{conHora?: boolean}} opciones sin hora: solo el día, «30/03/2027»
+ * @returns {{iso: string, texto: string} | null}
+ */
+export function fechaColombia(valor, { conHora = true } = {}) {
+  const fecha = new Date(valor);
+  if (!valor || Number.isNaN(fecha.getTime())) return null;
+  const formato = conHora ? formatoFechaHoraColombia : formatoDiaColombiaVisible;
+  return { iso: fecha.toISOString(), texto: formato.format(fecha) };
+}

@@ -53,11 +53,11 @@ function erroresDeFuentes(fuentes) {
 }
 
 /**
- * Lee el texto de un archivo de contenido.
- * @returns {{datos: object} | {error: string}} datos listos para el repositorio,
- *   siempre como publicado; o los errores de formato en un solo mensaje.
+ * Separa el encabezado YAML del cuerpo. La usan tambien las paginas fijas de
+ * api/contenidos/paginas (dominio/archivoPagina.js).
+ * @returns {{campos: object, cuerpo: string} | {error: string}}
  */
-function leerArchivoContenido(texto) {
+function leerEncabezado(texto) {
   const partes = PATRON_ARCHIVO.exec(typeof texto === 'string' ? texto : '');
   if (!partes) return { error: MENSAJES.SIN_ENCABEZADO };
   const [, encabezado, cuerpo] = partes;
@@ -69,6 +69,18 @@ function leerArchivoContenido(texto) {
     return { error: `${MENSAJES.ENCABEZADO_INVALIDO} ${e.message}` };
   }
   if (!esObjeto(campos)) return { error: MENSAJES.ENCABEZADO_SIN_CAMPOS };
+  return { campos, cuerpo };
+}
+
+/**
+ * Lee el texto de un archivo de contenido.
+ * @returns {{datos: object} | {error: string}} datos listos para el repositorio,
+ *   siempre como publicado; o los errores de formato en un solo mensaje.
+ */
+function leerArchivoContenido(texto) {
+  const leido = leerEncabezado(texto);
+  if (leido.error) return leido;
+  const { campos, cuerpo } = leido;
 
   const errores = [];
   const desconocidos = Object.keys(campos).filter((campo) => !CAMPOS.includes(campo));
@@ -126,6 +138,7 @@ module.exports = {
   CAMPOS,
   ACCIONES,
   MENSAJES,
+  leerEncabezado,
   leerArchivoContenido,
   decidirAccion,
   esFechaDeCalendario,

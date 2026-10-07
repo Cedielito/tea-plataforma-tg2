@@ -1,0 +1,111 @@
+/* Formularios, mensajes y resumen de errores (M-06, M-08). Los usan el formulario de
+   contacto de la zona pública y los editores del panel. RA-03, RA-05, RA-11: etiqueta
+   visible, error con ícono y texto (no solo color), objetivos táctiles de 44 px y
+   foco visible. Solo variables de tokens.css. */
+
+textarea, select { font: inherit; color: inherit; }
+
+/* ---------- Mensajes ---------- */
+.mensaje {
+  max-width: var(--ancho-lectura);
+  margin: 0 0 var(--espacio-2);
+  padding: var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-left-width: var(--borde-grueso);
+  border-radius: var(--radio);
+}
+.mensaje--exito { background: var(--color-primario-suave); border-color: var(--color-primario); }
+.mensaje--error { background: var(--color-aviso-fondo); border-color: var(--color-aviso-borde); }
+
+/* ---------- Formularios ---------- */
+.formulario {
+  max-width: var(--ancho-formulario);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.campo__etiqueta { padding: 0; font-weight: var(--peso-negrita); }
+.campo__indicacion { font-weight: normal; color: var(--color-texto-secundario); }
+.campo__pista {
+  max-width: var(--ancho-lectura);
+  margin: 0;
+  font-size: var(--tipo-pequeno);
+  color: var(--color-texto-secundario);
+}
+.campo__error {
+  display: flex;
+  gap: var(--espacio-1);
+  align-items: flex-start;
+  max-width: var(--ancho-lectura);
+  margin: 0;
+  padding: var(--espacio-1) var(--espacio-2);
+  background: var(--color-aviso-fondo);
+  border-left: var(--borde-grueso) solid var(--color-aviso-borde);
+  border-radius: var(--radio-pequeno);
+  font-weight: var(--peso-negrita);
+}
+.campo__error svg { width: var(--icono-pequeno); height: var(--icono-pequeno); margin-top: 0.2em; }
+.campo__control {
+  width: 100%;
+  min-height: var(--objetivo-tactil);
+  padding: var(--espacio-1) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-texto-secundario);
+  border-radius: var(--radio-pequeno);
+  line-height: var(--interlineado);
+}
+textarea.campo__control { resize: vertical; }
+.campo__control--cuerpo { min-height: var(--alto-cuerpo-editor); }
+.campo__control--fecha,
+.campo__control--corto { width: auto; max-width: var(--ancho-campo-fecha); }
+.campo__control[readonly] { background: var(--color-superficie-suave); }
+.campo__control[aria-invalid="true"] {
+  border: var(--borde-medio) solid var(--color-aviso-borde);
+  box-shadow: inset var(--borde-grueso) 0 0 var(--color-aviso-borde);
+}
+.campo__fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-1) var(--espacio-2);
+}
+
+.casilla {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  min-height: var(--objetivo-tactil);
+  cursor: pointer;
+}
+.casilla input { width: var(--icono-pequeno); height: var(--icono-pequeno); accent-color: var(--color-primario); }
+
+.formulario .boton { align-self: flex-start; }
+
+/* Acciones */
+.acciones { display: flex; flex-wrap: wrap; gap: var(--espacio-1) var(--espacio-2); }
+
+/* Resumen de errores */
+.resumen-errores {
+  max-width: var(--ancho-formulario);
+  margin-bottom: var(--espacio-3);
+  padding: var(--espacio-3);
+  background: var(--color-aviso-fondo);
+  border: var(--borde-medio) solid var(--color-aviso-borde);
+  border-left-width: var(--borde-grueso);
+  border-radius: var(--radio);
+}
+.resumen-errores__titulo { display: flex; align-items: center; gap: var(--espacio-1); font-size: var(--tipo-h3); }
+.resumen-errores__titulo svg { width: var(--icono); height: var(--icono); }
+.resumen-errores__lista { margin: 0; padding-left: var(--espacio-3); }
+.resumen-errores__lista li { margin-bottom: var(--espacio-1); }
+.resumen-errores__lista a { font-weight: var(--peso-negrita); color: var(--color-texto); }

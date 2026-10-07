@@ -9,7 +9,7 @@
  */
 import { useEffect, useRef } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import Campo, { MensajeError } from './Campo.jsx';
+import Campo, { MensajeError } from '../componentes/Campo.jsx';
 
 let ultimaClave = 0;
 /** Fila vacía con una clave estable para React y para los id de sus campos. */

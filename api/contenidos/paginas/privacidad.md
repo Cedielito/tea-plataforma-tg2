@@ -2,9 +2,9 @@
 titulo: "Política de tratamiento de datos personales"
 slug: privacidad
 version: "1.0"
-vigenteDesde: "COMPLETAR: fecha de publicación (AAAA-MM-DD)"
+vigenteDesde: 2026-10-07
 textoAutorizacion: "Autorizo el tratamiento de mi correo y mi mensaje para que el equipo del proyecto responda mi consulta, y su almacenamiento en servidores fuera de Colombia, según la Política de tratamiento de datos personales (versión 1.0)."
-fechaRevision: 2026-10-06
+fechaRevision: 2026-10-07
 fuentes:
   - texto: "Congreso de la República de Colombia. Ley Estatutaria 1581 de 2012, disposiciones generales para la protección de datos personales. Artículos 5, 7, 8, 14, 15, 16 y 26."
     url: "https://normas.cra.gov.co/Gestor/Docs/ley_1581_2012.htm"
@@ -13,7 +13,7 @@ fuentes:
 ---
 Esta política explica qué datos personales recogemos en esta plataforma, para qué los usamos y cómo puedes ejercer tus derechos, según la Ley 1581 de 2012.
 
-**Versión 1.0.** Vigente desde el COMPLETAR: fecha de publicación.
+**Versión 1.0.** Vigente desde el 7 de octubre de 2026.
 
 ## Quién es el responsable
 
@@ -47,7 +47,7 @@ La ley protege de forma especial los datos de niños, niñas y adolescentes. Tam
 - Los mensajes se guardan en una base de datos del servicio MongoDB Atlas. La plataforma funciona con los servicios Vercel y Render.
 - Los servidores de estos proveedores están fuera de Colombia. Al aceptar esta política en el formulario, autorizas de forma expresa que tus datos se guarden y se procesen en esos servidores.
 - Los datos se envían cifrados (HTTPS). Solo el equipo, con usuario y contraseña, puede leer los mensajes.
-- Cada mensaje se elimina de forma automática seis meses después de recibido, o antes si lo pides.
+- Cada mensaje se elimina de forma automática a más tardar seis meses después de recibido, o antes si lo pides.
 - La base de datos de mensajes estará vigente mientras la plataforma funcione como proyecto académico.
 
 ## Tus derechos

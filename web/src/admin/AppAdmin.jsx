@@ -2,7 +2,8 @@
  * Panel de administración (M-08): rutas bajo /admin, con su sesión y sus
  * estilos. Contenidos de S1 a S5 (/admin y /admin/contenidos), pasos de la
  * ruta de atención (/admin/ruta, M-03), directorio (/admin/directorio, M-04),
- * preguntas frecuentes (/admin/preguntas) y recursos (/admin/recursos, M-05).
+ * preguntas frecuentes (/admin/preguntas), recursos (/admin/recursos, M-05) y
+ * la bandeja de mensajes de contacto (/admin/mensajes, M-06, RF-11).
  * Se descarga aparte (React.lazy en rutas.jsx): quien visita la zona pública
  * no lo baja. No hay enlaces a /admin desde la navegación pública.
  */
@@ -21,6 +22,7 @@ import ListaPreguntas from './ListaPreguntas.jsx';
 import EditorPregunta from './EditorPregunta.jsx';
 import ListaRecursos from './ListaRecursos.jsx';
 import EditorRecurso from './EditorRecurso.jsx';
+import BandejaMensajes from './BandejaMensajes.jsx';
 
 function NoEncontradaAdmin() {
   useTituloPagina('Página no encontrada · Panel');
@@ -54,6 +56,7 @@ export default function AppAdmin() {
           <Route path="recursos" element={<ListaRecursos />} />
           <Route path="recursos/nuevo" element={<EditorRecurso key="nuevo" />} />
           <Route path="recursos/:id" element={<EditorRecurso key="existente" />} />
+          <Route path="mensajes" element={<BandejaMensajes />} />
           <Route path="*" element={<NoEncontradaAdmin />} />
         </Route>
       </Routes>

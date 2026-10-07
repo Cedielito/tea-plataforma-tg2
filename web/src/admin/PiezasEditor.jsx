@@ -13,7 +13,7 @@
  */
 import { CalendarCheck, FileText } from 'lucide-react';
 import { hoyEnColombia } from '../utilidades/formato.js';
-import Campo from './Campo.jsx';
+import Campo from '../componentes/Campo.jsx';
 import { PUBLICADO } from './edicion.js';
 
 export function EtiquetaEstado({ estado }) {

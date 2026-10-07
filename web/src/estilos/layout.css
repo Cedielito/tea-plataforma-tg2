@@ -230,13 +230,6 @@ main:focus { outline: none; }
 .pagina h1 { max-width: var(--ancho-lectura); }
 .pagina__descripcion { max-width: var(--ancho-lectura); font-size: var(--tipo-destacado); color: var(--color-texto-secundario); }
 .pagina__aviso { margin-block: var(--espacio-3); }
-.pagina__pendiente {
-  max-width: var(--ancho-lectura);
-  padding: var(--espacio-3);
-  border: var(--borde-fino) dashed var(--color-borde);
-  border-radius: var(--radio);
-  background: var(--color-superficie);
-}
 
 /* ---------- Pie ---------- */
 .pie {

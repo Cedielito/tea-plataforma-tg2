@@ -77,6 +77,7 @@
   --ancho-formulario: 46rem;          /* panel de administración (M-08) */
   --alto-cuerpo-editor: 20rem;
   --ancho-campo-fecha: 14rem;
+  --alto-mensaje-contacto: 12rem;     /* formulario de contacto (M-06) */
   --borde-medio: 2px;
   --numero-paso: 2.25rem;             /* círculo con el número de cada paso de la ruta (M-03) */
   --ancho-filtro: 22rem;              /* listas desplegables del directorio y de la guía (M-04) */

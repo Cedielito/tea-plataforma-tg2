@@ -1,7 +1,8 @@
 'use strict';
 
 /**
- * Limites del inicio de sesion del panel, sin servicios externos. M-08, RS-05
+ * Limites del inicio de sesion del panel y del formulario de contacto, sin
+ * servicios externos. M-06, M-08, RS-02, RS-05
  *
  * - Bloqueo por usuario: 5 intentos fallidos con un mismo usuario en 15
  *   minutos lo bloquean 15 minutos, aunque luego llegue la clave correcta.
@@ -14,6 +15,10 @@
  * - Limite global: como maximo 20 intentos por minuto en total, para que nadie
  *   sature la CPU (cada intento hace una comparacion bcrypt) probando muchos
  *   usuarios distintos.
+ *
+ * - Limite por clave (crearLimitePorClave): el formulario de contacto acepta
+ *   un maximo de envios por IP en una ventana. Cada IP se olvida en cuanto
+ *   vence su ventana: no se guarda en ninguna otra parte.
  *
  * El estado vive en memoria: se reinicia si la API se reinicia. El tiempo
  * llega como argumento (`ahora`), asi las pruebas no esperan minutos reales.
@@ -115,4 +120,57 @@ function crearLimiteGlobal({ maximo = 20, ventanaMs = MINUTO } = {}) {
   return { registrar };
 }
 
-module.exports = { MENSAJES, crearBloqueoPorUsuario, crearLimiteGlobal };
+/**
+ * Ventana deslizante por clave (la IP en el formulario de contacto).
+ * `consultar` no cuenta; `registrar` cuenta si queda cupo.
+ *
+ * El Map queda en orden del ultimo envio de cada clave: las claves cuya
+ * ventana ya vencio se borran desde el principio en cada llamada, y si se
+ * pasa de `maximoClaves` se descarta la mas antigua.
+ * @returns {{
+ *   consultar(clave: string, ahora: Date): {permitido: boolean, segundos?: number},
+ *   registrar(clave: string, ahora: Date): {permitido: boolean, segundos?: number},
+ *   cantidad(): number
+ * }}
+ */
+function crearLimitePorClave({ maximo, ventanaMs, maximoClaves = 10000 }) {
+  /** clave -> instantes de los envios dentro de la ventana, del mas antiguo al mas reciente */
+  const registros = new Map();
+
+  function olvidarVencidas(momento) {
+    for (const [clave, instantes] of registros) {
+      if (momento - instantes[instantes.length - 1] < ventanaMs) break;
+      registros.delete(clave);
+    }
+  }
+
+  function vigentes(clave, momento) {
+    return (registros.get(clave) || []).filter((instante) => momento - instante < ventanaMs);
+  }
+
+  function consultar(clave, ahora) {
+    const momento = ms(ahora);
+    olvidarVencidas(momento);
+    const instantes = vigentes(clave, momento);
+    if (instantes.length >= maximo) {
+      return { permitido: false, segundos: segundosHasta(instantes[0] + ventanaMs, momento) };
+    }
+    return { permitido: true };
+  }
+
+  function registrar(clave, ahora) {
+    const estado = consultar(clave, ahora);
+    if (!estado.permitido) return estado;
+    const momento = ms(ahora);
+    const instantes = vigentes(clave, momento);
+    instantes.push(momento);
+    registros.delete(clave);
+    registros.set(clave, instantes);
+    if (registros.size > maximoClaves) registros.delete(registros.keys().next().value);
+    return estado;
+  }
+
+  return { consultar, registrar, cantidad: () => registros.size };
+}
+
+module.exports = { MENSAJES, crearBloqueoPorUsuario, crearLimiteGlobal, crearLimitePorClave };

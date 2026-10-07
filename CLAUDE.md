@@ -105,9 +105,11 @@ web/src/ruta/        guía de la ruta (M-03): preguntas, filtro en el navegador 
 web/src/directorio/  directorio (M-04): página, tarjetas, filtros y entidades por paso
 web/src/recursos/    recursos (M-05): página, tarjetas y texto de cada enlace
 web/src/preguntas/   preguntas frecuentes (M-05): acordeón y ancla #slug
+web/src/contacto/    contacto (M-06): formulario, validación y borrador en memoria
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
-                     revisión, pestañas accesibles, estados de carga y error
+                     revisión, pestañas accesibles, estados de carga y error, campos
+                     de formulario y resumen de errores
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
@@ -170,7 +172,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T7 y T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -269,4 +271,25 @@ enlaza ahí. `/recursos` muestra tarjetas con un botón «Descargar PDF (dominio
 «Abrir página oficial (dominio)» (`recursos/enlaceRecurso.js`). Panel:
 `/admin/preguntas` y `/admin/recursos`, sobre `/api/admin/preguntas` y
 `/api/admin/recursos` (fábrica de `adminLista.js`).
-Siguiente: T8 (`feat/contacto`). Ver `docs/backlog-fase-i.md`.
+
+Contacto y privacidad (T8, M-06): `/privacidad` y `/acerca-de` muestran los textos de
+`api/contenidos/paginas/`, que no van a la base ni se editan desde el panel: la API
+los lee al arrancar (`datos/paginasFijas.js`, reglas en `dominio/archivoPagina.js`) y
+los sirve en `GET /api/paginas/:slug`. Un archivo que dice COMPLETAR no se publica (una
+prueba lo detecta) y la versión de la política debe coincidir en `version`,
+`textoAutorizacion` y el cuerpo. `/contacto` pide solo correo y mensaje, con la
+indicación de no escribir datos de niños, niñas o adolescentes, y una casilla sin
+marcar con `textoAutorizacion` y enlace a `/privacidad`; lo escrito se conserva solo en
+memoria al ir a la política y volver. `POST /api/contacto` (`api/rutas/contacto.js`,
+reglas en `dominio/contacto.js`) rechaza otros campos y la falta de autorización
+(400), responde 409 si la versión no es la vigente y aplica 5 envíos por IP cada 15
+minutos y 40 por hora en total (`crearLimitePorClave` en `dominio/limiteIntentos.js`).
+La IP sale de `X-Forwarded-For` con `trust proxy` = 2 (`SALTOS_PROXY`); ni la IP, ni el
+correo, ni el mensaje se guardan en el registro. Colección `mensaje_contacto`: correo,
+mensaje, fecha y `versionPolitica`, con `strict: 'throw'` y un índice TTL de 180 días
+sobre `fecha` (RS-04), que se comprueba al arrancar (`datos/supresionAutomatica.js`).
+Bandeja en `/admin/mensajes` sobre `GET /api/admin/mensajes` y
+`DELETE /api/admin/mensajes/:id`: texto plano, «Responder por correo» (`mailto:`) y
+«Eliminar» con confirmación en la tarjeta. Preguntas frecuentes termina con un enlace
+al contacto. Decisión en `docs/decisiones/0006-mensajes-contacto.md`.
+Siguiente: T10 (`test/accesibilidad`). Ver `docs/backlog-fase-i.md`.

@@ -3,7 +3,8 @@
  * «Patrón de página»): migas de pan, título, aviso de no diagnóstico donde
  * corresponde, cuerpo en Markdown y, al final, fuentes y fecha de revisión.
  * La usan S1 (Qué es el TEA), S3 (Mitos), S4 (Ruta de atención) y S5
- * (Derechos).
+ * (Derechos), y las páginas fijas de M-06 (política de privacidad y «Acerca
+ * de», RF-12, RS-03), que llegan de /api/paginas/:slug (`seccion.api`).
  *
  * `complemento` va después del aviso y antes del cuerpo, sin esperar a que
  * llegue el contenido: en S4 es la guía de la ruta (M-03, RF-04). Con
@@ -24,11 +25,11 @@ import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
 
 export default function PaginaContenido({ seccion, complemento = null, tituloCuerpo = null }) {
-  const { titulo, slug, avisoNoDiagnostico } = seccion;
+  const { titulo, slug, avisoNoDiagnostico, api } = seccion;
   const idCuerpo = useId();
   useTituloPagina(titulo);
   useEffect(precargarMarkdown, []);
-  const { estado, datos: contenido, reintentar } = useDatos(`/api/contenidos/${slug}`);
+  const { estado, datos: contenido, reintentar } = useDatos(api ?? `/api/contenidos/${slug}`);
   const listo = estado === ESTADOS.LISTO;
 
   return (

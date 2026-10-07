@@ -11,8 +11,8 @@ const pasosRuta = require('../../datos/repositorios/pasosRuta');
 const entidadesDirectorio = require('../../datos/repositorios/entidadesDirectorio');
 
 /**
- * Rutas publicas de solo lectura. M-01, M-02, M-03, M-04, M-05, RF-02, RF-03,
- * RF-04, RF-05, RF-06, RF-07, RCN-01, RCN-02, RS-01, RS-07
+ * Rutas publicas de solo lectura. M-01, M-02, M-03, M-04, M-05, M-06, RF-02,
+ * RF-03, RF-04, RF-05, RF-06, RF-07, RF-12, RCN-01, RCN-02, RS-01, RS-03, RS-07
  *
  * Solo devuelven lo publicado, con sus fuentes y su fecha de revision. No piden
  * registro ni guardan nada de quien consulta. Las rutas de escritura van en
@@ -30,11 +30,18 @@ const entidadesDirectorio = require('../../datos/repositorios/entidadesDirectori
  * /preguntas, /recursos y /buscar identifican cada pregunta y cada recurso por
  * su slug, sin el _id: la web enlaza cada pregunta como
  * /preguntas-frecuentes#slug.
+ *
+ * /paginas/:slug devuelve una pagina fija de api/contenidos/paginas (M-06,
+ * RF-12, RS-03): la politica de privacidad, con su version, su vigencia y el
+ * texto de la casilla del formulario de contacto, y «Acerca de». No estan en
+ * la base ni se editan desde el panel (datos/paginasFijas.js).
  */
 
 const NO_ENCONTRADO = 'Contenido no encontrado.';
+const PAGINA_NO_ENCONTRADA = 'Página no encontrada.';
 
-function crearRutasPublicas() {
+/** @param {{paginas: {obtener: (slug: string) => Promise<object|null>}}} opciones */
+function crearRutasPublicas({ paginas }) {
   const rutas = express.Router();
 
   rutas.get(
@@ -81,6 +88,16 @@ function crearRutasPublicas() {
     '/directorio',
     envolver(async (_req, res) => {
       res.json(await entidadesDirectorio.listarPublicadas());
+    })
+  );
+
+  rutas.get(
+    '/paginas/:slug',
+    envolver(async (req, res) => {
+      const { slug } = req.params;
+      const pagina = esSlugValido(slug) ? await paginas.obtener(slug) : null;
+      if (!pagina) return res.status(404).json({ error: PAGINA_NO_ENCONTRADA });
+      res.json(pagina);
     })
   );
 
