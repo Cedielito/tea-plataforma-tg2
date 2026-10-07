@@ -19,10 +19,10 @@ Esta política explica qué datos personales recogemos en esta plataforma, para 
 
 La plataforma es un proyecto académico: el trabajo de grado de dos estudiantes de Ingeniería de Sistemas y Computación de la Universidad Católica de Colombia. Los responsables del tratamiento de los datos son los estudiantes que la desarrollan:
 
-- **Nombres:** COMPLETAR: nombres completos de los dos integrantes.
+- **Nombres:** Lucas Cediel Alarcón y Santiago Cárdenas Rubio.
 - **Domicilio:** Bogotá D. C., Colombia.
-- **Dirección:** COMPLETAR: dirección de correspondencia.
-- **Correo electrónico:** COMPLETAR: correo de contacto del proyecto.
+- **Dirección de correspondencia:** Avenida Caracas # 46-72, Bogotá D. C.
+- **Correo electrónico:** lcediel46@ucatolica.edu.co
 - **Teléfono:** COMPLETAR: teléfono de contacto.
 
 ## Qué datos recogemos
@@ -63,7 +63,7 @@ Como titular de los datos, tienes derecho a:
 
 ## Cómo ejercer tus derechos
 
-Escríbenos a COMPLETAR: correo de contacto del proyecto, con el asunto «Datos personales». El equipo del proyecto atiende estas solicitudes.
+Escríbenos a lcediel46@ucatolica.edu.co, con el asunto «Datos personales». El equipo del proyecto atiende estas solicitudes.
 
 - **Consultas** (por ejemplo, saber qué datos tenemos): respondemos en un plazo máximo de 10 días hábiles. Si no es posible, te avisamos el motivo y respondemos en un máximo de 5 días hábiles más.
 - **Reclamos** (corregir, actualizar o eliminar datos, o revocar la autorización): incluye tu nombre, tu correo, qué quieres corregir o eliminar y por qué, y los documentos que quieras adjuntar. Respondemos en un plazo máximo de 15 días hábiles. Si no es posible, te avisamos el motivo y respondemos en un máximo de 8 días hábiles más.

@@ -38,7 +38,7 @@ Para usar la plataforma no tienes que registrarte, y no usamos cookies de seguim
 
 ## Quiénes la hacen
 
-Es un proyecto académico: el trabajo de grado de COMPLETAR: nombres completos de los dos integrantes, estudiantes de Ingeniería de Sistemas y Computación de la Universidad Católica de Colombia (Bogotá, 2026). COMPLETAR: confirmar si se menciona a la dirección del trabajo de grado.
+Es un proyecto académico: el trabajo de grado de Lucas Cediel Alarcón y Santiago Cárdenas Rubio, estudiantes de Ingeniería de Sistemas y Computación de la Universidad Católica de Colombia (Bogotá, 2026).
 
 No es un servicio de salud ni un canal oficial de la Universidad.
 
