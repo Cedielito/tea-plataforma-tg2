@@ -1,5 +1,6 @@
 /**
- * Formatos compartidos por las páginas de contenido. RCN-01, RCN-02, RF-02
+ * Formatos compartidos por las páginas de contenido, el directorio y el
+ * panel. RCN-01, RCN-02, RF-02, RF-05
  */
 
 /**
@@ -43,6 +44,12 @@ export const esRutaInterna = (url) => typeof url === 'string' && /^\/(?![/\\])/.
 
 /** «1 página», «3 páginas». */
 export const contar = (cantidad, singular, plural) => `${cantidad} ${cantidad === 1 ? singular : plural}`;
+
+/** «a», «a y b», «a, b y c». */
+export function unirConY(partes) {
+  if (partes.length <= 1) return partes.join('');
+  return `${partes.slice(0, -1).join(', ')} y ${partes[partes.length - 1]}`;
+}
 
 /**
  * Letras y números de una búsqueda, sin tildes ni signos: la misma cuenta que

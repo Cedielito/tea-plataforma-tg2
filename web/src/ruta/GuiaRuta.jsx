@@ -1,7 +1,7 @@
 /**
- * Guía de la ruta de atención (M-03; RF-04, RS-01, RCN-03; RA-03, RA-10,
- * RA-11). Va arriba en /ruta-de-atencion, después del aviso de no diagnóstico
- * y antes del texto de S4.
+ * Guía de la ruta de atención (M-03, M-04; RF-04, RF-05, RS-01, RCN-03; RA-03,
+ * RA-10, RA-11). Va arriba en /ruta-de-atencion, después del aviso de no
+ * diagnóstico y antes del texto de S4.
  *
  * - Tres preguntas, una por pantalla, con «Pregunta X de 3», Anterior y
  *   Siguiente. Cada una es un <form> con <fieldset> y <legend>; «Siguiente»
@@ -11,15 +11,21 @@
  *   continuar» (role="alert"), enlazado a las opciones con aria-describedby.
  * - Al cambiar de pantalla, el foco va al título de la nueva: la pregunta,
  *   «Pasos para tu caso» o, con «Empezar de nuevo», la primera pregunta.
- * - Los pasos publicados se descargan al abrir la página, todos y sin enviar
- *   respuestas; al final se eligen en el navegador (filtroPasos.js). Las
+ * - Los pasos publicados y todo el directorio publicado se descargan una sola
+ *   vez al abrir la página, sin enviar respuestas; al final se eligen en el
+ *   navegador (filtroPasos.js y directorio/filtroDirectorio.js). Las
  *   respuestas viven solo en el estado de React: no van a la API, ni a la
  *   dirección de la página, ni a sessionStorage. Al recargar se pierden.
+ * - En el final, la ciudad para ver entidades cercanas es opcional y no es
+ *   una cuarta pregunta: vive aquí, aparte de las respuestas, con las mismas
+ *   reglas (ni API, ni dirección, ni sessionStorage). «Empezar de nuevo» la
+ *   borra.
  * - La barra de avance es decorativa (aria-hidden) y sin animación.
  */
 import { useEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, CircleAlert, LockKeyhole } from 'lucide-react';
 import useDatos from '../api/useDatos.js';
+import { RUTA_DIRECTORIO } from '../directorio/filtroDirectorio.js';
 import { PREGUNTAS, RESPUESTAS_VACIAS, responder } from './preguntas.js';
 import PasosParaTuCaso from './PasosParaTuCaso.jsx';
 
@@ -114,8 +120,10 @@ function Pregunta({ indice, respuestas, titulo, alResponder, alSiguiente, alAnte
 export default function GuiaRuta() {
   const idTitulo = useId();
   const pasos = useDatos(RUTA_PASOS);
+  const directorio = useDatos(RUTA_DIRECTORIO);
   const [pantalla, setPantalla] = useState(0);
   const [respuestas, setRespuestas] = useState(RESPUESTAS_VACIAS);
+  const [ciudad, setCiudad] = useState(null);
   const titulo = useRef(null);
   const pantallaAnterior = useRef(pantalla);
 
@@ -131,6 +139,7 @@ export default function GuiaRuta() {
 
   function empezarDeNuevo() {
     setRespuestas(RESPUESTAS_VACIAS);
+    setCiudad(null);
     setPantalla(0);
   }
 
@@ -150,6 +159,9 @@ export default function GuiaRuta() {
           titulo={titulo}
           respuestas={respuestas}
           pasos={pasos}
+          directorio={directorio}
+          ciudad={ciudad}
+          alCambiarCiudad={setCiudad}
           alAnterior={() => irA(TOTAL - 1)}
           alEmpezarDeNuevo={empezarDeNuevo}
         />

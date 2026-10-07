@@ -64,6 +64,23 @@
 .fuentes__lista li { margin-bottom: var(--espacio-1); overflow-wrap: anywhere; }
 .fuentes__revision { margin: 0; font-weight: var(--peso-negrita); }
 
+/* Fuentes de un elemento de una lista (pasos de la ruta, entidades del
+   directorio): un <details> que se abre con Enter o Espacio */
+.fuentes-desplegables summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--objetivo-tactil);
+  color: var(--color-primario);
+  font-weight: var(--peso-negrita);
+  cursor: pointer;
+  list-style: none;
+}
+/* El triángulo es decorativo: el texto alternativo vacío lo oculta al lector de pantalla */
+.fuentes-desplegables summary::before { content: "▸"; content: "▸" / ""; margin-right: var(--espacio-1); }
+.fuentes-desplegables[open] summary::before { content: "▾"; content: "▾" / ""; }
+.fuentes-desplegables summary::-webkit-details-marker { display: none; }
+.fuentes-desplegables .fuentes__lista { margin-top: var(--espacio-1); }
+
 /* ---------- Estados: cargando, error, sin contenido ---------- */
 .estado {
   display: flex;

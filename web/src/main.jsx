@@ -15,6 +15,7 @@ import './estilos/layout.css';
 import './estilos/inicio.css';
 import './estilos/contenido.css';
 import './estilos/ruta.css';
+import './estilos/directorio.css';
 
 import App from './App.jsx';
 

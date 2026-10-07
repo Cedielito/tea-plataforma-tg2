@@ -79,6 +79,8 @@
   --ancho-campo-fecha: 14rem;
   --borde-medio: 2px;
   --numero-paso: 2.25rem;             /* círculo con el número de cada paso de la ruta (M-03) */
+  --ancho-filtro: 22rem;              /* listas desplegables del directorio y de la guía (M-04) */
+  --ancho-tarjeta-entidad: 20rem;     /* ancho mínimo de cada tarjeta del directorio (M-04) */
 }
 
 @media (min-width: 40em) {
