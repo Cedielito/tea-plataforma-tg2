@@ -78,6 +78,7 @@
   --alto-cuerpo-editor: 20rem;
   --ancho-campo-fecha: 14rem;
   --borde-medio: 2px;
+  --numero-paso: 2.25rem;             /* círculo con el número de cada paso de la ruta (M-03) */
 }
 
 @media (min-width: 40em) {

@@ -1,0 +1,212 @@
+/* Guía de la ruta de atención (M-03, RF-04) en /ruta-de-atencion. RA-01 a RA-11:
+   contraste, foco visible, 320 px, zoom al 200 % y objetivos táctiles de 44 px.
+   Sin animaciones. Solo variables de tokens.css. */
+
+/* ---------- Recuadro de la guía ---------- */
+.guia {
+  max-width: var(--ancho-lectura);
+  margin-block: var(--espacio-3) var(--espacio-4);
+  padding: var(--espacio-3) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-top: var(--borde-grueso) solid var(--color-primario);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra-suave);
+}
+@media (min-width: 40em) {
+  .guia { padding: var(--espacio-4); }
+}
+.guia__encabezado { margin-bottom: var(--espacio-1); }
+.guia__privacidad {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-1) var(--espacio-2);
+  background: var(--color-primario-suave);
+  border-radius: var(--radio);
+  font-size: var(--tipo-pequeno);
+  font-weight: var(--peso-negrita);
+}
+.alto-contraste .guia__privacidad { border: var(--borde-fino) solid var(--color-borde); }
+.guia__privacidad svg { width: var(--icono-pequeno); height: var(--icono-pequeno); color: var(--color-primario); }
+
+/* ---------- Cada pregunta ---------- */
+.guia__formulario,
+.guia__final {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-3);
+  padding-top: var(--espacio-3);
+  border-top: var(--borde-fino) solid var(--color-borde);
+}
+.guia__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+/* El legend no participa del gap del fieldset: su separación va como margen */
+.guia__leyenda { width: 100%; padding: 0; margin-bottom: var(--espacio-2); }
+.guia__titulo { display: flex; flex-direction: column; gap: var(--espacio-1); margin: 0; }
+.guia__progreso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-1) var(--espacio-2);
+  font-family: var(--tipo-familia);
+  font-size: var(--tipo-pequeno);
+  font-weight: var(--peso-negrita);
+  color: var(--color-texto-secundario);
+}
+.guia__enunciado { display: block; }
+
+/* Avance decorativo (aria-hidden): los pasos hechos se rellenan y los que
+   faltan solo tienen borde, así no depende únicamente del color */
+.guia__barra { display: inline-flex; gap: var(--espacio-1); }
+.guia__segmento {
+  width: var(--linea-decorativa);
+  height: var(--espacio-1);
+  border: var(--borde-fino) solid var(--color-texto-secundario);
+  border-radius: var(--radio-pequeno);
+}
+.guia__segmento--hecho { background: var(--color-primario); border-color: var(--color-primario); }
+
+.guia__error {
+  display: flex;
+  gap: var(--espacio-1);
+  align-items: flex-start;
+  margin: 0;
+  padding: var(--espacio-1) var(--espacio-2);
+  background: var(--color-aviso-fondo);
+  border-left: var(--borde-grueso) solid var(--color-aviso-borde);
+  border-radius: var(--radio-pequeno);
+  font-weight: var(--peso-negrita);
+}
+.guia__error svg { width: var(--icono-pequeno); height: var(--icono-pequeno); margin-top: 0.2em; }
+
+/* ---------- Opciones: tarjetas con un botón de radio nativo ---------- */
+.guia__opciones { display: flex; flex-direction: column; gap: var(--espacio-1); }
+.opcion {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-2);
+  min-height: var(--objetivo-tactil);
+  padding: var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  cursor: pointer;
+}
+.opcion:hover { border-color: var(--color-primario); }
+/* La opción elegida: punto del radio, borde más grueso y fondo suave */
+.opcion:has(.opcion__control:checked) {
+  background: var(--color-primario-suave);
+  border-color: var(--color-primario);
+  box-shadow: inset 0 0 0 var(--borde-fino) var(--color-primario);
+}
+.opcion__control {
+  flex-shrink: 0;
+  width: var(--icono-pequeno);
+  height: var(--icono-pequeno);
+  margin: 0.2em 0 0;
+  accent-color: var(--color-primario);
+}
+/* El anillo de foco rodea toda la tarjeta, que es el objetivo táctil */
+@supports selector(:has(*)) {
+  .opcion:has(.opcion__control:focus-visible) {
+    outline: var(--anillo-foco) solid var(--color-foco);
+    outline-offset: 2px;
+  }
+  .opcion__control:focus-visible { outline: none; }
+}
+.opcion__textos { display: flex; flex-direction: column; min-width: 0; }
+.opcion__etiqueta { font-weight: var(--peso-negrita); line-height: var(--interlineado-titulos); }
+.opcion__descripcion {
+  margin-top: var(--espacio-1);
+  font-size: var(--tipo-pequeno);
+  line-height: var(--interlineado-titulos);
+  color: var(--color-texto-secundario);
+}
+.opcion:has(.opcion__control:checked) .opcion__descripcion { color: var(--color-texto); }
+
+.guia__botones { display: flex; flex-wrap: wrap; gap: var(--espacio-1) var(--espacio-2); }
+
+/* ---------- Final: pasos para tu caso ---------- */
+.guia__resumen { margin: 0; }
+.guia__aviso { margin: 0; }
+.guia__vacio { margin: 0; }
+
+.pasos-ruta {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  counter-reset: paso;
+}
+.paso-ruta {
+  display: grid;
+  grid-template-columns: var(--numero-paso) minmax(0, 1fr);
+  column-gap: var(--espacio-2);
+  padding: var(--espacio-2);
+  background: var(--color-fondo);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  counter-increment: paso;
+}
+.paso-ruta::before {
+  content: counter(paso);
+  grid-row: 1 / span 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--numero-paso);
+  height: var(--numero-paso);
+  border-radius: 50%;
+  background: var(--color-primario);
+  color: var(--color-sobre-primario);
+  font-family: var(--tipo-titulos);
+  font-weight: var(--peso-titulo);
+}
+.paso-ruta > * { grid-column: 2; }
+.paso-ruta__titulo {
+  margin: 0 0 var(--espacio-1);
+  font-family: var(--tipo-titulos);
+  font-weight: var(--peso-titulo);
+  font-size: var(--tipo-h3);
+  line-height: var(--interlineado-titulos);
+}
+.paso-ruta__texto { margin-bottom: var(--espacio-1); }
+
+/* Fuentes de cada paso (RCN-01, RCN-02): se abren con Enter o Espacio */
+.paso-ruta__fuentes summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--objetivo-tactil);
+  color: var(--color-primario);
+  font-weight: var(--peso-negrita);
+  cursor: pointer;
+}
+/* El triángulo es decorativo: el texto alternativo vacío lo oculta al lector de pantalla */
+.paso-ruta__fuentes summary::before { content: "▸"; content: "▸" / ""; margin-right: var(--espacio-1); }
+.paso-ruta__fuentes[open] summary::before { content: "▾"; content: "▾" / ""; }
+.paso-ruta__fuentes summary::-webkit-details-marker { display: none; }
+.paso-ruta__fuentes summary { list-style: none; }
+.paso-ruta__fuentes .fuentes__lista { margin-top: var(--espacio-1); }
+
+/* Recuadro hacia las señales de alerta del tramo elegido */
+.guia__senales { margin-top: 0; border-radius: var(--radio); }
+.guia__senales .recuadro-ruta__titulo { font-family: var(--tipo-titulos); font-weight: var(--peso-titulo); }
+
+/* ---------- Texto de S4 debajo de la guía ---------- */
+.pagina__cuerpo { max-width: var(--ancho-lectura); }
+.pagina__cuerpo > h2 { padding-top: var(--espacio-3); border-top: var(--borde-fino) solid var(--color-borde); }
+.pagina__cuerpo .prosa h3 {
+  margin-top: var(--espacio-4);
+  font-size: var(--tipo-h3);
+}
