@@ -21,8 +21,10 @@ Trabajo de grado — Ingeniería de Sistemas y Computación, Universidad Católi
 | M-06 | Contacto y privacidad |
 | M-07 | Barra de accesibilidad |
 | M-08 | Panel de administración |
+| M-09 | Registro conductual estructurado: herramienta del profesional para registrar el desempeño en dos tareas de dominio público (cambio de regla y Navon); entrega valores observados por tarea, sin clasificar. En esta fase se evalúa solo con adultos voluntarios |
 
-La Fase II (minijuegos y registro de indicadores) está preservada en la rama
+El resto de la Fase II (los otros minijuegos, el reporte del cuidador, el consentimiento
+parental y el asentimiento) está preservado en la rama
 [`fase-ii`](https://github.com/Cedielito/tea-plataforma-tg2/tree/fase-ii) y no forma parte de esta entrega.
 
 ## Estructura

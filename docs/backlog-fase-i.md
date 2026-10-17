@@ -1,17 +1,28 @@
 # Backlog Fase I — Plataforma web TEA
 
-Reemplaza al backlog anterior (el del prototipo gamificado). Entrega del documento: **finales de octubre de 2026**.
+Reemplaza al backlog anterior (el del prototipo gamificado). Entrega del documento: **6 de noviembre de 2026**.
+
+Cambio de alcance (propuesta de la asesora, 17 de octubre): la Fase I es la plataforma
+informativa (M-01 a M-08, sin cambios) más **M-09 Registro conductual estructurado**,
+una herramienta para que un profesional registre de forma estandarizada el desempeño en
+dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las
+figuras jerárquicas de Navon. En esta fase M-09 se evalúa solo con adultos voluntarios.
+Decisión en `docs/decisiones/0007-registro-conductual.md`.
 
 ## Calendario
 
 | Semana | Fechas | Meta |
 |---|---|---|
 | 1 | 6 – 12 oct | Repo limpio, base visual, contenidos (M-01, M-02, M-07) y panel con login |
-| 2 | 13 – 19 oct | Ruta, directorio, recursos, preguntas, contacto y **despliegue** |
-| 3 | 20 – 24 oct | Accesibilidad, rendimiento, casos de aceptación y **prueba con voluntarios** |
-| 4 | 25 – 30 oct | Resultados en el documento (lo amarillo) y entrega |
+| 2 | 13 – 19 oct | Ruta, directorio, recursos, preguntas, contacto y **despliegue**; núcleo del registro (T12, 18 oct) |
+| 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); **versión congelada el 26 oct** |
+| 4 | 27 oct – 6 nov | Prueba con voluntarios adultos sobre la versión congelada, resultados en el documento (lo amarillo) y **entrega el 6 de noviembre** |
 
-Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no entra.
+Reglas:
+- Si una tarea no acerca a la plataforma desplegada al 19 de octubre, no entra.
+- Después del 26 de octubre solo entran correcciones sobre la versión congelada.
+- Línea de corte de M-09: si la tarea de Navon no está estable el 23 de octubre, se
+  evalúa solo la de cambio de regla.
 
 ## Tareas humanas (no las hace Claude Code)
 
@@ -39,8 +50,13 @@ Regla: si una tarea no acerca a la plataforma desplegada al 19 de octubre, no en
 | T7 ✅ | `feat/recursos-faq` | Recursos y preguntas frecuentes + administración | M-05, RF-06, RF-07 | 2 |
 | T8 ✅ | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
 | T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
-| T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones | RA-01 a RA-11 | 3 |
-| T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-15 y su ejecución | C1 | 3 |
+| T12 ✅ | `feat/nucleo-registro` | Núcleo del registro: indicadores, catálogo, secuenciador, motor, versión y seudónimo traídos de `fase-ii` | M-09, CC-08, CC-09, CC-10, CC-12, CT-03, CT-08, CT-11, CT-13, CP-01, CP-04, RF-13 a RF-15 | 2 (18 oct) |
+| T13 | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
+| T14 | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
+| T15 | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
+| T16 | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
+| T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
+| T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
 
 Reglas de cada sesión (Claude Code web): sesión nueva desde `main` → pegar el prompt → revisar y aprobar el plan → Claude programa, prueba, hace commit y push **a la rama de la tarea** y abre el Pull Request → revisar CI y vista previa → el otro integrante aprueba → *Squash and merge* → borrar la rama.
 
@@ -50,6 +66,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); T16 mide la real. | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
 | T8 | Comprobar en el entorno desplegado el límite de envíos por IP (pasos en `docs/despliegue.md`, «Formulario de contacto») y ajustar `SALTOS_PROXY` en Render si hace falta. El documento debe reflejar que los mensajes se suprimen a los 180 días (seis meses de 30 días: unos días antes de cumplirse los seis meses de calendario, nunca después) y que en el Cuadro 13 la versión de la autorización se llama `versionPolitica`. | M-06, RS-02, RS-04 |
 | T7 | El documento debe reflejar lo que cambió con T7. En el Cuadro 13, `pregunta_frecuente` y `recurso` llevan además un identificador (`slug`), y en `pregunta_frecuente` el orden es obligatorio. En el Cuadro B.1, la tarea T7 («¿A quién debo consultar primero?») se cumple desplegando la pregunta en `/preguntas-frecuentes` o desde el buscador, que enlaza a la pregunta abierta. | M-05, RF-06, RF-07 |
 | T6 | El documento debe reflejar lo que cambió con T6. En el Cuadro B.1, la tarea T4 de la prueba de usabilidad («Aplica el filtro de ciudad y abre un registro») ya no aplica: el directorio no tiene página de detalle y cada tarjeta muestra todos los datos (lo ajusta el equipo). En el Cuadro 13, `entidad_directorio` lleva además descripción, fuentes, estado de publicación y la marca de profesional independiente. | M-04, RF-05, RS-07 |
@@ -253,11 +270,71 @@ Hecha (adelantada para poder revisar T3 en adelante en las vistas previas). Web 
 Vercel, API en Render y base en MongoDB Atlas; Vercel reenvía `/api/*` a Render, así
 que no hay CORS. Pasos, variables y advertencias en `docs/despliegue.md`.
 
+### T12 — Núcleo del registro conductual ✅
+Hecha. Cambios frente al prompt, acordados al aprobar el plan: el seudónimo es un
+código de 8 caracteres (XXXX-XXXX) con un alfabeto sin 0, O, 1, I ni L, en lugar del
+UUID; CC-09 y CC-10 promedian solo aciertos; RF-14 excluye también las anticipaciones
+(tiempo neto menor que `trMinimoMs: 200`, parámetro del catálogo), sin recorte por
+desviación estándar; CC-12 lleva `criterioAlcanzado`; se conserva `vistaDeEnsayo`
+(CT-03) adaptada a la práctica con retroalimentación. Los códigos de la Fase II que
+chocaban con los actuales pasaron a RF-13 (antes RF-20), RF-14 (antes RF-23) y RF-15
+(antes RF-24). La tarea se presenta con `titulo` y no con `nombre`, porque `nombre` es
+un campo identificable. El motor tampoco procesa una sesión con datos identificables.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea T12, rama feat/nucleo-registro.
+
+Cambio de alcance: la Fase I es la plataforma informativa (M-01 a M-08) más M-09
+Registro conductual estructurado (DCCS y Navon, solo adultos voluntarios en esta
+fase). Entrega: 6 de noviembre de 2026.
+
+1. Actualiza CLAUDE.md (descripción, entrega, mapa del código, estado actual, reglas
+   de M-09 y «Qué no hacer sin preguntar»).
+2. Agrega al backlog M-09, HU-16 a HU-19 y las tareas T12 a T16.
+3. Trae de fase-ii a api/src/dominio, adaptado y con sus pruebas: los indicadores de
+   las dos tareas (CC-08, CC-09, CC-10 y CC-12) y sus utilidades, sin el campo
+   dominio y con CC-09 por ensayo en los bloques mixtos; el catálogo y el
+   secuenciador reducidos a las dos tareas y sin tramos de edad; el motor, con salida
+   por tarea y constructo, versión inmutable, sesiones incompletas sin procesar y
+   avisos obligatorios; el seudónimo y la detección de campos identificables.
+4. Conserva como pruebas las restricciones del Cuadro 27 que aplican: sin datos
+   identificables, salida sin clasificación ni nombres de dominios del DSM-5-TR,
+   práctica y omisiones fuera del cálculo, tiempo de reacción neto, sesiones
+   incompletas sin procesar y reproducibilidad por versión.
+5. Agrega los códigos a docs/requisitos-fase-i.md.
+Sin colecciones, rutas, pantallas ni dependencias nuevas.
+Propón el plan antes de escribir código.
+```
+
+### T13 — Motor de ensayos, reloj y tarea de cambio de regla
+Prompt pendiente (lo escribe el equipo). Alcance: motor de ensayos en el navegador que
+genera los estímulos por código a partir del catálogo de T12, mide el tiempo con reloj
+monotónico (`performance.now()`, CT-07), descuenta las pausas (RF-13), registra
+omisiones, anticipaciones y `claseError` al registrar cada ensayo, y la tarea de
+cambio de regla gamificada con instrucciones, práctica con retroalimentación (CP-04),
+barra de progreso y sin temporizadores ni marcadores (CT-03, `vistaDeEnsayo`). Textos
+revisados con `vocabularioProhibido`.
+
+### T14 — Tarea de Navon
+Prompt pendiente. Alcance: figuras jerárquicas generadas por código, 2 ensayos de
+práctica y 4 bloques ABBA de 7 ensayos sobre el motor de T13 (CC-10). Si el 23 de
+octubre no está estable, se evalúa solo la tarea de cambio de regla.
+
+### T15 — Flujo del profesional, SUS y exportación
+Prompt pendiente. Alcance: colecciones del registro (sin datos identificables, índice
+único del seudónimo), creación de la sesión con la constancia del consentimiento
+(HU-16), vista de valores observados con el aviso de M-09 (HU-18), exportación CSV de
+ensayos y valores y eliminación por seudónimo (HU-19), y el cuestionario SUS.
+
+### T16 — Precisión temporal, perfiles simulados y reproducibilidad
+Prompt pendiente. Alcance: experimento que mide el error del registro del tiempo de
+reacción frente a una referencia (CT-07), perfiles de desempeño simulados que pasan
+por el motor y prueba de reproducibilidad por versión (CT-13).
+
 ### T10 — Accesibilidad y rendimiento
 ```
 Lee CLAUDE.md. Tarea T10, rama test/accesibilidad.
 
-Auditoría automática con axe-core sobre todas las páginas públicas y del panel,
+Auditoría automática con axe-core sobre todas las páginas públicas, del panel y de M-09,
 y medición con Lighthouse (perfil móvil). Pide autorización antes de añadir
 @axe-core/playwright. Genera docs/evaluacion/accesibilidad.md con violaciones
 por severidad y puntajes de Lighthouse por página; corrige las críticas y graves
@@ -269,7 +346,7 @@ rendimiento ≥ 80. Propón el plan antes de escribir código.
 ```
 Lee CLAUDE.md. Tarea T11, rama docs/casos-aceptacion.
 
-A partir del Cuadro 12 de docs/requisitos-fase-i.md (HU-01 a HU-15), escribe
+A partir del Cuadro 12 de docs/requisitos-fase-i.md (HU-01 a HU-19), escribe
 docs/evaluacion/casos-aceptacion.md: un caso por historia con pasos, resultado
 esperado y columna de resultado obtenido. Donde sea viable, automatízalos con
 pruebas de extremo a extremo (pide autorización para Playwright).
