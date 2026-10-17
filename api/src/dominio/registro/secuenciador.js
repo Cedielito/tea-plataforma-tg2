@@ -15,7 +15,8 @@ const { VERSION_CATALOGO } = require('./version');
  *   marcadores ni puntajes (vistaDeEnsayo).
  *
  * Solo arma los bloques: los ensayos y sus estimulos los genera el motor de
- * ensayos (T13).
+ * ensayos de la web (web/src/registro/, T13), que recibe este plan en
+ * GET /api/registro/plan.
  *
  * Traido de fase-ii (api/src/dominio/minijuegos/secuenciador.js), sin tramos de
  * edad y con los bloques mixtos expandidos desde el catalogo.
@@ -53,6 +54,11 @@ function construirSecuencia(tarea) {
 
   for (const b of bloques) {
     if (b.ensayos > LIMITES.ENSAYOS_POR_BLOQUE) throw new Error('CP-01 incumplido en el bloque ' + b.id);
+    // Despues del primer ensayo hay b.ensayos - 1 transiciones: al menos un
+    // cambio y una repeticion, o CC-09 no se puede calcular
+    if (b.cambios !== undefined && !(Number.isInteger(b.cambios) && b.cambios > 0 && b.cambios < b.ensayos - 1)) {
+      throw new Error('cambios fuera de rango en el bloque ' + b.id);
+    }
   }
   if (cfg.ensayosPractica < LIMITES.PRACTICA_MINIMA) throw new Error('CP-04 incumplido en ' + tarea);
 
@@ -65,6 +71,8 @@ function construirSecuencia(tarea) {
     bloques,
     ensayosPuntuados,
     trMinimoMs: cfg.trMinimoMs,
+    limiteRespuestaMs: cfg.limiteRespuestaMs,
+    intervaloEntreEnsayosMs: cfg.intervaloEntreEnsayosMs,
     duracionEstimadaMin: cfg.minutosInstrucciones + minutos(cfg.ensayosPractica + ensayosPuntuados, cfg),
     // El tramo mas largo sin pausa: las instrucciones con la practica, o el bloque mas largo
     tramoSinPausaMaxMin: Math.max(
@@ -95,6 +103,9 @@ function planificarSesion(orden) {
  * CT-03. Lo que el participante puede ver de un ensayo. Nunca el tiempo, la
  * clase de error, un temporizador ni un marcador. El acierto solo se muestra
  * en la practica, como retroalimentacion (CP-04).
+ *
+ * La web no puede importar este archivo: web/src/registro/vista.js tiene una
+ * copia y una prueba que compara las dos con todos los ensayos de una sesion.
  */
 function vistaDeEnsayo(ensayo) {
   const { tiempoReaccionMs, pausasDuranteItemMs, acierto, claseError, ...visible } = ensayo;

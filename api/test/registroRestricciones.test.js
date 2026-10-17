@@ -183,6 +183,16 @@ describe('CT-13 reproducibilidad por versión', () => {
       navon: { practica: 2, bloques: ['NV-GLOBAL-1', 'NV-LOCAL-1', 'NV-LOCAL-2', 'NV-GLOBAL-2'] },
       ensayosPorBloque: 7,
       trMinimoMs: 200
+    },
+    // T13: limite de respuesta, intervalo entre ensayos y cambios por bloque mixto
+    '1.1.0': {
+      'cambio-regla': { practica: 2, bloques: ['CR-COLOR', 'CR-FORMA', 'CR-MIXTO-1', 'CR-MIXTO-2', 'CR-MIXTO-3', 'CR-MIXTO-4'] },
+      navon: { practica: 2, bloques: ['NV-GLOBAL-1', 'NV-LOCAL-1', 'NV-LOCAL-2', 'NV-GLOBAL-2'] },
+      ensayosPorBloque: 7,
+      trMinimoMs: 200,
+      limiteRespuestaMs: 5000,
+      intervaloEntreEnsayosMs: 500,
+      cambiosPorBloqueMixto: 3
     }
   };
 
@@ -206,6 +216,10 @@ describe('CT-13 reproducibilidad por versión', () => {
       expect(s.bloques.map((b) => b.id)).toEqual(esperado[tarea].bloques);
       expect(s.bloques.every((b) => b.ensayos === esperado.ensayosPorBloque)).toBe(true);
       expect(s.trMinimoMs).toBe(esperado.trMinimoMs);
+      expect(s.limiteRespuestaMs).toBe(esperado.limiteRespuestaMs);
+      expect(s.intervaloEntreEnsayosMs).toBe(esperado.intervaloEntreEnsayosMs);
+      const mixtos = s.bloques.filter((b) => b.fase === 'mixto');
+      expect(mixtos.every((b) => b.cambios === esperado.cambiosPorBloqueMixto)).toBe(true);
       expect(s.versionCatalogo).toBe(versiones.VERSION_CATALOGO);
     }
   });

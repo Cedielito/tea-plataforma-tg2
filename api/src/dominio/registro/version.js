@@ -11,9 +11,12 @@
  *
  * Traido de fase-ii (api/src/dominio/puntuacion/version.js). Empieza en 1.0.0
  * porque CC-09 cambio de definicion y el catalogo se redujo a dos tareas.
+ *
+ * Catalogo 1.1.0 (T13): limite de respuesta de 5 s, intervalo de 500 ms entre
+ * ensayos y 3 cambios por bloque mixto.
  */
 
 module.exports = Object.freeze({
   VERSION_ALGORITMO: '1.0.0',
-  VERSION_CATALOGO: '1.0.0'
+  VERSION_CATALOGO: '1.1.0'
 });

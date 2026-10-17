@@ -82,6 +82,18 @@
   --numero-paso: 2.25rem;             /* círculo con el número de cada paso de la ruta (M-03) */
   --ancho-filtro: 22rem;              /* listas desplegables del directorio y de la guía (M-04) */
   --ancho-tarjeta-entidad: 20rem;     /* ancho mínimo de cada tarjeta del directorio (M-04) */
+
+  /* Registro conductual (M-09). El color de las figuras es el estímulo: rojo y azul
+     (nunca rojo y verde), distinguibles con protanopía y deuteranopía; contraste
+     con el blanco 5,6:1 y 6,2:1. El modo alto contraste NO los cambia
+     (web/src/registro/coloresEstimulo.test.js). */
+  --estimulo-rojo: #c62828;
+  --estimulo-azul: #1e5bc6;
+  --estimulo-contorno: #1f2a37;
+  --figura-estimulo: 9rem;            /* figura del centro */
+  --figura-caja: 4.5rem;              /* figura de cada caja */
+  --alto-caja: 9rem;                  /* botón de cada caja: muy por encima de 44 px */
+  --ancho-tarea: 44rem;
 }
 
 @media (min-width: 40em) {

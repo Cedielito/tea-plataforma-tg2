@@ -1,0 +1,163 @@
+/* Registro conductual (M-09): página de prueba y tarea de cambio de regla.
+   RA-01 a RA-11: contraste, foco visible, 320 px sin desplazamiento horizontal,
+   zoom al 200 % y objetivos táctiles muy por encima de 44 px. Sin animaciones
+   ni transiciones (CT-03). Solo variables de tokens.css; los colores de las
+   figuras (--estimulo-*) no cambian con el alto contraste. Se carga con
+   AppRegistro.jsx, no en la zona pública. */
+
+/* ---------- Encabezado ---------- */
+.encabezado-registro { padding-block: var(--espacio-2); }
+.encabezado-registro__nombre {
+  margin: 0;
+  font-family: var(--tipo-titulos);
+  font-size: var(--tipo-logo);
+  font-weight: var(--peso-titulo);
+  color: var(--color-primario);
+}
+
+/* ---------- Página y pantallas de texto ---------- */
+.registro { max-width: var(--ancho-tarea); }
+.registro__nota { margin-block: var(--espacio-3); }
+.registro__nota p + p { margin-top: var(--espacio-1); }
+
+.tarea__pantalla {
+  margin-top: var(--espacio-3);
+  padding: var(--espacio-3);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra-suave);
+}
+.tarea__pantalla > * + * { margin-top: var(--espacio-2); }
+.tarea__pantalla p { max-width: var(--ancho-lectura); }
+.tarea__continuar { margin-top: var(--espacio-3); }
+.tarea__pantalla .boton { margin-right: var(--espacio-2); }
+
+.tarea__instrucciones {
+  padding: var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border-radius: var(--radio);
+}
+.tarea__instrucciones p + p { margin-top: var(--espacio-1); }
+
+.tarea__retroalimentacion {
+  display: flex;
+  gap: var(--espacio-1);
+  align-items: flex-start;
+  font-size: var(--tipo-destacado);
+  font-weight: var(--peso-negrita);
+}
+.tarea__retroalimentacion svg {
+  flex: none;
+  width: var(--icono);
+  height: var(--icono);
+  margin-top: 0.15em;
+  color: var(--color-primario);
+}
+
+/* ---------- Barra de progreso por bloques (HU-17) ---------- */
+.progreso-tarea { margin-top: var(--espacio-3); }
+.progreso-tarea__texto {
+  margin: 0 0 var(--espacio-1);
+  color: var(--color-texto-secundario);
+  font-size: var(--tipo-pequeno);
+}
+.progreso-tarea__barra {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--espacio-2);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-pequeno);
+  background: var(--color-superficie-suave);
+  color: var(--color-primario);
+  overflow: hidden;
+}
+.progreso-tarea__barra::-webkit-progress-bar { background: var(--color-superficie-suave); }
+.progreso-tarea__barra::-webkit-progress-value { background: var(--color-primario); }
+.progreso-tarea__barra::-moz-progress-bar { background: var(--color-primario); }
+
+/* ---------- Ensayo ---------- */
+.ensayo {
+  margin-top: var(--espacio-3);
+  padding: var(--espacio-3) var(--espacio-2);
+  background: var(--color-superficie);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio-grande);
+}
+.ensayo__cajas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-2);
+}
+.ensayo__caja {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-1);
+  min-width: 0;
+  min-height: var(--alto-caja);
+  padding: var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border: var(--borde-medio) solid var(--color-texto-secundario);
+  border-radius: var(--radio);
+  color: var(--color-texto);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ensayo__figura-caja { width: var(--figura-caja); height: var(--figura-caja); }
+.ensayo__tecla {
+  font-family: var(--tipo-titulos);
+  font-weight: var(--peso-titulo);
+  font-size: var(--tipo-h3);
+}
+
+/* Alto fijo: el juguete y la señal aparecen sin mover las cajas. */
+.ensayo__centro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-1);
+  min-height: calc(var(--figura-estimulo) + var(--espacio-5));
+  margin-top: var(--espacio-3);
+}
+.ensayo__senal {
+  display: flex;
+  gap: var(--espacio-1);
+  align-items: center;
+  margin: 0;
+  font-family: var(--tipo-titulos);
+  font-size: var(--tipo-h2);
+  font-weight: var(--peso-titulo);
+}
+.ensayo__senal-icono { width: var(--icono); height: var(--icono); color: var(--color-primario); }
+.ensayo__figura { width: var(--figura-estimulo); height: var(--figura-estimulo); }
+.ensayo__fijacion {
+  margin: 0;
+  font-size: var(--tipo-h1);
+  color: var(--color-texto);
+}
+
+/* ---------- Tabla de ensayos (al terminar) ---------- */
+.tabla-ensayos { margin-top: var(--espacio-4); }
+.tabla-ensayos__recuadro {
+  margin-top: var(--espacio-2);
+  overflow-x: auto;
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+}
+.tabla-ensayos table { border-collapse: collapse; font-size: var(--tipo-pequeno); }
+.tabla-ensayos th,
+.tabla-ensayos td {
+  padding: var(--espacio-1);
+  border-bottom: var(--borde-fino) solid var(--color-borde);
+  text-align: left;
+  white-space: nowrap;
+}
+.tabla-ensayos th { background: var(--color-superficie-suave); }

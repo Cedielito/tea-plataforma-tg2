@@ -2,7 +2,7 @@
 
 Reemplaza al backlog anterior (el del prototipo gamificado). Entrega del documento: **6 de noviembre de 2026**.
 
-Cambio de alcance (propuesta de la asesora, 17 de octubre): la Fase I es la plataforma
+Cambio de alcance (propuesta de la asesora, 13 de octubre): la Fase I es la plataforma
 informativa (M-01 a M-08, sin cambios) más **M-09 Registro conductual estructurado**,
 una herramienta para que un profesional registre de forma estandarizada el desempeño en
 dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las
@@ -16,13 +16,15 @@ Decisión en `docs/decisiones/0007-registro-conductual.md`.
 | 1 | 6 – 12 oct | Repo limpio, base visual, contenidos (M-01, M-02, M-07) y panel con login |
 | 2 | 13 – 19 oct | Ruta, directorio, recursos, preguntas, contacto y **despliegue**; núcleo del registro (T12, 18 oct) |
 | 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); **versión congelada el 26 oct** |
-| 4 | 27 oct – 6 nov | Prueba con voluntarios adultos sobre la versión congelada, resultados en el documento (lo amarillo) y **entrega el 6 de noviembre** |
+| 4 | 27 oct – 6 nov | Prueba con voluntarios adultos sobre la versión congelada (solo con el aval escrito del comité de ética), resultados en el documento (lo amarillo) y **entrega el 6 de noviembre** |
 
 Reglas:
 - Si una tarea no acerca a la plataforma desplegada al 19 de octubre, no entra.
 - Después del 26 de octubre solo entran correcciones sobre la versión congelada.
 - Línea de corte de M-09: si la tarea de Navon no está estable el 23 de octubre, se
   evalúa solo la de cambio de regla.
+- La prueba con voluntarios de la semana 4 empieza solo con el aval escrito del comité
+  de ética.
 
 ## Tareas humanas (no las hace Claude Code)
 
@@ -51,7 +53,7 @@ Reglas:
 | T8 ✅ | `feat/contacto` | Contacto, privacidad, bandeja y supresión a 6 meses | M-06, RF-08, RF-11, RS-02 a RS-04 | 2 |
 | T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
 | T12 ✅ | `feat/nucleo-registro` | Núcleo del registro: indicadores, catálogo, secuenciador, motor, versión y seudónimo traídos de `fase-ii` | M-09, CC-08, CC-09, CC-10, CC-12, CT-03, CT-08, CT-11, CT-13, CP-01, CP-04, RF-13 a RF-15 | 2 (18 oct) |
-| T13 | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
+| T13 ✅ | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
 | T14 | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
 | T15 | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
 | T16 | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
@@ -66,6 +68,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T13 | El documento debe reflejar lo que cambió con T13. El catálogo pasa a la versión 1.1.0, con el límite de respuesta de 5 s (después, el ensayo queda omitido), 500 ms entre ensayos y 3 cambios y 3 repeticiones por bloque mixto. Con dos cajas y estímulos siempre en conflicto, todo error del bloque de forma es perseverativo, así que CC-08 equivale a la proporción de errores de ese bloque. La práctica usa solo la regla de color y cada cambio de regla tiene su pantalla de instrucciones. Una omisión no tiene clase de error. La señal y el estímulo aparecen juntos y el tiempo de reacción se mide desde esa aparición (`docs/decisiones/0008-motor-ensayos.md`). | M-09, CC-08, CT-07, RF-14, HU-17 |
 | T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); T16 mide la real. | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
 | T8 | Comprobar en el entorno desplegado el límite de envíos por IP (pasos en `docs/despliegue.md`, «Formulario de contacto») y ajustar `SALTOS_PROXY` en Render si hace falta. El documento debe reflejar que los mensajes se suprimen a los 180 días (seis meses de 30 días: unos días antes de cumplirse los seis meses de calendario, nunca después) y que en el Cuadro 13 la versión de la autorización se llama `versionPolitica`. | M-06, RS-02, RS-04 |
 | T7 | El documento debe reflejar lo que cambió con T7. En el Cuadro 13, `pregunta_frecuente` y `recurso` llevan además un identificador (`slug`), y en `pregunta_frecuente` el orden es obligatorio. En el Cuadro B.1, la tarea T7 («¿A quién debo consultar primero?») se cumple desplegando la pregunta en `/preguntas-frecuentes` o desde el buscador, que enlaza a la pregunta abierta. | M-05, RF-06, RF-07 |
@@ -305,18 +308,85 @@ Sin colecciones, rutas, pantallas ni dependencias nuevas.
 Propón el plan antes de escribir código.
 ```
 
-### T13 — Motor de ensayos, reloj y tarea de cambio de regla
-Prompt pendiente (lo escribe el equipo). Alcance: motor de ensayos en el navegador que
-genera los estímulos por código a partir del catálogo de T12, mide el tiempo con reloj
-monotónico (`performance.now()`, CT-07), descuenta las pausas (RF-13), registra
-omisiones, anticipaciones y `claseError` al registrar cada ensayo, y la tarea de
-cambio de regla gamificada con instrucciones, práctica con retroalimentación (CP-04),
-barra de progreso y sin temporizadores ni marcadores (CT-03, `vistaDeEnsayo`). Textos
-revisados con `vocabularioProhibido`.
+### T13 — Motor de ensayos, reloj y tarea de cambio de regla ✅
+Hecha. Cambios frente al prompt, acordados al aprobar el plan: el catálogo pasa a la
+versión 1.1.0 con `limiteRespuestaMs`, `intervaloEntreEnsayosMs` y `cambios` (la web no
+inventa parámetros de medición); `vistaDeEnsayo` tiene una copia mínima en
+`web/src/registro/vista.js`, con una prueba que la compara con la de `api/`; el error en
+el primer ensayo de un bloque mixto queda como `aleatoria` y una omisión no tiene clase
+de error. Ajustes del equipo: una pantalla de instrucciones antes del bloque de forma y
+otra antes del primer bloque mixto; figuras rojas y azules que el alto contraste no
+cambia; los dos estímulos balanceados también en los bloques mixtos; la señal aparece
+con el estímulo y el tiempo se mide desde esa aparición. La práctica usa solo la regla
+de color. Hecha en la rama `claude/motor-ensayos-dccs-2ki0ju` (la que asignó el entorno
+de Claude Code). Decisión en `docs/decisiones/0008-motor-ensayos.md`.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea T13, rama feat/motor-tareas.
+
+Construye en web/ el motor de ensayos de M-09 y la tarea de cambio de regla
+(DCCS), sobre el núcleo de T12 (api/src/dominio/registro/).
+
+Fuente única: el catálogo y el secuenciador viven en la API y la web no los
+copia. Propón cómo los obtiene la web (por ejemplo, GET /api/registro/plan, de
+solo lectura, que devuelve planificarSesion() sin datos de nadie).
+
+Medición del tiempo (CT-07):
+- La aparición del estímulo se marca con el tiempo del requestAnimationFrame
+  en que se dibuja (performance.now()); la respuesta, con event.timeStamp del
+  keydown o pointerdown. Tiempo de reacción = respuesta menos aparición, en ms
+  con decimales. Cuenta la primera respuesta (rectificaciones = 0).
+- La estrategia vive en web/src/registro/reloj.js, con dos variantes
+  intercambiables por configuración: la anterior y una de referencia con
+  setTimeout y Date.now(). T16 compara las dos.
+- Si la pestaña se oculta durante un ensayo (visibilitychange), ese tiempo va
+  a pausasDuranteItemMs (RF-13).
+- Teclas F y J, o dos botones grandes en pantallas táctiles; se registra el
+  tipo de entrada. Sin animaciones ni sonidos durante el ensayo.
+- Sin respuesta en 5 s: estadoItem 'omitido' y tiempoReaccionMs null.
+
+Tarea de cambio de regla:
+- Estímulos generados por código (SVG): 2 colores y 2 formas. Las dos cajas
+  objetivo cruzan color y forma (por ejemplo, conejo rojo y barco azul) y los
+  estímulos de prueba siempre están en conflicto (conejo azul, barco rojo): con
+  una regla van a una caja y con la otra, a la otra.
+- En los bloques mixtos la señal de cada ensayo es «COLOR» o «FORMA» con un
+  ícono. Después del primer ensayo de cada bloque van 3 cambios y 3
+  repeticiones, en orden seudoaleatorio con semilla registrada (sin
+  dependencias).
+- Cada ensayo sale con la forma que documenta indicadores.js (tarea, bloque,
+  fase, regla, condicion, practica, estadoItem, acierto, claseError,
+  tiempoReaccionMs, pausasDuranteItemMs, rectificaciones), más número,
+  estímulo, respuesta, aparición, semilla y tipo de entrada. El tipo de ensayo
+  (cambio o repetición) lo calcula el dominio, no la web.
+- claseError: 'correcta' si acierta; 'perseverativa' si la respuesta habría
+  sido correcta con la regla anterior (en el bloque de forma, la de color; en
+  los mixtos, la del ensayo anterior); 'aleatoria' en otro caso.
+- Dinámicas gamificadas que no alteran la medición: marco narrativo («El
+  taller que cambia»), barra de progreso por bloques, mensaje de ánimo al final
+  de cada bloque y retroalimentación de acierto solo en la práctica. Nada de
+  puntos, vidas, rankings ni temporizadores visibles: la interfaz aplica la
+  regla de vistaDeEnsayo (CT-03), con prueba. Cada dinámica declara en un
+  comentario el principio neuroeducativo que aplica.
+- Una prueba pasa los textos de la tarea por buscarVocabularioProhibido.
+
+La sesión es local: no se guarda en la API. La tarea se abre en
+/registro/prueba (no enlazada, noindex) y al terminar muestra los ensayos en
+una tabla con «Descargar JSON». El flujo del profesional y el guardado son de
+T15.
+
+Pruebas: con semilla fija el generador produce la estructura del catálogo y
+3 cambios y 3 repeticiones por bloque mixto; todo estímulo de prueba está en
+conflicto; el reloj es inyectable y el tiempo de reacción se prueba sin
+navegador; una prueba en api/ procesa con procesarSesion una sesión con el
+formato de la web y obtiene CC-08, CC-09 y CC-12.
+
+Propón el plan antes de escribir código.
+```
 
 ### T14 — Tarea de Navon
 Prompt pendiente. Alcance: figuras jerárquicas generadas por código, 2 ensayos de
-práctica y 4 bloques ABBA de 7 ensayos sobre el motor de T13 (CC-10). Si el 23 de
+práctica y 4 bloques ABBA de 7 ensayos sobre el motor de T13 (CC-10): reutiliza
+`motorEnsayo.js`, `reloj.js`, `azar.js` y la página `/registro/prueba`. Si el 23 de
 octubre no está estable, se evalúa solo la tarea de cambio de regla.
 
 ### T15 — Flujo del profesional, SUS y exportación

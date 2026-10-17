@@ -10,26 +10,17 @@
  * - Sin sesión muestra el inicio de sesión; con la sesión vencida deja la
  *   página montada para no perder lo escrito (SesionVencida.jsx).
  */
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import BarraAccesibilidad from '../accesibilidad/BarraAccesibilidad.jsx';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import useFocoAlNavegar from '../componentes/useFocoAlNavegar.js';
+import useNoIndexar from '../componentes/useNoIndexar.js';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import { ESTADOS } from '../api/useDatos.js';
 import InicioSesion from './InicioSesion.jsx';
 import { SESION, useSesion } from './ContextoSesion.jsx';
-
-function useNoIndexar() {
-  useEffect(() => {
-    const meta = document.createElement('meta');
-    meta.name = 'robots';
-    meta.content = 'noindex, nofollow';
-    document.head.appendChild(meta);
-    return () => meta.remove();
-  }, []);
-}
 
 function ComprobandoSesion() {
   const { estado, reintentar } = useSesion();
