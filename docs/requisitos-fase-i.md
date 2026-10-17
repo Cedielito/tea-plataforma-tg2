@@ -7,6 +7,11 @@ referencias bibliográficas del documento.
 
 Usa solo estos códigos en comentarios, pruebas, commits y PR. No inventes códigos nuevos.
 
+Los códigos de M-09 (sección 7) vienen del documento anterior y de la versión 2.3 del
+documento, que lleva los mismos textos: RF-13 a RF-15, CC-08, CC-09, CC-10, CC-12,
+CT-03, CT-07, CT-08, CT-11, CT-13, CP-01 y CP-04. Los demás códigos de la Fase II
+(RF-20, RF-23, RN-01, ...) no se usan: chocan con los de este archivo.
+
 Nota de implementación: el Cuadro 14 fija una base tipográfica mínima de 16 px; la
 plataforma usa 18 px (más legible y dentro de la regla).
 
@@ -84,6 +89,7 @@ plataforma usa 18 px (más legible y dentro de la regla).
 | M-06. Contacto y privacidad | Formulario de contacto con autorización de tratamiento de datos, política de privacidad y página «Acerca de». | Familia, docente | RF-08, RF-12, RS-02, RS-03 |
 | M-07. Ajustes de accesibilidad | Control permanente de tamaño de letra, alto contraste y reducción de movimiento. | Todos | RA-07 |
 | M-08. Panel de administración | Gestión de contenidos, preguntas, recursos, directorio, pasos de la ruta y mensajes, con acceso autenticado. | Administrador | RF-09 a RF-11, RS-04, RS-05 |
+| M-09. Registro conductual estructurado | Herramienta para que un profesional registre de forma estandarizada el desempeño en dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas de Navon, y entregue los valores observados por tarea con el aviso de no diagnóstico. En esta fase se evalúa solo con adultos voluntarios. | Profesional, participante adulto | RF-13 a RF-15, CC-08, CC-09, CC-10, CC-12, CT-03, CT-07, CT-08, CT-11, CT-13, CP-01, CP-04, RCN-03 |
 
 ### Cuadro 11. Arquitectura de contenidos del portal
 
@@ -120,6 +126,10 @@ plataforma usa 18 px (más legible y dentro de la regla).
 | HU-13 | Administrador | Quiero publicar o corregir un contenido sin tocar el código. | El editor exige fuente y fecha de revisión antes de publicar, y permite despublicar. | RF-10, RCN-01, RCN-02 |
 | HU-14 | Administrador | Quiero mantener actualizados el directorio y la ruta. | Cada entidad exige tipo, ciudad, contacto, fecha de verificación y constancia de autorización si es un profesional; cada paso de la ruta exige su fuente. | RF-10, RS-07, RCN-05 |
 | HU-15 | Administrador | Quiero responder y luego eliminar los mensajes recibidos. | La bandeja muestra los mensajes y permite eliminarlos; los mensajes con más de seis meses se suprimen de forma automática. | RF-11, RS-04 |
+| HU-16 | Profesional | Quiero crear una sesión con un seudónimo aleatorio y dejar constancia de que el adulto firmó el consentimiento, para aplicar las tareas sin guardar datos que lo identifiquen. | La sesión se crea solo después de marcar la constancia del consentimiento firmado, recibe un seudónimo aleatorio de 8 caracteres y ningún campo del registro guarda nombre, documento ni contacto. | CT-11 |
+| HU-17 | Participante adulto | Quiero instrucciones claras, práctica con retroalimentación y una barra de progreso, para completar las dos tareas sin ayuda. | Cada tarea empieza con instrucciones y al menos dos ensayos de práctica con retroalimentación; durante los ensayos se ve una barra de progreso y no se ven temporizadores, marcadores ni puntajes; la aplicación dura 20 minutos o menos, con pausas. | CP-01, CP-04, CT-03, CT-07, CT-08 |
+| HU-18 | Profesional | Quiero ver los valores observados por tarea con el aviso de no diagnóstico, para interpretarlos con mi propio criterio. | La vista muestra por tarea cada valor observado con su constructo, el aviso de no diagnóstico y la versión del algoritmo, sin etiquetas, niveles, puntos de corte ni puntajes globales; una sesión incompleta no muestra valores. | CC-08, CC-09, CC-10, CC-12, RF-13, RF-14, RF-15, CT-13, RCN-03 |
+| HU-19 | Profesional | Quiero exportar los ensayos y los valores en CSV y eliminar una sesión por su seudónimo, para analizar los datos y atender una solicitud de supresión. | El CSV trae los ensayos y los valores con el seudónimo y la versión del algoritmo, sin datos identificables; al eliminar por seudónimo se borran la sesión y sus ensayos. | CT-11, CT-13 |
 
 ## 4. Modelo de datos
 
@@ -173,3 +183,43 @@ plataforma usa 18 px (más legible y dentro de la regla).
 | T6 | Descargue un recurso para docentes. | Inicia la descarga o abre el enlace del recurso. | HU-09 |
 | T7 | Encuentre la respuesta a «¿A quién debo consultar primero?». | Despliega la pregunta frecuente o la encuentra con el buscador. | HU-10 |
 | T8 | Envíe un mensaje de contacto con una pregunta. | Acepta la autorización y envía el formulario. | HU-08 |
+
+## 7. Módulo M-09. Registro conductual estructurado
+
+Códigos del documento anterior que aplican a M-09, con los textos de la versión 2.3 del
+documento. Los indicadores conservan su código; su constructo se nombra sin términos
+clínicos y ninguno se asocia a un dominio del DSM-5-TR.
+
+### Requisitos funcionales de M-09
+
+| Código | Requisito | Perfil | Verificación |
+|---|---|---|---|
+| RF-13 | Los indicadores de tiempo usan el tiempo de reacción neto, sin las pausas ocurridas durante el ensayo. | Profesional | Prueba automatizada |
+| RF-14 | Los ensayos de práctica, las omisiones y las anticipaciones no entran al cálculo. | Profesional | Prueba automatizada |
+| RF-15 | Las sesiones incompletas no se procesan. | Profesional | Prueba automatizada |
+
+### Restricciones técnicas y de procedimiento de M-09
+
+| Código | Restricción | Verificación |
+|---|---|---|
+| CT-03 | Durante los ensayos, el participante no ve temporizadores, marcadores ni puntajes. | Prueba automatizada y revisión de interfaz |
+| CT-07 | El sistema registra el tiempo de reacción de cada ensayo con un error de 50 ms o menos. | Experimento de precisión temporal (T16) |
+| CT-08 | La aplicación de las tareas dura 20 minutos o menos, con una pausa al menos cada 5 minutos. | Prueba automatizada y prueba con voluntarios |
+| CT-11 | Cada sesión se identifica con un seudónimo aleatorio y ninguna colección del registro guarda datos identificables. | Prueba automatizada |
+| CT-13 | Cada resultado guarda la versión del algoritmo; la misma entrada con la misma versión produce la misma salida. | Prueba automatizada |
+| CP-01 | Cada bloque tiene como máximo 7 ensayos. | Prueba automatizada |
+| CP-04 | Cada tarea empieza con al menos 2 ensayos de práctica con retroalimentación. | Prueba automatizada |
+
+### Indicadores de desempeño de M-09
+
+Valores observados por tarea: no se suman, no se comparan con puntos de corte y no se
+asocian a ninguna categoría. Los de tiempo usan el tiempo de reacción neto (RF-13) y
+ninguno cuenta la práctica, las omisiones ni las anticipaciones, es decir, los tiempos
+netos menores de 200 ms (RF-14).
+
+| Código | Constructo | Métrica | Cálculo | Tarea |
+|---|---|---|---|---|
+| CC-08 | Perseveración tras el cambio de regla | Proporción de errores perseverativos | Errores perseverativos / ensayos del bloque posterior al cambio. Un error es perseverativo si la respuesta habría sido correcta con la regla anterior. | Cambio de regla |
+| CC-09 | Costo de cambio | Diferencia de tiempo entre ensayos de cambio y de repetición | Tiempo medio de los ensayos de cambio menos el de los ensayos de repetición, solo en los bloques mixtos y solo con aciertos, en ms. El primer ensayo de cada bloque no cuenta. | Cambio de regla |
+| CC-10 | Diferencia global-local | Diferencia de tiempo entre condiciones | Tiempo medio de los ensayos de atención global menos el de los de atención local, solo con aciertos, en ms. | Navon |
+| CC-12 | Ensayos hasta criterio | Ensayos hasta tres aciertos seguidos | Ensayos del bloque posterior al cambio hasta tres aciertos seguidos; si no se alcanza, se informa que el criterio no se alcanzó. | Cambio de regla |

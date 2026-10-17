@@ -2,13 +2,19 @@
 
 Plataforma web de **información y orientación** sobre el trastorno del espectro autista
 (TEA) para **familias y docentes** de niños, niñas y adolescentes de 4 a 17 años en
-Colombia. Trabajo de grado de Ingeniería de Sistemas y Computación, Universidad Católica
-de Colombia. Equipo de 2 personas. Entrega del documento: finales de octubre de 2026.
+Colombia (M-01 a M-08), más un módulo para profesionales: **M-09 Registro conductual
+estructurado**, para registrar de forma estandarizada el desempeño en dos tareas de
+dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas
+de Navon. En esta fase M-09 se evalúa solo con adultos voluntarios. Trabajo de grado de
+Ingeniería de Sistemas y Computación, Universidad Católica de Colombia. Equipo de 2
+personas. Entrega del documento: 6 de noviembre de 2026.
 
 **La plataforma NO diagnostica ni hace tamizaje.** Informa, orienta sobre la ruta de
-atención y muestra a dónde acudir. Los minijuegos, el motor de puntuación, el
-consentimiento parental y el asentimiento son de la **Fase II** y viven solo en la rama
-`fase-ii`: no se tocan ni se traen a `main`.
+atención y muestra a dónde acudir. M-09 entrega valores observados por tarea, sin
+clasificar ni sugerir nada. MJ-1, MJ-2, el reporte del cuidador, el consentimiento
+parental y el asentimiento son de la **Fase II** y se quedan en la rama `fase-ii`; de
+allí solo se trae, archivo por archivo, lo que M-09 necesita (ver «Qué no hacer sin
+preguntar»).
 
 ## Stack
 
@@ -35,6 +41,8 @@ consentimiento parental y el asentimiento son de la **Fase II** y viven solo en 
 - M-07 Barra de ajustes de accesibilidad (tamaño de letra, alto contraste, reducir
   movimiento)
 - M-08 Panel de administración (autenticado)
+- M-09 Registro conductual estructurado (profesional y participante adulto): tarea de
+  cambio de regla y tarea de Navon, valores observados por tarea y exportación
 
 ## Reglas de dominio (no negociables; cada una tiene una prueba)
 
@@ -61,6 +69,22 @@ Si una tarea parece exigir romper una, detente y pregunta.
    inactividad. Toda ruta `/api/admin/*` exige autenticación.
 9. **RS-07** — El directorio solo publica datos institucionales públicos o de
    profesionales con constancia de autorización.
+10. **M-09 / RCN-03** — M-09 no tamiza, no clasifica y no sugiere. Entrega valores
+    observados por tarea con el aviso «Estos valores describen el desempeño en dos
+    tareas. No constituyen diagnóstico ni clasificación y no sustituyen la valoración
+    profesional; su interpretación corresponde al profesional.» Prohibido: etiquetas
+    diagnósticas, niveles de riesgo o de apoyo, puntos de corte, puntajes globales y
+    nombres de dominios del DSM-5-TR en la salida o en la interfaz
+    (`api/src/dominio/registro/vocabularioProhibido.js`).
+11. **M-09** — Solo tareas de dominio público, con estímulos generados por código. Nada
+    del Autism Research Centre.
+12. **CT-11** — En esta fase no se registran datos de menores. Cada sesión usa un
+    seudónimo aleatorio (XXXX-XXXX) y ninguna colección del registro guarda nombre,
+    documento ni contacto.
+13. **RF-13 / RF-14 / RF-15 / CT-13** — Los indicadores de tiempo usan el tiempo de
+    reacción neto; la práctica, las omisiones y las anticipaciones no entran al
+    cálculo; las sesiones incompletas no se procesan, y cada resultado guarda la
+    versión del algoritmo (misma entrada y misma versión, misma salida).
 
 ## Accesibilidad (WCAG 2.1 AA, RA-01 a RA-11)
 
@@ -91,13 +115,17 @@ emergentes automáticas ni carruseles automáticos; objetivos táctiles ≥ 44 p
 api/src/api/         Express: servidor, rutas y middleware (las rutas solo validan,
                      llaman al dominio y responden)
 api/src/dominio/     lógica pura y validaciones de las reglas de dominio
+api/src/dominio/registro/  núcleo de M-09: catálogo y secuenciador de las dos tareas,
+                     indicadores (CC-08, CC-09, CC-10, CC-12), motor, versión,
+                     seudónimo y vocabulario prohibido
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
                      slug (datos/sincronizacionListas.js); igual directorio/entidades.yaml,
                      preguntas/preguntas.yaml y recursos/recursos.yaml
-api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria
+api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria;
+                     ayudas/sesionRegistro.js es la sesión fija de M-09
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
@@ -134,12 +162,15 @@ npm run build:web    compila el frontend
   identificadores (`validarFuente`, no `validárFuente`). Los textos visibles para el
   usuario sí llevan tildes.
 - **Trazabilidad**: todo archivo nuevo declara en su comentario inicial los códigos que
-  implementa (M-xx, RF-xx, RCN-xx, RA-xx, RS-xx). Todo `describe` de prueba que verifica
-  una regla empieza con su código: `describe('RCN-01 fuente obligatoria', ...)`.
+  implementa (M-xx, RF-xx, RCN-xx, RA-xx, RS-xx, CC-xx, CT-xx, CP-xx). Todo `describe`
+  de prueba que verifica una regla empieza con su código:
+  `describe('RCN-01 fuente obligatoria', ...)`.
 - **Códigos oficiales**: usa solo los códigos de `docs/requisitos-fase-i.md`
-  (RCN-01..08, RA-01..11, RF-01..12, RS-01..07, HU-01..HU-15), que copia los cuadros
-  del documento de tesis, incluido el modelo de datos (Cuadro 13). No inventes
-  códigos; si hace falta uno, pregunta.
+  (M-01..M-09, RCN-01..08, RA-01..11, RF-01..15, RS-01..07, HU-01..HU-19 y, para M-09,
+  CC-08, CC-09, CC-10, CC-12, CT-03, CT-07, CT-08, CT-11, CT-13, CP-01 y CP-04), que
+  copia los cuadros del documento de tesis, incluido el modelo de datos (Cuadro 13).
+  No inventes códigos; si hace falta uno, pregunta. Los códigos de la Fase II que no
+  están en esa lista (RF-20, RF-23, RN-01, ...) no se usan: chocan con los actuales.
 - **Voz del equipo**: commits, PR, comentarios de revisión y documentos se redactan en
   primera persona del plural, como trabajo del equipo: «implementamos», «verificamos»,
   «revisamos». Nunca en singular («revisé», «comprobé»). En el chat de la sesión sí se
@@ -166,13 +197,16 @@ npm run build:web    compila el frontend
 
 - Agregar dependencias nuevas (las previstas en el backlog se autorizan con el plan).
 - Tocar `.github/workflows/`.
-- Modificar `docs/fase-ii/` o traer código de la rama `fase-ii`.
+- Modificar `docs/fase-ii/`.
+- Traer código de la rama `fase-ii` de otra forma que archivo por archivo, con sus
+  pruebas y diciendo en el PR qué se trajo y de dónde. MJ-1, MJ-2, el reporte del
+  cuidador, el consentimiento parental y el asentimiento se quedan en `fase-ii`.
 - Crear archivos `.env` con credenciales reales o subirlos al repositorio.
-- Agregar cualquier funcionalidad que evalúe, puntúe o clasifique a un niño.
+- Agregar cualquier funcionalidad que evalúe, puntúe o clasifique a una persona.
 
 ## Estado actual
 
-T0 a T9 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9 y T12 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -292,4 +326,31 @@ Bandeja en `/admin/mensajes` sobre `GET /api/admin/mensajes` y
 `DELETE /api/admin/mensajes/:id`: texto plano, «Responder por correo» (`mailto:`) y
 «Eliminar» con confirmación en la tarjeta. Preguntas frecuentes termina con un enlace
 al contacto. Decisión en `docs/decisiones/0006-mensajes-contacto.md`.
-Siguiente: T10 (`test/accesibilidad`). Ver `docs/backlog-fase-i.md`.
+
+Núcleo del registro conductual (T12, M-09): funciones puras en
+`api/src/dominio/registro/`, traídas de `fase-ii` y adaptadas (el PR de T12 dice qué
+archivo vino de dónde). Sin colecciones, rutas ni pantallas todavía. `catalogo.js`
+(congelado): cambio de regla con 2 ensayos de práctica, bloque de color
+(`pre-cambio`), bloque de forma (`post-cambio`) y `bloquesMixtos: 4` con señal por
+ensayo; Navon con 2 de práctica y 4 bloques ABBA (global, local, local, global); 7
+ensayos por bloque y `trMinimoMs: 200` (anticipación). La tarea se presenta con
+`titulo`, nunca `nombre` (que es un campo identificable). `secuenciador.js` expande
+los bloques mixtos (`CR-MIXTO-1..4`), comprueba CP-01, CP-04 y CT-08 (duración
+estimada y pausa tras cada bloque) y tiene `vistaDeEnsayo` (CT-03: fuera de la
+práctica no se ven tiempo, acierto ni marcador). `indicadores.js`: CC-08 y CC-12 sobre
+el bloque posterior al cambio (CC-12 trae `criterioAlcanzado`: `null` si no hay
+ensayos, `false` si no se alcanzan 3 aciertos seguidos); CC-09 por ensayo, solo en los
+bloques mixtos (`clasificarEnsayosMixtos`: inicial, cambio o repetición frente al
+ensayo anterior del mismo bloque); CC-10 global menos local. CC-09 y CC-10 solo con
+aciertos y sin recorte por desviación estándar. RF-13 (tiempo neto) y RF-14
+(práctica, omisiones y anticipaciones fuera) valen para los cuatro. `motor.js`
+(`procesarSesion`) devuelve los indicadores por tarea y constructo, el contexto, el
+aviso de M-09 y `versionAlgoritmo`; no procesa sesiones incompletas (RF-15) ni con
+datos identificables (CT-11). `version.js` está congelado: un cambio en un cálculo o
+en el catálogo sube su versión y agrega su fila en `registroRestricciones.test.js`.
+`seudonimo.js`: código XXXX-XXXX con un alfabeto sin 0, O, 1, I ni L
+(`normalizarSeudonimo` para lo escrito a mano) y `contieneDatoIdentificable`
+recursivo. Las pruebas usan la sesión fija `api/test/ayudas/sesionRegistro.js`.
+Decisión en `docs/decisiones/0007-registro-conductual.md`.
+
+Siguiente: T13 (`feat/motor-tareas`). Ver `docs/backlog-fase-i.md`.
