@@ -9,15 +9,16 @@
 import { PROGRESO } from './textos.js';
 
 /**
- * @param {{parte: number|null, total: number, completadas: number}} props
+ * @param {{parte: number|null, total: number, completadas: number, textos?: object}} props
  *   parte: la parte en curso (1 a total), o null durante la práctica
+ *   textos: los de la tarea (PROGRESO en cambio de regla, NAVON.progreso en Navon)
  */
-export default function BarraProgreso({ parte, total, completadas }) {
-  const texto = parte === null ? PROGRESO.practica : PROGRESO.parte(parte, total);
+export default function BarraProgreso({ parte, total, completadas, textos = PROGRESO }) {
+  const texto = parte === null ? textos.practica : textos.parte(parte, total);
   return (
     <div className="progreso-tarea">
       <p className="progreso-tarea__texto" id="progreso-tarea">
-        {PROGRESO.etiqueta}: {texto}
+        {textos.etiqueta}: {texto}
       </p>
       <progress className="progreso-tarea__barra" max={total} value={completadas} aria-labelledby="progreso-tarea" />
     </div>

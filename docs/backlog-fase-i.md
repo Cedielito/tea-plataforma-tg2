@@ -54,7 +54,7 @@ Reglas:
 | T9 ✅ | `chore/despliegue` | Despliegue en Vercel + Render + MongoDB Atlas (adelantada a la semana 1) | RS-06 | 1 |
 | T12 ✅ | `feat/nucleo-registro` | Núcleo del registro: indicadores, catálogo, secuenciador, motor, versión y seudónimo traídos de `fase-ii` | M-09, CC-08, CC-09, CC-10, CC-12, CT-03, CT-08, CT-11, CT-13, CP-01, CP-04, RF-13 a RF-15 | 2 (18 oct) |
 | T13 ✅ | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
-| T14 | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
+| T14 ✅ | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
 | T15 | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
 | T16 | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
 | T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
@@ -68,6 +68,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T14 | El documento debe reflejar cómo se aplica la tarea de Navon con T14. La práctica tiene un ensayo de cada nivel y los dos son incongruentes (en uno congruente se acierta mirando cualquier nivel). Cada bloque tiene 3 y 4 ensayos congruentes e incongruentes y la letra correcta repartida 4 y 3; cada nivel queda con 7 congruentes, 7 incongruentes, 7 H y 7 S. El cartel tiene un tamaño fijo en píxeles. Un error en Navon es siempre `aleatoria` y una omisión no tiene clase de error. En la sesión, las dos tareas van seguidas (cambio de regla, pausa, Navon) (`docs/decisiones/0009-tarea-navon.md`). | M-09, CC-10, CP-04, RF-14, HU-17 |
 | T13 | El documento debe reflejar lo que cambió con T13. El catálogo pasa a la versión 1.1.0, con el límite de respuesta de 5 s (después, el ensayo queda omitido), 500 ms entre ensayos y 3 cambios y 3 repeticiones por bloque mixto. Con dos cajas y estímulos siempre en conflicto, todo error del bloque de forma es perseverativo, así que CC-08 equivale a la proporción de errores de ese bloque. La práctica usa solo la regla de color y cada cambio de regla tiene su pantalla de instrucciones. Una omisión no tiene clase de error. La señal y el estímulo aparecen juntos y el tiempo de reacción se mide desde esa aparición (`docs/decisiones/0008-motor-ensayos.md`). | M-09, CC-08, CT-07, RF-14, HU-17 |
 | T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); T16 mide la real. | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
 | T8 | Comprobar en el entorno desplegado el límite de envíos por IP (pasos en `docs/despliegue.md`, «Formulario de contacto») y ajustar `SALTOS_PROXY` en Render si hace falta. El documento debe reflejar que los mensajes se suprimen a los 180 días (seis meses de 30 días: unos días antes de cumplirse los seis meses de calendario, nunca después) y que en el Cuadro 13 la versión de la autorización se llama `versionPolitica`. | M-06, RS-02, RS-04 |
@@ -383,11 +384,57 @@ formato de la web y obtiene CC-08, CC-09 y CC-12.
 Propón el plan antes de escribir código.
 ```
 
-### T14 — Tarea de Navon
-Prompt pendiente. Alcance: figuras jerárquicas generadas por código, 2 ensayos de
-práctica y 4 bloques ABBA de 7 ensayos sobre el motor de T13 (CC-10): reutiliza
-`motorEnsayo.js`, `reloj.js`, `azar.js` y la página `/registro/prueba`. Si el 23 de
-octubre no está estable, se evalúa solo la tarea de cambio de regla.
+### T14 — Tarea de Navon ✅
+Hecha. Decisiones acordadas al aprobar el plan: la práctica tiene dos ensayos
+incongruentes con letras correctas distintas; entre los dos bloques de cada nivel se
+alterna el congruente de más y la letra de más, para que cada nivel quede con 7 y 7; una
+omisión no tiene clase de error, como en T13; `respuesta` guarda la letra; los ensayos de
+cambio de regla no cambian. `?tarea=cambio-regla` también abre solo esa tarea. Única
+prueba de T13 que se ajustó: el nombre del archivo descargado, que ahora puede traer las
+dos tareas. Hecha en la rama `claude/lucid-cannon-4ksg3y` (la que asignó el entorno de
+Claude Code). Decisión en `docs/decisiones/0009-tarea-navon.md`.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea T14, rama feat/tarea-navon.
+
+Agrega la tarea de figuras jerárquicas (Navon) sobre el motor de T13, sin
+cambiar el reloj ni motorEnsayo.js. Usa la secuencia 'navon' del plan
+(GET /api/registro/plan): 2 ensayos de práctica y los 4 bloques del catálogo
+en su orden (global, local, local, global), 7 ensayos por bloque, con
+limiteRespuestaMs e intervaloEntreEnsayosMs del plan.
+
+- Figuras generadas por código (SVG): una letra grande, H o S, formada por
+  letras pequeñas H o S. Congruentes (H de H, S de S) e incongruentes (H de S,
+  S de H): 3 y 4 en cada bloque, barajadas con la semilla, y la letra correcta
+  repartida lo más parejo posible. El tamaño de la figura es fijo en píxeles:
+  no cambia con el tamaño de letra de la barra de accesibilidad.
+- Respuesta: F = H y J = S, con dos botones grandes que muestran la letra y la
+  tecla. La respuesta correcta es la letra del nivel que pide el bloque.
+- Antes de cada bloque, una pantalla de instrucciones: «Mira la letra grande»
+  o «Mira las letras pequeñas», con un ejemplo dibujado. La práctica tiene un
+  ensayo de cada nivel, con retroalimentación (CP-04).
+- La figura aparece después de la cruz de fijación y queda visible hasta la
+  respuesta o el límite. Durante el ensayo, arriba, un recordatorio fijo del
+  nivel del bloque («GRANDE» o «PEQUEÑAS»).
+- Cada ensayo guarda condicion ('global' | 'local') y congruencia
+  ('congruente' | 'incongruente'), además de los campos de T13. claseError:
+  'correcta' si acierta y 'aleatoria' si no (en Navon no hay regla anterior).
+- Generaliza lo que haga falta de PantallaEnsayo.jsx para que las dos tareas
+  compartan la pantalla, sin cambiar la medición de T13 (sus pruebas siguen
+  pasando).
+- Las mismas dinámicas gamificadas de T13, con su propio marco narrativo y
+  sus textos en textos.js (pasan por buscarVocabularioProhibido).
+
+En /registro/prueba la sesión hace las dos tareas seguidas (cambio de regla,
+pausa, Navon) y descarga un solo JSON. Con ?tarea=navon se abre solo Navon,
+para revisar.
+
+Pruebas: con semilla fija, el generador produce la estructura del plan y el
+balance de congruencia; los aciertos se clasifican según el nivel del bloque;
+una prueba en api/ procesa con procesarSesion una sesión simulada de las dos
+tareas y obtiene CC-08, CC-09, CC-10 y CC-12.
+
+Propón el plan antes de escribir código.
+```
 
 ### T15 — Flujo del profesional, SUS y exportación
 Prompt pendiente. Alcance: colecciones del registro (sin datos identificables, índice

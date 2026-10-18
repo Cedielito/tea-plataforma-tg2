@@ -24,7 +24,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { CircleCheck, CircleHelp } from 'lucide-react';
 import BarraProgreso from './BarraProgreso.jsx';
-import PantallaEnsayo from './PantallaEnsayo.jsx';
+import EnsayoCambioRegla from './EnsayoCambioRegla.jsx';
+import { Pantalla, Pausa } from './PantallasTarea.jsx';
 import { generarEnsayos } from './generador.js';
 import { armarSesion, registrarEnsayo } from './sesionLocal.js';
 import { retroalimentacion, vistaDeEnsayo } from './vista.js';
@@ -39,52 +40,6 @@ import {
   RETROALIMENTACION,
   textosAntesDeBloque
 } from './textos.js';
-
-/**
- * Pantalla de texto con un título que recibe el foco al aparecer, para que se
- * anuncie. Cada pantalla lleva su `key`: dos seguidas no comparten el foco.
- */
-function Pantalla({ titulo, parrafos = [], boton, alContinuar, children }) {
-  const encabezado = useRef(null);
-  useEffect(() => {
-    encabezado.current?.focus();
-  }, []);
-  return (
-    <section className="tarea__pantalla">
-      <h2 ref={encabezado} tabIndex={-1}>{titulo}</h2>
-      {parrafos.map((p) => (
-        <p key={p}>{p}</p>
-      ))}
-      {children}
-      <button type="button" className="boton boton-primario tarea__continuar" onClick={alContinuar}>
-        {boton}
-      </button>
-    </section>
-  );
-}
-
-/** Pausa entre bloques, con la opción de volver a leer las instrucciones. */
-function Pausa({ titulo, parrafos, alVerInstrucciones, alContinuar }) {
-  const [verInstrucciones, setVerInstrucciones] = useState(false);
-  function alternar() {
-    if (!verInstrucciones) alVerInstrucciones();
-    setVerInstrucciones((v) => !v);
-  }
-  return (
-    <Pantalla titulo={titulo} parrafos={[...parrafos, PAUSA.parrafo]} boton={PAUSA.boton} alContinuar={alContinuar}>
-      <button type="button" className="boton boton-secundario" aria-expanded={verInstrucciones} onClick={alternar}>
-        {verInstrucciones ? PAUSA.ocultarInstrucciones : PAUSA.verInstrucciones}
-      </button>
-      {verInstrucciones && (
-        <div className="tarea__instrucciones">
-          {INSTRUCCIONES.parrafos.map((p) => (
-            <p key={p}>{p}</p>
-          ))}
-        </div>
-      )}
-    </Pantalla>
-  );
-}
 
 /**
  * @param {{secuencia: object, versionCatalogo: string, semilla: number, reloj: object,
@@ -180,6 +135,7 @@ export default function TareaCambioRegla({ secuencia, versionCatalogo, semilla, 
       <Pausa
         key="fin-practica"
         {...FIN_PRACTICA}
+        instrucciones={INSTRUCCIONES.parrafos}
         alVerInstrucciones={verInstruccionesDeNuevo}
         alContinuar={() => setPaso({ tipo: 'antes-bloque' })}
       />
@@ -211,6 +167,7 @@ export default function TareaCambioRegla({ secuencia, versionCatalogo, semilla, 
           key={`pausa-${orden}`}
           titulo={PAUSA.titulo}
           parrafos={[animo(orden, total)]}
+          instrucciones={INSTRUCCIONES.parrafos}
           alVerInstrucciones={verInstruccionesDeNuevo}
           alContinuar={() => setPaso({ tipo: 'antes-bloque' })}
         />
@@ -223,7 +180,7 @@ export default function TareaCambioRegla({ secuencia, versionCatalogo, semilla, 
   return (
     <>
       <BarraProgreso parte={bloque ? bloque.orden : null} total={total} completadas={bloque ? bloque.orden - 1 : 0} />
-      <PantallaEnsayo
+      <EnsayoCambioRegla
         key={actual.numero}
         vista={vistaDeEnsayo(actual)}
         reloj={reloj}

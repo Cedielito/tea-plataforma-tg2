@@ -8,16 +8,17 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { planificarSesion, vistaDeEnsayo as vistaDeLaApi } from '../../../api/src/dominio/registro/secuenciador.js';
 import { retroalimentacion, vistaDeEnsayo } from './vista.js';
-import { simularSesion } from './sesionSimulada.js';
-import { RETROALIMENTACION } from './textos.js';
+import { simularSesion, simularSesionDosTareas } from './sesionSimulada.js';
+import { NAVON, RETROALIMENTACION } from './textos.js';
 
 const { ensayos } = simularSesion(planificarSesion());
+const navon = simularSesionDosTareas(planificarSesion()).ensayos.filter((e) => e.tarea === 'navon');
 const OCULTOS = ['tiempoReaccionMs', 'pausasDuranteItemMs', 'claseError'];
 
 describe('CT-03 vistaDeEnsayo en la web', () => {
   test('la copia de la web da lo mismo que la de la API con todos los ensayos de una sesión', () => {
     assert.ok(ensayos.length > 40);
-    for (const e of ensayos) assert.deepEqual(vistaDeEnsayo(e), vistaDeLaApi(e));
+    for (const e of [...ensayos, ...navon]) assert.deepEqual(vistaDeEnsayo(e), vistaDeLaApi(e));
     // También con ensayos sin medir y con campos de más
     const extra = { practica: true, acierto: true, tiempoReaccionMs: 1, claseError: 'correcta', otro: 1 };
     assert.deepEqual(vistaDeEnsayo(extra), vistaDeLaApi(extra));
@@ -47,12 +48,30 @@ describe('CT-03 vistaDeEnsayo en la web', () => {
     assert.equal(retroalimentacion(omitido, RETROALIMENTACION).texto, RETROALIMENTACION.omitida);
   });
 
+  test('Navon: fuera de la práctica nada; en la práctica, el acierto según el nivel', () => {
+    for (const e of navon.filter((x) => !x.practica)) {
+      const v = vistaDeEnsayo(e);
+      for (const campo of [...OCULTOS, 'acierto']) assert.equal(campo in v, false, campo);
+      assert.equal(retroalimentacion(e, NAVON.retroalimentacion), null);
+    }
+    const [global, local] = navon.filter((x) => x.practica);
+    assert.deepEqual(retroalimentacion(global, NAVON.retroalimentacion), {
+      correcta: true,
+      texto: NAVON.retroalimentacion.correcta
+    });
+    const error = retroalimentacion(local, NAVON.retroalimentacion);
+    assert.equal(error.correcta, false);
+    assert.equal(error.texto, `Esa no era la letra. Las letras pequeñas eran ${local.estimulo.local}.`);
+  });
+
   test('las pantallas de la tarea no leen el tiempo, el acierto ni la clase de error', () => {
     // Solo la tabla final (para el equipo, después de terminar) muestra los ensayos completos.
     const pantallas = readdirSync(new URL('.', import.meta.url)).filter(
       (f) => f.endsWith('.jsx') && f !== 'TablaEnsayos.jsx'
     );
-    assert.ok(pantallas.includes('TareaCambioRegla.jsx') && pantallas.includes('PantallaEnsayo.jsx'));
+    for (const archivo of ['TareaCambioRegla.jsx', 'TareaNavon.jsx', 'PantallaEnsayo.jsx', 'EnsayoNavon.jsx']) {
+      assert.ok(pantallas.includes(archivo), archivo);
+    }
     for (const archivo of pantallas) {
       const codigo = readFileSync(new URL(archivo, import.meta.url), 'utf8');
       for (const campo of [...OCULTOS, '.acierto']) assert.equal(codigo.includes(campo), false, `${archivo}: ${campo}`);

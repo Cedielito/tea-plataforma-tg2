@@ -1,6 +1,7 @@
 /**
- * Textos de la tarea de cambio de regla (M-09, HU-17, CP-04, RCN-03). Todos
- * los textos visibles de la tarea están aquí, para que una prueba los pase
+ * Textos de las tareas de cambio de regla y de Navon (M-09, HU-17, CP-04,
+ * RCN-03). Todos los textos visibles de las tareas están aquí, para que una
+ * prueba los pase
  * por buscarVocabularioProhibido (api/src/dominio/registro/
  * vocabularioProhibido.js): ni etiquetas diagnósticas, ni niveles, ni puntos,
  * ni puntajes. Frases cortas y literales.
@@ -19,6 +20,9 @@
  *   Principio: la retroalimentación inmediata consolida una regla nueva
  *   mientras se aprende (CP-04); en la medición se retira para no cambiar la
  *   conducta que se registra (CT-03).
+ *
+ * La tarea de Navon (T14) usa las mismas dinámicas con su propio marco
+ * narrativo, «Los carteles de letras» (ver NAVON, más abajo).
  */
 
 export const TITULO_TAREA = 'El taller que cambia';
@@ -177,6 +181,140 @@ export const ENSAYO = Object.freeze({
 
 export const FIN = Object.freeze({ titulo: 'Terminaste el taller' });
 
+/* ---------- Tarea de Navon (T14) ---------- */
+
+/**
+ * Textos de la tarea de figuras jerárquicas de Navon. Las mismas dinámicas
+ * gamificadas que la tarea de cambio de regla, con su propio marco:
+ * - Marco narrativo «Los carteles de letras». Principio: un propósito
+ *   sencillo (revisar carteles) da sentido a mirar la letra grande o las
+ *   pequeñas y anticipa que el nivel que se mira cambia entre partes, sin
+ *   cambiar lo que se mide.
+ * - Mensaje de ánimo fijo al final de cada bloque (animoNavon). Principio:
+ *   reconocer el esfuerzo y no el resultado sostiene la motivación; nunca
+ *   depende del desempeño.
+ * - Retroalimentación de acierto solo en la práctica, un ensayo de cada
+ *   nivel (CP-04). Principio: la retroalimentación inmediata consolida qué
+ *   letra mirar mientras se aprende; en la medición se retira (CT-03).
+ * - Recordatorio fijo del nivel arriba del cartel (RECORDATORIOS_NAVON).
+ *   Principio: una señal visible y constante reduce la carga de memoria de
+ *   trabajo; no cambia de un ensayo a otro dentro del bloque.
+ */
+export const TITULO_NAVON = 'Los carteles de letras';
+
+/** Recordatorio fijo arriba del cartel durante cada bloque. */
+export const RECORDATORIOS_NAVON = Object.freeze({ global: 'GRANDE', local: 'PEQUEÑAS' });
+
+/** Texto alternativo del cartel: «Letra H grande hecha con letras S pequeñas». */
+export const nombreFiguraNavon = (estimulo) =>
+  `Letra ${estimulo.global} grande hecha con letras ${estimulo.local} pequeñas`;
+
+/** Forma corta para la tabla: «H de S». */
+export const nombreCortoNavon = (estimulo) => `${estimulo.global} de ${estimulo.local}`;
+
+export const etiquetaLetra = (opcion) => `Letra ${opcion.valor} (tecla ${opcion.tecla})`;
+
+/** Ejemplo dibujado en las instrucciones de cada nivel: una H grande hecha con S pequeñas. */
+export const EJEMPLO_NAVON = Object.freeze({ global: 'H', local: 'S' });
+
+/** Instrucciones antes de cada bloque y de cada ensayo de la práctica. */
+export const INSTRUCCIONES_NIVEL = Object.freeze({
+  global: Object.freeze({
+    titulo: 'Mira la letra grande',
+    parrafos: [
+      'En esta parte, responde qué letra grande forma el cartel. No importa de qué letras pequeñas está hecha.',
+      `Arriba del cartel verás la palabra ${RECORDATORIOS_NAVON.global} para recordártelo.`
+    ],
+    ejemplo: `En este ejemplo, la letra grande es ${EJEMPLO_NAVON.global}. La respuesta es ${EJEMPLO_NAVON.global}.`
+  }),
+  local: Object.freeze({
+    titulo: 'Mira las letras pequeñas',
+    parrafos: [
+      'En esta parte, responde de qué letra son las letras pequeñas. No importa qué letra grande forman.',
+      `Arriba del cartel verás la palabra ${RECORDATORIOS_NAVON.local} para recordártelo.`
+    ],
+    ejemplo: `En este ejemplo, las letras pequeñas son ${EJEMPLO_NAVON.local}. La respuesta es ${EJEMPLO_NAVON.local}.`
+  })
+});
+
+export const NAVON = Object.freeze({
+  bienvenida: Object.freeze({
+    titulo: TITULO_NAVON,
+    parrafos: [
+      'Ahora vas a revisar carteles. Cada cartel tiene una letra grande hecha con muchas letras pequeñas.',
+      'Las letras son H y S. Unas veces vas a mirar la letra grande y otras veces, las letras pequeñas.',
+      'Antes de cada parte te diremos qué letra mirar.'
+    ],
+    boton: 'Ver las instrucciones'
+  }),
+  instrucciones: Object.freeze({
+    titulo: 'Cómo responder',
+    parrafos: [
+      'En el centro aparece un cartel. Arriba aparece una palabra: GRANDE o PEQUEÑAS. Te recuerda qué letra mirar.',
+      'Si la letra es H, presiona la tecla F. Si es S, presiona la tecla J. En una pantalla táctil, toca el botón de la letra.',
+      'Responde rápido, pero procura no equivocarte. Si no respondes en unos segundos, el cartel se va y llega otro.',
+      'Entre una parte y otra puedes descansar el tiempo que quieras.'
+    ],
+    boton: 'Continuar'
+  }),
+  practica: Object.freeze({
+    titulo: 'Práctica',
+    parrafos: [
+      'Primero vas a practicar con dos carteles: en uno miras la letra grande y en el otro, las letras pequeñas.',
+      'En la práctica te diremos si elegiste la letra correcta.'
+    ],
+    boton: 'Empezar la práctica'
+  }),
+  botonVerCartel: 'Ver el cartel',
+  retroalimentacion: Object.freeze({
+    correcta: 'Correcto. Elegiste la letra que pedía el cartel.',
+    incorrecta: (condicion, vista) =>
+      condicion === 'global'
+        ? `Esa no era la letra. La letra grande era ${vista.estimulo.global}.`
+        : `Esa no era la letra. Las letras pequeñas eran ${vista.estimulo.local}.`,
+    omitida: 'No elegiste una letra a tiempo. En la tarea, el cartel se va y llega otro.',
+    boton: 'Siguiente'
+  }),
+  finPractica: Object.freeze({
+    titulo: 'Terminaste la práctica',
+    parrafos: ['Desde ahora ya no te diremos si elegiste la letra correcta.'],
+    boton: 'Continuar'
+  }),
+  progreso: Object.freeze({
+    etiqueta: 'Avance en los carteles',
+    practica: 'Práctica',
+    parte: (actual, total) => `Parte ${actual} de ${total}`
+  }),
+  ensayo: Object.freeze({
+    region: 'Cartel y letras',
+    fijacion: 'Prepárate: mira el centro de la pantalla.'
+  }),
+  fin: Object.freeze({ titulo: 'Terminaste los carteles' })
+});
+
+const ANIMOS_NAVON = Object.freeze([
+  'Terminaste la primera parte de los carteles. Gracias por tu atención.',
+  'Terminaste otra parte. Gracias por mirar con cuidado.'
+]);
+
+/** Mensaje de ánimo al terminar el bloque `orden` de `total`. Fijo por bloque, como animo. */
+export function animoNavon(orden, total) {
+  if (orden >= total) return 'Terminaste todos los carteles. Gracias por tu tiempo.';
+  if (orden === total - 1) return 'Solo queda una parte. Gracias por tu paciencia.';
+  return ANIMOS_NAVON[orden - 1] || 'Terminaste otra parte. Gracias por tu esfuerzo.';
+}
+
+/** Pausa entre la tarea de cambio de regla y la de Navon (CT-08). */
+export const ENTRE_TAREAS = Object.freeze({
+  titulo: 'Terminaste el taller',
+  parrafos: [
+    'Terminaste la primera tarea. Gracias por tu tiempo.',
+    'Ahora sigue una segunda tarea, con carteles de letras.',
+    'Puedes descansar el tiempo que quieras. Cuando quieras, continúa.'
+  ],
+  boton: 'Continuar'
+});
+
 /** Layout de las páginas de M-09 (/registro). Sin el nombre de la plataforma. */
 export const MODULO = Object.freeze({
   nombre: 'Registro conductual',
@@ -187,25 +325,29 @@ export const MODULO = Object.freeze({
 
 /** Página de prueba (/registro/prueba): para el equipo, no para el participante. */
 export const PAGINA_PRUEBA = Object.freeze({
-  tituloPagina: 'Prueba de la tarea de cambio de regla',
+  tituloPagina: 'Prueba de las tareas',
   nota:
-    'Esta página es solo para revisar la tarea durante el desarrollo. La sesión no se envía ni se guarda: ' +
+    'Esta página es solo para revisar las tareas durante el desarrollo. La sesión no se envía ni se guarda: ' +
     'al terminar puedes ver los ensayos y descargarlos.',
+  finSesion: 'Terminaste las dos tareas',
   semilla: 'Semilla',
   reloj: 'Reloj',
-  queCarga: 'el plan de la tarea',
+  queCarga: 'el plan de las tareas',
   tituloTabla: 'Ensayos registrados',
   descargar: 'Descargar JSON',
   otraVez: 'Empezar de nuevo con otra semilla'
 });
 
 export const COLUMNAS_TABLA = Object.freeze([
+  ['tarea', 'Tarea'],
   ['numero', 'N.º'],
   ['bloque', 'Bloque'],
   ['fase', 'Fase'],
   ['regla', 'Regla'],
-  ['estimulo', 'Juguete'],
-  ['respuesta', 'Caja elegida'],
+  ['condicion', 'Nivel'],
+  ['congruencia', 'Congruencia'],
+  ['estimulo', 'Estímulo'],
+  ['respuesta', 'Respuesta'],
   ['estadoItem', 'Estado'],
   ['acierto', 'Acierto'],
   ['claseError', 'Clase de error'],

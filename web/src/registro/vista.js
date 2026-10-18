@@ -25,7 +25,8 @@ export function vistaDeEnsayo(ensayo) {
  * tarea solo muestra lo que devuelve esta función.
  *
  * @param {object} ensayo el ensayo registrado
- * @param {object} textos { correcta, incorrecta(regla), omitida } (textos.js)
+ * @param {object} textos { correcta, incorrecta(regla o condición, vista), omitida } (textos.js):
+ *   en cambio de regla, la regla del ensayo; en Navon (sin regla), la condición
  */
 export function retroalimentacion(ensayo, textos) {
   const vista = vistaDeEnsayo(ensayo);
@@ -33,5 +34,5 @@ export function retroalimentacion(ensayo, textos) {
   if (vista.estadoItem === 'omitido') return { correcta: false, texto: textos.omitida };
   return vista.acierto
     ? { correcta: true, texto: textos.correcta }
-    : { correcta: false, texto: textos.incorrecta(vista.regla) };
+    : { correcta: false, texto: textos.incorrecta(vista.regla ?? vista.condicion, vista) };
 }

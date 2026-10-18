@@ -136,7 +136,8 @@ web/src/preguntas/   preguntas frecuentes (M-05): acordeón y ancla #slug
 web/src/contacto/    contacto (M-06): formulario, validación y borrador en memoria
 web/src/registro/    registro conductual (M-09): generador con semilla, reloj, motor de
                      un ensayo, clase de error, vistaDeEnsayo (copia probada), textos,
-                     tarea de cambio de regla y página /registro/prueba
+                     pantalla de ensayo compartida, tareas de cambio de regla y de
+                     Navon y página /registro/prueba
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
@@ -209,7 +210,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T9, T12 y T13 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9 y T12 a T14 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -385,4 +386,27 @@ ensayos y «Descargar JSON», sin enviar nada. Los colores `--estimulo-*` de
 con `procesarSesion` (se regenera con `ACTUALIZAR_SESION_SIMULADA=1 npm test -w web`).
 Decisión en `docs/decisiones/0008-motor-ensayos.md`.
 
-Siguiente: T14 (`feat/tarea-navon`). Ver `docs/backlog-fase-i.md`.
+Tarea de Navon (T14, M-09, CC-10): usa la secuencia `navon` del plan sin cambiar el
+catálogo, `reloj.js` ni `motorEnsayo.js`. `estimulosNavon.js`: estímulo
+`{ global, local }` con H o S, la respuesta correcta es `estimulo[condicion]`, F = H y
+J = S, y los patrones de 5 × 7 de cada letra grande. `generadorNavon.js`: práctica con
+un ensayo de cada nivel (global y local), los dos incongruentes y con letras distintas;
+cada bloque con 3 y 4 congruentes e incongruentes y la letra correcta 4 y 3, alternando
+entre los dos bloques de cada nivel para que cada uno quede con 7 y 7. Cada ensayo lleva
+`condicion` y `congruencia` (`fase` y `regla` en null); `respuesta` es la letra.
+`clasificacionNavon.js`: `correcta` o `aleatoria`; la omisión, `null`. `FiguraNavon.jsx`
+dibuja las letras pequeñas como trazos SVG, con tamaño fijo en px
+(`--figura-navon-*`, que no cambian con la barra de accesibilidad; prueba).
+`PantallaEnsayo.jsx` es común a las dos tareas: conserva la medición y recibe por props
+las opciones con su tecla, el estímulo y un encabezado fijo; la usan
+`EnsayoCambioRegla.jsx` y `EnsayoNavon.jsx` (recordatorio «GRANDE» o «PEQUEÑAS»
+arriba, cartel y botones H y S). `PantallasTarea.jsx` tiene las pantallas de texto y la
+pausa. `TareaNavon.jsx` («Los carteles de letras») muestra «Mira la letra grande» o «Mira
+las letras pequeñas» con un ejemplo antes de cada bloque y de cada ensayo de práctica.
+`/registro/prueba` hace cambio de regla, pausa y Navon y descarga un solo JSON
+(`unirSesiones`); `?tarea=navon` o `?tarea=cambio-regla` abre solo una.
+`simularSesionDosTareas` produce `api/test/ayudas/sesionWebDosTareas.json`, que
+`registroSesionDosTareas.test.js` procesa con `procesarSesion` (CC-08, CC-09, CC-10 y
+CC-12). Decisión en `docs/decisiones/0009-tarea-navon.md`.
+
+Siguiente: T15 (`feat/flujo-profesional`). Ver `docs/backlog-fase-i.md`.

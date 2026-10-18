@@ -1,4 +1,4 @@
-/* Registro conductual (M-09): página de prueba y tarea de cambio de regla.
+/* Registro conductual (M-09): página de prueba y tareas de cambio de regla y de Navon.
    RA-01 a RA-11: contraste, foco visible, 320 px sin desplazamiento horizontal,
    zoom al 200 % y objetivos táctiles muy por encima de 44 px. Sin animaciones
    ni transiciones (CT-03). Solo variables de tokens.css; los colores de las
@@ -86,12 +86,12 @@
   border: var(--borde-fino) solid var(--color-borde);
   border-radius: var(--radio-grande);
 }
-.ensayo__cajas {
+.ensayo__opciones {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--espacio-2);
 }
-.ensayo__caja {
+.ensayo__opcion {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -142,6 +142,37 @@
   font-size: var(--tipo-h1);
   color: var(--color-texto);
 }
+
+/* ---------- Tarea de Navon (T14) ---------- */
+/* El cartel tiene un tamaño fijo en px (--figura-navon-*): no crece con la barra de
+   accesibilidad. El centro reserva su alto: el cartel aparece sin mover los botones. */
+.ensayo__recordatorio { justify-content: center; margin-bottom: var(--espacio-2); }
+.ensayo--letras .ensayo__centro {
+  min-height: var(--figura-navon-alto);
+  margin-block: var(--espacio-3);
+}
+.figura-navon { display: block; flex: none; }
+.ensayo__figura-navon { width: var(--figura-navon-ancho); height: var(--figura-navon-alto); }
+.ensayo--letras .ensayo__opcion { min-height: var(--alto-boton-letra); }
+.ensayo__letra {
+  font-family: var(--tipo-titulos);
+  font-weight: var(--peso-titulo);
+  font-size: var(--tipo-h1);
+  line-height: var(--interlineado-titulos);
+}
+
+.tarea__ejemplo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  margin-inline: 0;
+  padding: var(--espacio-2);
+  background: var(--color-superficie-suave);
+  border-radius: var(--radio);
+}
+.tarea__ejemplo-figura { width: var(--figura-navon-ejemplo-ancho); height: var(--figura-navon-ejemplo-alto); }
+.tarea__ejemplo figcaption { font-weight: var(--peso-negrita); text-align: center; }
 
 /* ---------- Tabla de ensayos (al terminar) ---------- */
 .tabla-ensayos { margin-top: var(--espacio-4); }
