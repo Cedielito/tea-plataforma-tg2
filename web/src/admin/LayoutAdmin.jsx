@@ -9,6 +9,8 @@
  *   no la indexen (además del encabezado X-Robots-Tag de web/vercel.json).
  * - Sin sesión muestra el inicio de sesión; con la sesión vencida deja la
  *   página montada para no perder lo escrito (SesionVencida.jsx).
+ * - Una cuenta de profesional (registro conductual, M-09) no ve el panel: un
+ *   aviso la lleva a /registro (la API le responde 403 en el panel).
  */
 import { useRef } from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
@@ -20,7 +22,23 @@ import useNoIndexar from '../componentes/useNoIndexar.js';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import { ESTADOS } from '../api/useDatos.js';
 import InicioSesion from './InicioSesion.jsx';
-import { SESION, useSesion } from './ContextoSesion.jsx';
+import { ROLES, SESION, useSesion } from './ContextoSesion.jsx';
+
+function CuentaDeRegistro() {
+  useTituloPagina('Cuenta del registro conductual · Panel');
+  return (
+    <div className="contenedor pagina pagina-admin">
+      <h1>Esta cuenta es del registro conductual</h1>
+      <p className="pagina__descripcion">
+        Con esta cuenta se crean y se revisan las sesiones del registro conductual. El panel de contenidos es
+        solo para las cuentas de administración.
+      </p>
+      <p>
+        <Link to="/registro">Ir al registro conductual</Link>
+      </p>
+    </div>
+  );
+}
 
 function ComprobandoSesion() {
   const { estado, reintentar } = useSesion();
@@ -38,14 +56,15 @@ function ComprobandoSesion() {
 }
 
 export default function LayoutAdmin() {
-  const { estado, usuario, cerrarSesion } = useSesion();
+  const { estado, usuario, rol, cerrarSesion } = useSesion();
   const principal = useRef(null);
   useNoIndexar();
   useFocoAlNavegar(principal);
   const conSesion = estado === SESION.ACTIVA || estado === SESION.VENCIDA;
+  const deRegistro = conSesion && rol === ROLES.PROFESIONAL;
 
   let pagina = <ComprobandoSesion />;
-  if (conSesion) pagina = <Outlet />;
+  if (conSesion) pagina = deRegistro ? <CuentaDeRegistro /> : <Outlet />;
   if (estado === SESION.SIN_SESION) pagina = <InicioSesion />;
 
   return (
@@ -62,7 +81,7 @@ export default function LayoutAdmin() {
             </span>
           </Link>
 
-          {conSesion && (
+          {conSesion && !deRegistro && (
             <nav aria-label="Panel" className="navegacion-admin">
               <ul className="navegacion-admin__lista">
                 <li>

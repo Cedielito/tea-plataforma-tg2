@@ -9,7 +9,8 @@ const {
   leerCredenciales,
   compararClave,
   generarToken,
-  hashToken
+  hashToken,
+  rolDe
 } = require('../../dominio/autenticacion');
 const {
   MENSAJES: MENSAJES_LIMITE,
@@ -28,7 +29,8 @@ const {
  *    429, aunque la clave sea correcta.
  * 4. Comparacion bcrypt. Si el usuario no existe se compara igual contra un
  *    hash ficticio, y la respuesta es la misma que con una clave incorrecta.
- * 5. Si es correcta: cookie de sesion y { usuario }.
+ * 5. Si es correcta: cookie de sesion y { usuario, rol } (la web elige con el
+ *    rol entre el panel y el registro conductual).
  *
  * La primera comparacion de cada arranque deja su duracion en el registro,
  * para ver cuanto tarda bcrypt en Render. Nunca se registra la clave, el token
@@ -89,7 +91,7 @@ function crearRutasSesion({ ahora, produccion, registro }) {
         const token = generarToken();
         await administradores.abrirSesion(administrador, { tokenHash: hashToken(token), ahora: momento });
         res.cookie(NOMBRE_COOKIE, token, cookie);
-        return res.json({ usuario: administrador.usuario });
+        return res.json({ usuario: administrador.usuario, rol: rolDe(administrador) });
       } finally {
         bloqueo.liberar(usuario);
       }

@@ -103,6 +103,12 @@
   --figura-navon-ejemplo-ancho: 100px; /* ejemplo de las instrucciones */
   --figura-navon-ejemplo-alto: 140px;
   --alto-boton-letra: 6rem;           /* botones H y J: muy por encima de 44 px */
+  /* Flujo del profesional (T15): el seudónimo se lee en grande y en letra de ancho fijo
+     (fuentes del sistema, sin CDN), para copiarlo a mano sin confundir caracteres. */
+  --tipo-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Consolas, monospace;
+  --tipo-seudonimo: clamp(2rem, 1.5rem + 3vw, 3rem);
+  --espaciado-seudonimo: 0.08em;
+  --ancho-registro: 60rem;            /* páginas del profesional, con tablas */
 }
 
 @media (min-width: 40em) {

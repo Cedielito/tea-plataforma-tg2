@@ -8,7 +8,8 @@ const { randomInt } = require('node:crypto');
  *   formato XXXX-XXXX (unos 40 bits), generado con crypto. El alfabeto no
  *   tiene caracteres ambiguos (0, O, 1, I ni L): el profesional lo puede
  *   dictar o copiar a mano para eliminar una sesion (HU-19). Ningun dato de la
- *   persona participa en su construccion. El indice unico va en T15.
+ *   persona participa en su construccion. El indice unico esta en
+ *   sesion_registro (T15).
  * - Ninguna coleccion del registro guarda nombre, documento ni contacto:
  *   contieneDatoIdentificable revisa las claves de un objeto, tambien las de
  *   los objetos y arreglos anidados.

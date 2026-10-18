@@ -192,3 +192,129 @@
   white-space: nowrap;
 }
 .tabla-ensayos th { background: var(--color-superficie-suave); }
+
+/* ---------- Zona del profesional (T15) ---------- */
+.registro-profesional { max-width: var(--ancho-registro); }
+.registro-profesional > * + * { margin-top: var(--espacio-3); }
+.registro-profesional .tarjeta-admin { margin-top: var(--espacio-3); }
+.registro-profesional .tarjeta-admin > * + * { margin-top: var(--espacio-2); }
+.registro-profesional .formulario { max-width: var(--ancho-formulario); }
+
+.navegacion-registro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-2);
+  padding-block: var(--espacio-2);
+  border-bottom: var(--borde-fino) solid var(--color-borde);
+}
+.navegacion-registro__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* El seudónimo, en grande y en letra de ancho fijo, para copiarlo a mano. */
+.seudonimo {
+  margin: 0;
+  font-family: var(--tipo-mono);
+  font-size: var(--tipo-seudonimo);
+  font-weight: var(--peso-negrita);
+  letter-spacing: var(--espaciado-seudonimo);
+  color: var(--color-texto);
+  overflow-wrap: anywhere;
+}
+.seudonimo-creado__etiqueta { margin: 0; color: var(--color-texto-secundario); }
+.seudonimo-celda { white-space: nowrap; }
+.seudonimo-celda,
+.seudonimo-titulo,
+.seudonimo-campo { font-family: var(--tipo-mono); letter-spacing: var(--espaciado-seudonimo); }
+.seudonimo-titulo { overflow-wrap: anywhere; }
+
+.datos-sesion { margin: 0; }
+.datos-sesion__fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--espacio-2);
+  padding-block: var(--espacio-1);
+  border-bottom: var(--borde-fino) solid var(--color-borde);
+}
+.datos-sesion dt { font-weight: var(--peso-negrita); }
+.datos-sesion dd { margin: 0; overflow-wrap: anywhere; }
+
+/* Tablas de sesiones y de valores: se desplazan dentro de su recuadro. Con
+   position: relative, el texto para lectores de pantalla (.solo-lector, en
+   posición absoluta) queda dentro del recuadro y no ensancha la página a 320 px. */
+.tabla-registro {
+  position: relative;
+  overflow-x: auto;
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+}
+.tabla-registro table { width: 100%; border-collapse: collapse; }
+.tabla-registro caption {
+  padding: var(--espacio-1) var(--espacio-2);
+  text-align: left;
+  font-weight: var(--peso-negrita);
+}
+.tabla-registro th,
+.tabla-registro td {
+  padding: var(--espacio-1) var(--espacio-2);
+  border-top: var(--borde-fino) solid var(--color-borde);
+  text-align: left;
+  vertical-align: top;
+}
+.tabla-registro thead th { background: var(--color-superficie-suave); }
+.tabla-registro__texto { min-width: 16rem; }
+.valores-sesion > * + *,
+.valores-tarea > * + * { margin-top: var(--espacio-2); }
+.valores-tarea { margin-top: var(--espacio-4); }
+
+/* ---------- Aplicación: cuestionario SUS y final (T15) ---------- */
+.sus { max-width: var(--ancho-tarea); }
+.sus__enunciado {
+  margin: 0;
+  padding: var(--espacio-2);
+  border: var(--borde-fino) solid var(--color-borde);
+  border-radius: var(--radio);
+  background: var(--color-superficie);
+}
+/* La leyenda flota para quedar dentro del recuadro y no sobre su borde; sigue
+   siendo la leyenda del fieldset para los lectores de pantalla. */
+.sus__enunciado legend { float: left; width: 100%; padding: 0; }
+.sus__enunciado legend + * { clear: both; }
+.sus__numero {
+  display: block;
+  color: var(--color-texto-secundario);
+  font-size: var(--tipo-pequeno);
+}
+.sus__texto { display: block; margin-bottom: var(--espacio-2); font-weight: var(--peso-negrita); }
+.sus__opciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+@media (min-width: 40em) {
+  .sus__opciones { flex-direction: row; flex-wrap: wrap; }
+}
+.sus__opcion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  min-height: var(--objetivo-tactil);
+  min-width: var(--objetivo-tactil);
+  padding: var(--espacio-1) var(--espacio-2);
+  border: var(--borde-fino) solid var(--color-texto-secundario);
+  border-radius: var(--radio-pequeno);
+  background: var(--color-superficie-suave);
+  cursor: pointer;
+}
+.sus__opcion input { width: var(--icono-pequeno); height: var(--icono-pequeno); accent-color: var(--color-primario); }
+
+.aplicacion__guardado { display: flex; gap: var(--espacio-1); align-items: flex-start; }
+.aplicacion__guardado svg { flex: none; width: var(--icono); height: var(--icono); }

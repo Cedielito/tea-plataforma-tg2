@@ -62,6 +62,22 @@ export async function pedirAdmin(ruta, opciones = {}) {
   }
 }
 
+/**
+ * Descarga un archivo del panel (los CSV del registro conductual, M-09,
+ * HU-19) con la cookie de sesión. Un 401 avisa a los oyentes, igual que
+ * pedirAdmin. Sin reintento: la persona vuelve a pulsar el botón.
+ * @returns {Promise<Blob>}
+ */
+export async function descargarAdmin(ruta) {
+  const respuesta = await fetch(ruta, { credentials: 'same-origin', headers: { Accept: 'text/csv' } });
+  if (!respuesta.ok) {
+    const cuerpo = await respuesta.json().catch(() => null);
+    if (respuesta.status === 401) oyentesSesionPerdida.forEach((oyente) => oyente());
+    throw new ErrorAdmin(respuesta.status, cuerpo);
+  }
+  return respuesta.blob();
+}
+
 /** Texto para la persona cuando una acción del panel falla. */
 export function mensajeDeError(error) {
   if (error instanceof ErrorAdmin && error.mensaje && error.estado < 500) return error.mensaje;

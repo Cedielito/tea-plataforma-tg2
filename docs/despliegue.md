@@ -33,6 +33,8 @@ Navegador ──HTTPS──> Vercel (tea-plataforma-tg2.vercel.app)
 | Render | `NODE_ENV` | `production`: la cookie de sesión del panel lleva `Secure` (T4) |
 | Render | `ADMIN_USUARIO` | Solo para crear el primer administrador; se borra después (ver «Panel de administración») |
 | Render | `ADMIN_CLAVE` | Solo para crear el primer administrador; **se borra después** |
+| Render | `PROFESIONAL_USUARIO` | Solo para crear la cuenta de un profesional del registro conductual; se borra después (ver «Registro conductual») |
+| Render | `PROFESIONAL_CLAVE` | Solo para crear la cuenta de un profesional; **se borra después** |
 | Render | `SALTOS_PROXY` | No se define: vale 2 (ver «Formulario de contacto»). Solo si la comprobación del límite falla |
 | Render | `PORT` | No se define: Render la asigna |
 | Vercel | `VITE_RELOJ_REGISTRO` | No se define: vale `animacion`. `referencia` cambia el reloj del registro conductual (M-09) para el experimento de precisión temporal (T16); en `/registro/prueba` también se puede elegir con `?reloj=` |
@@ -111,11 +113,13 @@ plan gratuito de Render no tiene consola.
 3. **Borrar `ADMIN_CLAVE` y `ADMIN_USUARIO`** de *Environment*. La clave ya quedó cifrada
    en Atlas; mientras siga configurada, cada arranque deja un aviso para borrarla.
 
-La API solo crea el administrador si la colección `administrador` está vacía: cambiar las
-variables después no cambia nada. Nunca escribe la clave en los logs.
+La API solo crea el administrador si no hay ninguna cuenta de administrador (las de
+profesional no cuentan): cambiar las variables después no cambia nada. Nunca escribe la
+clave en los logs.
 
 **Si se olvida la contraseña:** en Atlas → *Browse Collections* → `tea_plataforma` →
-`administrador`, borrar el documento y repetir los pasos 1 a 3.
+`administrador`, borrar el documento del administrador (el que no tiene
+`rol: "profesional"`) y repetir los pasos 1 a 3.
 
 **Cómo funciona la sesión** (detalles en `docs/decisiones/0005-sesion-administrador.md`)
 
@@ -127,6 +131,43 @@ variables después no cambia nada. Nunca escribe la clave en los logs.
   acepta como máximo 20 intentos de inicio de sesión por minuto en total.
 - Si la API se reinicia (se durmió o hubo despliegue), las sesiones siguen abiertas
   porque viven en Atlas; los contadores de intentos sí vuelven a cero.
+
+## Registro conductual (M-09, T15)
+
+El profesional entra en `/registro` (no está enlazado desde el sitio) con una cuenta de
+rol «profesional». Usa el mismo inicio de sesión, la misma cookie y los mismos
+vencimientos que el panel, pero no ve el panel: la API le responde 403 en `/api/admin/*`,
+salvo en `/api/admin/registro`, y el administrador recibe 403 allí. Detalles en
+`docs/decisiones/0010-flujo-profesional.md`.
+
+**Crear la cuenta de un profesional**
+
+1. En Render → `tea-plataforma-api` → *Environment*, agregar:
+   - `PROFESIONAL_USUARIO`: de 3 a 40 caracteres entre `a-z`, `0-9`, `.`, `_` y `-`.
+     No puede ser el usuario de un administrador.
+   - `PROFESIONAL_CLAVE`: 12 caracteres o más (máximo 72 bytes), generada con un gestor
+     de contraseñas.
+2. Guardar las variables y desplegar de nuevo (*Manual Deploy → Deploy latest commit* si
+   Render no lo ofrece). En los logs debe aparecer
+   `Profesional: cuenta creada: <usuario>.` Si la clave o el usuario no cumplen, aparece
+   `Profesional: no se creó.` con el motivo.
+3. **Borrar `PROFESIONAL_CLAVE` y `PROFESIONAL_USUARIO`** de *Environment*. Mientras la
+   clave siga configurada, cada arranque deja un aviso para borrarla.
+
+Para otro profesional se repiten los pasos con otro usuario: la API crea la cuenta si no
+existe ninguna con ese usuario y no cambia las que ya existen. Si se olvida la
+contraseña, se borra su documento en `administrador` (el que tiene
+`rol: "profesional"`) y se crea de nuevo. Las sesiones del registro de esa cuenta
+quedan en la base, pero la cuenta nueva no las ve (cada sesión es de quien la creó).
+
+**Antes de una sesión con un voluntario**
+
+- Abrir `/api/salud` un par de minutos antes (la API gratuita se duerme).
+- En los logs del arranque debe aparecer `Cuestionario SUS: versión …, 10 ítems.` Si
+  `api/contenidos/registro/sus.yaml` tiene un error, la aplicación termina sin el SUS.
+- La sesión se aplica en el mismo dispositivo en que se crea, en las 2 horas siguientes.
+  Al entregarlo se cierra la sesión del profesional en ese navegador: al terminar, el
+  profesional vuelve a entrar para ver los valores.
 
 ## Cosas que hay que saber
 

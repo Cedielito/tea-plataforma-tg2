@@ -226,3 +226,22 @@ lugares, el texto, `vigenteDesde` y la frase «Vigente desde…» con la fecha d
 fusión, y `fechaRevision`. Quien tenga el formulario abierto con la versión anterior
 recibe un aviso para leer y aceptar la nueva antes de enviar. Si el cambio es
 importante, la política promete avisar por correo a quienes tengan mensajes guardados.
+
+## Cuestionario SUS del registro conductual (`registro/sus.yaml`, T15)
+
+Los 10 enunciados del SUS (System Usability Scale) que responde el participante al
+terminar las dos tareas de M-09. Valora la herramienta, no a la persona: la API guarda
+las respuestas y el `valorSUS` con la `version` del archivo, y el participante no ve
+ningún valor. No es contenido de las secciones S1 a S5: no lleva fuentes ni fecha de
+revisión de RCN-01/02, sino una `fuente` con la referencia del cuestionario.
+
+Campos: `version`, `fuente`, `escala` (`minimo: 1`, `maximo: 5`, `etiquetaMinimo`,
+`etiquetaMaximo`) e `items` (exactamente 10 textos, en el orden del cuestionario
+original: los impares a favor de la herramienta y los pares en contra). Al arrancar, la
+API lo lee (`api/src/datos/cuestionarioSus.js`) y deja en los logs
+`Cuestionario SUS: versión …, 10 ítems.` Un archivo con errores no se usa y la
+aplicación termina sin el SUS.
+
+La traducción actual es de trabajo. Para reemplazarla por la versión validada
+(Sevilla-González y colaboradores, 2020): cambiar los textos de `items`, la `fuente` y
+la `version` en un PR. Una prueba revisa que no haya vocabulario prohibido (M-09).

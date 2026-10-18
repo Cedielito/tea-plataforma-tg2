@@ -1,0 +1,31 @@
+# Cuestionario SUS (System Usability Scale) del registro conductual (M-09).
+#
+# El participante lo responde al terminar las dos tareas. Valora la
+# herramienta, no a la persona: la API guarda las respuestas y el valorSUS con
+# la version de este archivo, y el participante no ve el valor.
+#
+# Para cambiar la traduccion: reemplaza los textos de `items` (exactamente 10,
+# en el orden del cuestionario original: los impares a favor de la
+# herramienta y los pares en contra) y cambia `version`. La escala va siempre
+# de 1 a 5. La API lee este archivo al arrancar (api/src/datos/cuestionarioSus.js).
+version: trabajo-2026-10
+fuente: >-
+  Brooke, J. (1996). SUS: A quick and dirty usability scale. Traducción de
+  trabajo del equipo; se reemplazará por la versión validada en español de
+  Sevilla-González y colaboradores (2020).
+escala:
+  minimo: 1
+  maximo: 5
+  etiquetaMinimo: Totalmente en desacuerdo
+  etiquetaMaximo: Totalmente de acuerdo
+items:
+  - Creo que me gustaría usar esta herramienta con frecuencia.
+  - Encontré la herramienta innecesariamente compleja.
+  - Pensé que la herramienta era fácil de usar.
+  - Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar esta herramienta.
+  - Encontré que las distintas funciones de la herramienta estaban bien integradas.
+  - Pensé que había demasiada inconsistencia en la herramienta.
+  - Imagino que la mayoría de las personas aprendería a usar esta herramienta muy rápido.
+  - Encontré la herramienta muy difícil de usar.
+  - Me sentí con mucha confianza al usar la herramienta.
+  - Necesité aprender muchas cosas antes de poder usar esta herramienta.
