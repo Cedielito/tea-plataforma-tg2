@@ -56,7 +56,7 @@ Reglas:
 | T13 ✅ | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
 | T14 ✅ | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
 | T15 ✅ | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
-| T16 | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
+| T16 ✅ | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
 | T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
 | T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
 
@@ -68,10 +68,11 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T16 | Después de fusionar T16, lanzar el flujo «Precisión temporal (M-09)» (Actions → *Run workflow* en `main`, 3 sesiones por celda) y pegar su tabla en `docs/evaluacion/precision.md`, en lugar de la de la corrida corta. Revisar en el resumen si alguna celda quedó marcada (¹: vale la cota superior). El documento debe reflejar el método de CT-07: se mide el error del software frente a una aparición y una pulsación de referencia medidas en el navegador, no la latencia del teclado ni de la pantalla, y una latencia constante se cancela en CC-09 y CC-10. También, que los 6 perfiles simulados recuperan sus parámetros con ±1 ms y que la misma entrada da la misma salida al pasar por la API (CT-13). | M-09, CT-07, CT-13 |
 | T15 | El documento debe reflejar lo que cambió con T15. En el Cuadro 13 entran `sesion_registro` (seudónimo, constancia del consentimiento con la versión del formato y la mayoría de edad, estado, versiones del catálogo y del algoritmo, semilla, reloj, navegador, contexto, resultado y SUS) y `ensayo_registro` (un documento por ensayo), y `administrador` lleva el rol (`administrador` o `profesional`). Los criterios de HU-16 suman la mayoría de edad y la versión del formato; los de HU-19, los dos CSV (ensayos; valores y SUS). La sesión se aplica en el mismo dispositivo en las 2 horas siguientes a su creación; al entregarlo se cierra la sesión del profesional; una recarga a mitad de una tarea deja la sesión interrumpida y sin procesar (RF-15). El SUS usa una traducción de trabajo: reemplazarla por la validada de Sevilla-González y colaboradores (2020) en `api/contenidos/registro/sus.yaml` antes de la prueba con voluntarios, y crear en Render la cuenta del profesional (`docs/despliegue.md`). | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 |
 | T14 | El documento debe reflejar cómo se aplica la tarea de Navon con T14. La práctica tiene un ensayo de cada nivel y los dos son incongruentes (en uno congruente se acierta mirando cualquier nivel). Cada bloque tiene 3 y 4 ensayos congruentes e incongruentes y la letra correcta repartida 4 y 3; cada nivel queda con 7 congruentes, 7 incongruentes, 7 H y 7 S. El cartel tiene un tamaño fijo en píxeles. Un error en Navon es siempre `aleatoria` y una omisión no tiene clase de error. En la sesión, las dos tareas van seguidas (cambio de regla, pausa, Navon) (`docs/decisiones/0009-tarea-navon.md`). | M-09, CC-10, CP-04, RF-14, HU-17 |
 | T13 | El documento debe reflejar lo que cambió con T13. El catálogo pasa a la versión 1.1.0, con el límite de respuesta de 5 s (después, el ensayo queda omitido), 500 ms entre ensayos y 3 cambios y 3 repeticiones por bloque mixto. Con dos cajas y estímulos siempre en conflicto, todo error del bloque de forma es perseverativo, así que CC-08 equivale a la proporción de errores de ese bloque. La práctica usa solo la regla de color y cada cambio de regla tiene su pantalla de instrucciones. Una omisión no tiene clase de error. La señal y el estímulo aparecen juntos y el tiempo de reacción se mide desde esa aparición (`docs/decisiones/0008-motor-ensayos.md`). | M-09, CC-08, CT-07, RF-14, HU-17 |
-| T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); T16 mide la real. | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
+| T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); la real se mide con los voluntarios (T16 no la mide: necesita personas). | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
 | T8 | Comprobar en el entorno desplegado el límite de envíos por IP (pasos en `docs/despliegue.md`, «Formulario de contacto») y ajustar `SALTOS_PROXY` en Render si hace falta. El documento debe reflejar que los mensajes se suprimen a los 180 días (seis meses de 30 días: unos días antes de cumplirse los seis meses de calendario, nunca después) y que en el Cuadro 13 la versión de la autorización se llama `versionPolitica`. | M-06, RS-02, RS-04 |
 | T7 | El documento debe reflejar lo que cambió con T7. En el Cuadro 13, `pregunta_frecuente` y `recurso` llevan además un identificador (`slug`), y en `pregunta_frecuente` el orden es obligatorio. En el Cuadro B.1, la tarea T7 («¿A quién debo consultar primero?») se cumple desplegando la pregunta en `/preguntas-frecuentes` o desde el buscador, que enlaza a la pregunta abierta. | M-05, RF-06, RF-07 |
 | T6 | El documento debe reflejar lo que cambió con T6. En el Cuadro B.1, la tarea T4 de la prueba de usabilidad («Aplica el filtro de ciudad y abre un registro») ya no aplica: el directorio no tiene página de detalle y cada tarjeta muestra todos los datos (lo ajusta el equipo). En el Cuadro 13, `entidad_directorio` lleva además descripción, fuentes, estado de publicación y la marca de profesional independiente. | M-04, RF-05, RS-07 |
@@ -497,10 +498,64 @@ api/contenidos/registro/sus.yaml.
 Propón el plan antes de escribir código.
 ```
 
-### T16 — Precisión temporal, perfiles simulados y reproducibilidad
-Prompt pendiente. Alcance: experimento que mide el error del registro del tiempo de
-reacción frente a una referencia (CT-07), perfiles de desempeño simulados que pasan
-por el motor y prueba de reproducibilidad por versión (CT-13).
+### T16 — Precisión temporal, perfiles simulados y reproducibilidad ✅
+Hecha. Decisiones acordadas al aprobar el plan: `@playwright/test` 1.64.1 en `web/`; el
+arnés se inyecta en la página y no cambia la web; la aparición de referencia es el final
+del fotograma que dibuja el estímulo (no la marca de `requestAnimationFrame`, que en
+Chromium queda antes de la inserción) y la pulsación de referencia, el `event.timeStamp`
+del `keydown` en captura; se informan el error (con la latencia del arnés separada) y la
+cota superior, y una celda con carga en la que el desvío del arnés (P95) sube más de 10 ms
+frente a la normal se lee con la cota superior; 3 sesiones de las dos tareas por celda (222 ensayos). Perfiles con ruido
+centrado por grupo, para que las medias sean exactas, y errores al comienzo del bloque de
+forma. La duración real de la sesión (CT-08) queda para la prueba con voluntarios. No se
+trajo nada de `fase-ii`. Hecha en la rama `claude/confident-goldberg-sbozcu` (la que asignó
+el entorno de Claude Code; corresponde a `test/precision-temporal`). Decisión en
+`docs/decisiones/0011-precision-temporal.md`.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea T16, rama test/precision-temporal.
+
+Capa 1 de la evaluación de M-09, sin participantes: un experimento de
+precisión temporal, perfiles simulados y reproducibilidad. Autorizo
+@playwright/test (dependencia de desarrollo) y un flujo nuevo de GitHub
+Actions que solo se ejecuta a mano (workflow_dispatch). En esta sesión solo
+hay Chromium y no se pueden descargar Firefox ni WebKit: el experimento
+completo corre en Actions, que instala los tres navegadores.
+
+1. Experimento de precisión (CT-07). Playwright recorre /registro/prueba
+   (con ?semilla=, ?reloj= y ?tarea=) sobre un build local de la web y la API
+   local (basta el plan), y responde con el teclado a latencias programadas
+   (300, 500 y 800 ms después de la aparición). Por ensayo se guardan la
+   latencia programada, el tiempo de reacción registrado y el error. Explica
+   en el plan cómo detecta el arnés la aparición y cómo separa su propia
+   latencia; si no se puede separar, el resultado se reporta como cota
+   superior del error.
+2. Diseño, con al menos 200 ensayos medidos por celda:
+   - motor: Chromium, Firefox y WebKit;
+   - reloj: 'animacion' y 'referencia';
+   - carga: normal, e hilo principal ocupado (tareas largas de 30 a 100 ms
+     inyectadas en la página en momentos aleatorios con semilla), que funciona
+     en los tres motores. En Chromium, además, CPU ralentizada ×4 por CDP.
+3. Salida: CSV por celda como artefacto del flujo, un script que los resume
+   (media y desviación del error, percentil 95 del error absoluto y porcentaje
+   de ensayos con error ≤ 50 ms, por celda) y docs/evaluacion/precision.md con
+   la tabla y el método. Aclara que se mide el error del software y no la
+   latencia del teclado ni de la pantalla, y que una latencia constante se
+   cancela en los indicadores, que son diferencias.
+4. Perfiles simulados: 6 perfiles con parámetros conocidos (tiempo medio,
+   costo de cambio, diferencia global-local, tasa de error y de omisión),
+   generados con semilla en el formato de la web. procesarSesion debe
+   recuperar los valores con tolerancia de ±1 ms y distinguir perfiles con
+   parámetros distintos.
+5. Reproducibilidad (CT-13): misma entrada y misma versión dan la misma
+   salida, también al pasar por la API de T15 (sesión guardada y vuelta a
+   procesar).
+Los perfiles y la reproducibilidad corren en el CI normal; el experimento de
+precisión no, solo en el flujo manual. Antes de terminar, corre en esta
+sesión una versión corta del experimento solo con Chromium para comprobar que
+el arnés funciona.
+
+Propón el plan antes de escribir código.
+```
 
 ### T10 — Accesibilidad y rendimiento
 ```

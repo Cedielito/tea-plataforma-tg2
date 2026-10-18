@@ -77,9 +77,10 @@ function conducta(ensayo, posicion, tipoMixto) {
 /**
  * Reloj falso y motor de ensayos con respuestas dadas. El tiempo avanza de
  * una tarea a la siguiente: en una sesión de dos tareas, la segunda empieza
- * donde terminó la primera.
+ * donde terminó la primera. También lo usan los perfiles simulados
+ * (perfilesSimulados.js, T16).
  */
-function crearSimulador() {
+export function crearSimulador() {
   let t = 1000;
   let pendiente = null;
   const reloj = crearReloj('animacion', {
@@ -131,7 +132,7 @@ function crearSimulador() {
 }
 
 /** Posición (1 a 7) de cada ensayo dentro de su bloque. */
-function posiciones(planificados) {
+export function posiciones(planificados) {
   let posicion = 0;
   return planificados.map((ensayo, i) => {
     const anterior = planificados[i - 1];

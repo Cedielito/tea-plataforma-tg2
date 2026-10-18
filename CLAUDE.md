@@ -129,7 +129,8 @@ api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda 
 api/contenidos/registro/  sus.yaml: los 10 ítems del SUS de M-09 (no va a la base)
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria;
                      ayudas/sesionRegistro.js es la sesión fija de M-09;
-                     ayudas/registro.js y envioRegistro.js, el flujo del profesional
+                     ayudas/registro.js y envioRegistro.js, el flujo del profesional;
+                     ayudas/perfilesSimulados.json, los 6 perfiles de T16
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
@@ -143,12 +144,18 @@ web/src/registro/    registro conductual (M-09): generador con semilla, reloj, m
                      pantalla de ensayo compartida, tareas de cambio de regla y de
                      Navon y página /registro/prueba; con T15, la zona del profesional
                      (/registro: sesiones, nueva, detalle, CSV y eliminar) y la
-                     aplicación (/registro/aplicacion: cola de envíos y SUS)
+                     aplicación (/registro/aplicacion: cola de envíos y SUS); con T16,
+                     los perfiles simulados (perfilesSimulados.js)
+web/evaluacion/precision/  experimento de precisión temporal (T16, CT-07): servidor del
+                     build y la API, arnés inyectado, prueba de Playwright por celda,
+                     cálculos y resumen (no corre en el CI normal; flujo manual
+                     .github/workflows/precision.yml)
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
                      de formulario y resumen de errores
-docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/
+docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/,
+                     evaluacion/ (precision.md)
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
 
@@ -164,6 +171,9 @@ npm run dev:api      API en http://localhost:3000 (requiere MongoDB y api/.env);
                      al arrancar carga los textos de api/contenidos
 npm run dev:web      interfaz en http://localhost:5173 (proxy de /api a la API)
 npm run build:web    compila el frontend
+npm run precision -w web -- --project=chromium
+                     experimento de precisión temporal (T16) sobre el build; luego
+                     npm run precision:resumen -w web arma la tabla
 ```
 
 ## Convenciones
@@ -216,7 +226,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T9 y T12 a T15 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9 y T12 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -459,4 +469,31 @@ recarga con una tarea pendiente interrumpe la sesión). Una cuenta profesional e
 `/admin` ve un aviso hacia `/registro`. Decisión en
 `docs/decisiones/0010-flujo-profesional.md`.
 
-Siguiente: T16 (`test/precision-temporal`). Ver `docs/backlog-fase-i.md`.
+Precisión temporal, perfiles simulados y reproducibilidad (T16, M-09, CT-07, CT-13):
+`@playwright/test` 1.64.1 (desarrollo, en `web/`). `web/evaluacion/precision/`:
+`servidor.js` sirve `web/dist` y monta `crearServidor()` (la página solo pide el plan, sin
+MongoDB); `arnes.js` se inyecta con `addInitScript` y, por ensayo, marca la inserción del
+estímulo (`MutationObserver`), su fotograma (`requestAnimationFrame`, desde donde avisa a
+Node) y el final del dibujo (`MessageChannel`: la aparición de referencia), y el
+`event.timeStamp` del `keydown` en captura (la pulsación de referencia); con
+`hilo-ocupado` inyecta tareas largas de 30 a 100 ms con semilla. `precision.spec.js`
+aplica por celda (motor × reloj × carga; `cpu-x4` solo en Chromium, por CDP)
+`PRECISION_SESIONES` sesiones de las dos tareas de `/registro/prueba` (74 ensayos), presiona
+F o J a 300, 500 u 800 ms (`planDeRespuestas`), empareja con el JSON descargado
+(`comprobarEmparejamiento`) y escribe un CSV por celda. Error = TR registrado − latencia
+efectiva del arnés; cota superior = TR registrado − latencia programada (`medicion.js`).
+`estadisticas.js` y `resumir.js`: media, DE, P95 del error absoluto y % ≤ 50 ms por celda;
+una celda con carga cuyo P95 del desvío del arnés sube más de 10 ms frente a la normal
+se lee con la cota superior. Flujo manual
+`.github/workflows/precision.yml` (`workflow_dispatch`, un trabajo por motor y el resumen);
+el CI normal solo corre `web/evaluacion/**/*.test.js`. Método y tabla en
+`docs/evaluacion/precision.md`. Perfiles: `web/src/registro/perfilesSimulados.js` (6
+perfiles con tiempo medio, costo de cambio, diferencia global-local, errores y omisiones
+por bloque; ruido centrado por grupo, así que las medias son exactas) produce
+`api/test/ayudas/perfilesSimulados.json`; `registroPerfiles.test.js` exige recuperar los
+tiempos con ±1 ms y distinguir los perfiles, y `registroReproducibilidad.test.js` los
+pasa por la API de T15 (resultado guardado = `procesarSesion`, igual al volver a procesar
+de la base y en otra sesión con los mismos ensayos). Decisión en
+`docs/decisiones/0011-precision-temporal.md`.
+
+Siguiente: T10 (`test/accesibilidad`). Ver `docs/backlog-fase-i.md`.

@@ -1,0 +1,90 @@
+name: Precisión temporal (M-09)
+
+# Experimento de precisión temporal del registro conductual (CT-07, T16).
+# Solo se ejecuta a mano: Actions → «Precisión temporal (M-09)» → Run
+# workflow. Un trabajo por motor mide sus celdas (reloj × carga) y sube sus
+# CSV; el último arma la tabla y la deja en el resumen de la corrida.
+# Método y lectura de la tabla en docs/evaluacion/precision.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      sesiones:
+        description: 'Sesiones por celda (cada una con las dos tareas: 74 ensayos; 3 dan 222 por celda)'
+        required: true
+        default: '3'
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    name: Medir en ${{ matrix.motor }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        motor: [chromium, firefox, webkit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Instalar el navegador y sus dependencias
+        run: npx playwright install --with-deps ${{ matrix.motor }}
+
+      - name: Compilar el frontend
+        run: npm run build:web
+
+      - name: Medir
+        env:
+          PRECISION_SESIONES: ${{ inputs.sesiones }}
+        run: npm run precision -w web -- --project=${{ matrix.motor }}
+
+      - name: Guardar los CSV y los metadatos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: precision-${{ matrix.motor }}
+          path: |
+            web/evaluacion/precision/resultados/*.csv
+            web/evaluacion/precision/resultados/*.json
+          if-no-files-found: warn
+
+  resumen:
+    name: Resumen
+    needs: medir
+    if: always()
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: precision-*
+          path: resultados
+          merge-multiple: true
+
+      - name: Resumir por celda
+        run: |
+          node web/evaluacion/precision/resumir.js resultados --salida resultados/resumen.md
+          cat resultados/resumen.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Guardar el resumen
+        uses: actions/upload-artifact@v4
+        with:
+          name: precision-resumen
+          path: resultados/
