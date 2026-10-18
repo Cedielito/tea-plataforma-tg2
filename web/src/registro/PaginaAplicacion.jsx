@@ -79,7 +79,11 @@ function EstadoGuardado({ envios, alReintentar }) {
   );
 }
 
-/** Pantalla final con su título como h1, que recibe el foco al aparecer. */
+/**
+ * Pantalla final con su título como h1, que recibe el foco al aparecer. Cada
+ * una lleva su `key`: del SUS a «Gracias» React no reutiliza la instancia y el
+ * foco pasa al nuevo h1 (2.4.3).
+ */
 function PantallaFinal({ titulo, parrafos, children }) {
   const encabezado = useRef(null);
   useEffect(() => {
@@ -150,7 +154,7 @@ export default function PaginaAplicacion({ recienEntregada = false, alUsarEntreg
   }, [cola]);
 
   if (carga.estado === ESTADOS.NO_ENCONTRADO) {
-    return <PantallaFinal titulo={APLICACION.sinAplicacionTitulo} parrafos={[APLICACION.sinAplicacion]} />;
+    return <PantallaFinal key="sin-aplicacion" titulo={APLICACION.sinAplicacionTitulo} parrafos={[APLICACION.sinAplicacion]} />;
   }
   if (carga.estado !== ESTADOS.LISTO || !paso) {
     return (
@@ -165,12 +169,12 @@ export default function PaginaAplicacion({ recienEntregada = false, alUsarEntreg
   const reintentar = () => cola.procesar();
 
   if (paso === PASOS.INTERRUMPIDA) {
-    return <PantallaFinal titulo={APLICACION.interrumpidaTitulo} parrafos={APLICACION.interrumpida} />;
+    return <PantallaFinal key="interrumpida" titulo={APLICACION.interrumpidaTitulo} parrafos={APLICACION.interrumpida} />;
   }
 
   if (paso === PASOS.GRACIAS) {
     return (
-      <PantallaFinal titulo={APLICACION.graciasTitulo} parrafos={APLICACION.gracias}>
+      <PantallaFinal key="gracias" titulo={APLICACION.graciasTitulo} parrafos={APLICACION.gracias}>
         <EstadoGuardado envios={envios} alReintentar={reintentar} />
       </PantallaFinal>
     );
@@ -178,7 +182,7 @@ export default function PaginaAplicacion({ recienEntregada = false, alUsarEntreg
 
   if (paso === PASOS.SUS) {
     return (
-      <PantallaFinal titulo={SUS.titulo} parrafos={[]}>
+      <PantallaFinal key="sus" titulo={SUS.titulo} parrafos={[]}>
         <CuestionarioSus
           cuestionario={aplicacion.cuestionarioSus}
           alTerminar={(respuestas) => {

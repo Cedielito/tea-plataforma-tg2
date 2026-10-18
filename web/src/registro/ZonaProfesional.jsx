@@ -9,7 +9,9 @@
  *   aviso para cerrar la sesión (la API también le responde 403).
  * - Con sesión: una navegación corta (Sesiones, Nueva sesión, Cerrar sesión)
  *   y la página. Con la sesión vencida, la página sigue montada y muestra el
- *   formulario para volver a entrar (SesionVencida.jsx).
+ *   formulario para volver a entrar (SesionVencida.jsx). Dos minutos antes del
+ *   cierre por inactividad, el aviso del panel ofrece «Seguir conectado»
+ *   (AvisoVencimiento.jsx, criterio 2.2.1 de WCAG).
  * - Va dentro del layout de M-09, que no nombra la plataforma: el del panel
  *   sí lo hace, y M-09 no puede tener ese vocabulario.
  * - `alEntregar` pasa a las páginas (useOutletContext): al entregar el
@@ -25,6 +27,7 @@ import '../estilos/admin.css';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import useFocoAlNavegar from '../componentes/useFocoAlNavegar.js';
 import { ESTADOS } from '../api/useDatos.js';
+import AvisoVencimiento from '../admin/AvisoVencimiento.jsx';
 import FormularioAcceso from '../admin/FormularioAcceso.jsx';
 import { ProveedorSesion, ROLES, SESION, useSesion } from '../admin/ContextoSesion.jsx';
 import { ZONA } from './textosProfesional.js';
@@ -91,6 +94,7 @@ function Zona({ alEntregar }) {
 
   return (
     <div ref={contenido}>
+      <AvisoVencimiento />
       <div className="contenedor navegacion-registro">
         <nav aria-label={ZONA.navegacion}>
           <ul className="navegacion-registro__lista">

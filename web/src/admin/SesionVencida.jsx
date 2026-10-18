@@ -1,8 +1,9 @@
 /**
  * Aviso de sesión vencida (M-08, RS-05; RA-10). Cada página del panel lo pone
- * justo debajo de su h1. Aparece cuando una acción recibe 401: no hay
- * temporizador ni ventana emergente. La página sigue montada, así que lo
- * escrito en el editor se conserva; al volver a entrar se puede guardar.
+ * justo debajo de su h1. Aparece cuando una acción recibe 401 (también
+ * «Seguir conectado» del aviso de vencimiento, AvisoVencimiento.jsx): no es
+ * una ventana emergente. La página sigue montada, así que lo escrito en el
+ * editor se conserva; al volver a entrar se puede guardar.
  *
  * Al aparecer, el foco pasa a su título; al volver a entrar, a la
  * confirmación.

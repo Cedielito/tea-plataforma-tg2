@@ -150,6 +150,10 @@ web/evaluacion/precision/  experimento de precisión temporal (T16, CT-07): serv
                      build y la API, arnés inyectado, prueba de Playwright por celda,
                      cálculos y resumen (no corre en el CI normal; flujo manual
                      .github/workflows/precision.yml)
+web/evaluacion/accesibilidad/  auditoría de accesibilidad y rendimiento (T10): servidor
+                     del build con la API y MongoDB en memoria, axe-core con Playwright
+                     por variante (normal, alto contraste, 320 px), Lighthouse móvil con
+                     npx y resumen (no corre en el CI normal)
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
@@ -174,6 +178,9 @@ npm run build:web    compila el frontend
 npm run precision -w web -- --project=chromium
                      experimento de precisión temporal (T16) sobre el build; luego
                      npm run precision:resumen -w web arma la tabla
+npm run accesibilidad -w web
+                     auditoría de accesibilidad y rendimiento (T10) sobre el build:
+                     axe-core, Lighthouse y resumen (docs/evaluacion/accesibilidad.md)
 ```
 
 ## Convenciones
@@ -226,7 +233,7 @@ npm run precision -w web -- --project=chromium
 
 ## Estado actual
 
-T0 a T9 y T12 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T10 y T12 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -496,4 +503,27 @@ pasa por la API de T15 (resultado guardado = `procesarSesion`, igual al volver a
 de la base y en otra sesión con los mismos ensayos). Decisión en
 `docs/decisiones/0011-precision-temporal.md`.
 
-Siguiente: T10 (`test/accesibilidad`). Ver `docs/backlog-fase-i.md`.
+Accesibilidad y rendimiento (T10, RA-01 a RA-11): `npm run accesibilidad -w web` (sobre
+`npm run build:web`; no corre en el CI normal). `web/evaluacion/accesibilidad/servidor.js`
+levanta MongoDB en memoria, corre `prepararArranque()` (`api/src/index.js`, la misma
+preparación del arranque real, con dos cuentas de prueba) y sirve el build comprimido con
+brotli o gzip y la API en el mismo origen. `accesibilidad.spec.js` (Playwright con
+`@axe-core/playwright` 4.13.0, etiquetas WCAG 2.0/2.1 A y AA y `best-practice`) recorre en
+tres proyectos (normal, alto contraste por sessionStorage y 320 px) las páginas públicas, el
+panel, la zona del profesional y la aplicación de M-09 completa (presiona F en cada ensayo,
+sin tocar la medición), y comprueba también el desplazamiento horizontal.
+`lighthouse.js` mide en perfil móvil, con `npx lighthouse@12.8.2 --port` hacia el
+Chromium de Playwright (sin dependencia en `package.json`), 3 corridas por página;
+`resumir.js` arma las tablas con medianas y termina con código 1 si no se cumplen las metas.
+Correcciones: las páginas con contenido de la API muestran todo de una vez, con
+`useMarkdownListo()` (`componentes/Markdown.jsx`, sin `React.lazy`), y mientras cargan
+`EstadoDatos` con `reservarAlto` ocupa el alto de la ventana (CLS). Aviso de vencimiento
+(criterio 2.2.1): `admin/AvisoVencimiento.jsx`, con la lógica en `admin/vencimiento.js`;
+`clienteAdmin.js` anota como actividad cada respuesta de `/api/admin` atendida con sesión
+(`cuentaComoActividad`); 2 minutos antes de los 30 sin actividad aparece una franja sticky
+en `role="status"`, sin mover el foco, con la hora de cierre y «Seguir conectado»
+(`GET /api/admin/sesion`); si ya venció, el 401 lleva a `SesionVencida`. Lo usan el panel y la
+zona del profesional. Método, resultados y revisión manual en
+`docs/evaluacion/accesibilidad.md`; decisión en `docs/decisiones/0012-accesibilidad-rendimiento.md`.
+
+Siguiente: T11 (`docs/casos-aceptacion`). Ver `docs/backlog-fase-i.md`.

@@ -8,7 +8,11 @@
     "preview": "vite preview",
     "test": "node --test \"src/**/*.test.js\" \"evaluacion/**/*.test.js\"",
     "precision": "playwright test -c evaluacion/precision/playwright.config.js",
-    "precision:resumen": "node evaluacion/precision/resumir.js evaluacion/precision/resultados"
+    "precision:resumen": "node evaluacion/precision/resumir.js evaluacion/precision/resultados",
+    "accesibilidad": "npm run accesibilidad:axe && npm run accesibilidad:lighthouse && npm run accesibilidad:resumen",
+    "accesibilidad:axe": "playwright test -c evaluacion/accesibilidad/playwright.config.js",
+    "accesibilidad:lighthouse": "node evaluacion/accesibilidad/lighthouse.js",
+    "accesibilidad:resumen": "node evaluacion/accesibilidad/resumir.js"
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible": "^5.3.0",
@@ -20,6 +24,7 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.64.1",
     "@vitejs/plugin-react": "^4.3.1",
     "vite": "^5.4.0"

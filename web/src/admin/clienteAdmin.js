@@ -10,8 +10,13 @@
  *   503, 504 o falla de red); un envío repetido podría guardar dos veces.
  * - Los errores traen el mensaje del servidor y, al guardar, un mensaje por
  *   campo (`campos`), que el editor muestra junto a cada uno.
+ * - Cada respuesta que el servidor atendió con la sesión vigente se anota
+ *   como actividad, con la hora en que salió la petición
+ *   (cuentaComoActividad en vencimiento.js): con ella, AvisoVencimiento.jsx
+ *   avisa antes del cierre por inactividad (RA-10, criterio 2.2.1 de WCAG).
  */
 import { ErrorApi, esReintentable } from '../api/cliente.js';
+import { cuentaComoActividad } from './vencimiento.js';
 
 export class ErrorAdmin extends ErrorApi {
   constructor(estado, cuerpo) {
@@ -23,11 +28,32 @@ export class ErrorAdmin extends ErrorApi {
 }
 
 const oyentesSesionPerdida = new Set();
+const oyentesActividad = new Set();
+let ultimaActividad = null;
 
 /** @returns función para dejar de escuchar */
 export function alPerderSesion(oyente) {
   oyentesSesionPerdida.add(oyente);
   return () => oyentesSesionPerdida.delete(oyente);
+}
+
+/** Hora (Date.now()) de la última petición que contó como actividad, o null. */
+export const ultimaActividadRegistrada = () => ultimaActividad;
+
+/**
+ * @param {(momento: number) => void} oyente recibe la hora de la última actividad
+ * @returns función para dejar de escuchar
+ */
+export function alRegistrarActividad(oyente) {
+  oyentesActividad.add(oyente);
+  return () => oyentesActividad.delete(oyente);
+}
+
+function anotarActividad(ruta, metodo, estado, enviada) {
+  if (!cuentaComoActividad(ruta, metodo, estado)) return;
+  // Dos peticiones pueden responder en desorden: vale la que salió más tarde.
+  ultimaActividad = Math.max(ultimaActividad ?? 0, enviada);
+  oyentesActividad.forEach((oyente) => oyente(ultimaActividad));
 }
 
 async function pedir(ruta, { metodo = 'GET', datos, signal } = {}) {
@@ -36,7 +62,9 @@ async function pedir(ruta, { metodo = 'GET', datos, signal } = {}) {
     opciones.headers['Content-Type'] = 'application/json';
     opciones.body = JSON.stringify(datos);
   }
+  const enviada = Date.now();
   const respuesta = await fetch(ruta, opciones);
+  anotarActividad(ruta, metodo, respuesta.status, enviada);
   if (respuesta.status === 204) return null;
   const cuerpo = await respuesta.json().catch(() => null);
   if (!respuesta.ok) {
@@ -69,7 +97,9 @@ export async function pedirAdmin(ruta, opciones = {}) {
  * @returns {Promise<Blob>}
  */
 export async function descargarAdmin(ruta) {
+  const enviada = Date.now();
   const respuesta = await fetch(ruta, { credentials: 'same-origin', headers: { Accept: 'text/csv' } });
+  anotarActividad(ruta, 'GET', respuesta.status, enviada);
   if (!respuesta.ok) {
     const cuerpo = await respuesta.json().catch(() => null);
     if (respuesta.status === 401) oyentesSesionPerdida.forEach((oyente) => oyente());

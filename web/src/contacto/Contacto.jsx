@@ -50,6 +50,7 @@ export default function Contacto({ seccion }) {
           estado={estado === ESTADOS.NO_ENCONTRADO ? ESTADOS.ERROR : estado}
           reintentar={reintentar}
           queCarga="el formulario de contacto"
+          reservarAlto
         />
       )}
     </div>

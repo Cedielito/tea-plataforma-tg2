@@ -196,7 +196,7 @@ export default function NuevaSesion() {
           </form>
         </>
       )}
-      <p className="registro-profesional__volver">
+      <p className="volver">
         <Link to="/registro">{NUEVA.volver}</Link>
       </p>
     </div>

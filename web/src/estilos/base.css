@@ -61,6 +61,9 @@ button, input, select { font: inherit; color: inherit; }
   border: 0;
 }
 
+/* Enlace suelto (no dentro de una frase): objetivo táctil de 44 px (RA-05) */
+.enlace-suelto { display: inline-flex; align-items: center; min-height: var(--objetivo-tactil); }
+
 /* Botones */
 .boton {
   display: inline-flex;

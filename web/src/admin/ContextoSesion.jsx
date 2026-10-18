@@ -8,8 +8,10 @@
  * - activa: se muestran las páginas del panel.
  * - vencida: una acción recibió 401 (30 minutos sin actividad u 8 horas en
  *   total). La página sigue montada, con lo que se haya escrito, y muestra el
- *   formulario para volver a entrar (SesionVencida.jsx). Sin temporizadores ni
- *   ventanas emergentes (RA-10): se nota al hacer la siguiente acción.
+ *   formulario para volver a entrar (SesionVencida.jsx). Sin ventanas
+ *   emergentes (RA-10): se nota al hacer la siguiente acción. Antes, dos
+ *   minutos antes del cierre por inactividad, AvisoVencimiento.jsx ofrece
+ *   seguir conectado (criterio 2.2.1 de WCAG).
  * - error: no se pudo comprobar la sesión (servidor caído o sin red).
  *
  * `generacion` aumenta en cada inicio de sesión: las páginas la usan para

@@ -14,12 +14,16 @@
  * El h1 se muestra desde el primer momento con el nombre de la sección y
  * cambia al título del contenido cuando llega: es el mismo elemento, así que
  * el foco que el Layout pone en él al navegar no se pierde.
+ *
+ * El contenido aparece de una vez, cuando llegan los datos y react-markdown
+ * (useMarkdownListo); mientras tanto, el aviso de carga reserva el alto de la
+ * ventana. Así nada salta al llegar (CLS, T10).
  */
 import { useEffect, useId } from 'react';
 import AvisoNoDiagnostico from '../componentes/AvisoNoDiagnostico.jsx';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import FuentesRevision from '../componentes/FuentesRevision.jsx';
-import Markdown, { precargarMarkdown } from '../componentes/Markdown.jsx';
+import Markdown, { precargarMarkdown, useMarkdownListo } from '../componentes/Markdown.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
@@ -30,7 +34,8 @@ export default function PaginaContenido({ seccion, complemento = null, tituloCue
   useTituloPagina(titulo);
   useEffect(precargarMarkdown, []);
   const { estado, datos: contenido, reintentar } = useDatos(api ?? `/api/contenidos/${slug}`);
-  const listo = estado === ESTADOS.LISTO;
+  const markdownListo = useMarkdownListo();
+  const listo = estado === ESTADOS.LISTO && markdownListo;
 
   return (
     <div className="contenedor pagina">
@@ -52,7 +57,7 @@ export default function PaginaContenido({ seccion, complemento = null, tituloCue
           <FuentesRevision grupos={[contenido]} />
         </>
       ) : (
-        <EstadoDatos estado={estado} reintentar={reintentar} />
+        <EstadoDatos estado={estado === ESTADOS.LISTO ? ESTADOS.CARGANDO : estado} reintentar={reintentar} reservarAlto />
       )}
     </div>
   );

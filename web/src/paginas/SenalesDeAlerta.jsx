@@ -20,7 +20,7 @@ import { ArrowRight, Route } from 'lucide-react';
 import AvisoNoDiagnostico from '../componentes/AvisoNoDiagnostico.jsx';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
 import FuentesRevision from '../componentes/FuentesRevision.jsx';
-import Markdown, { precargarMarkdown } from '../componentes/Markdown.jsx';
+import Markdown, { precargarMarkdown, useMarkdownListo } from '../componentes/Markdown.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';
 import Pestanas from '../componentes/Pestanas.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
@@ -47,7 +47,9 @@ export default function SenalesDeAlerta({ seccion }) {
   useEffect(() => setEdad(edadDeLaDireccion), [edadDeLaDireccion]);
 
   const { estado, datos, reintentar } = useDatos(`/api/contenidos?seccion=${seccion.seccion}`);
-  const contenidos = estado === ESTADOS.LISTO ? datos : [];
+  // El contenido aparece de una vez, con react-markdown ya descargado (CLS, T10).
+  const markdownListo = useMarkdownListo();
+  const contenidos = estado === ESTADOS.LISTO && markdownListo ? datos : [];
   const introduccion = contenidos.find((c) => !c.tramoEdad);
   const tramo = contenidos.find((c) => c.tramoEdad === edad);
   const hayContenido = contenidos.length > 0;
@@ -65,9 +67,10 @@ export default function SenalesDeAlerta({ seccion }) {
 
       {!hayContenido ? (
         <EstadoDatos
-          estado={estado === ESTADOS.LISTO ? ESTADOS.NO_ENCONTRADO : estado}
+          estado={estado === ESTADOS.LISTO ? (markdownListo ? ESTADOS.NO_ENCONTRADO : ESTADOS.CARGANDO) : estado}
           reintentar={reintentar}
           queCarga="las señales de alerta"
+          reservarAlto
         />
       ) : (
         <>
