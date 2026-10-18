@@ -41,6 +41,7 @@ export default function Recursos({ seccion }) {
           reintentar={reintentar}
           queCarga="los recursos"
           sinContenido="Todavía no hay recursos publicados."
+          reservarAlto
         />
       )}
     </div>

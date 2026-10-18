@@ -166,6 +166,7 @@ export default function Directorio({ seccion }) {
           reintentar={reintentar}
           queCarga="el directorio"
           sinContenido="El directorio todavía no tiene entidades publicadas."
+          reservarAlto
         />
       )}
     </div>

@@ -154,6 +154,7 @@ export default function PasosParaTuCaso({
           estado={directorio.estado}
           reintentar={directorio.reintentar}
           queCarga="las entidades del directorio"
+          focoAlRetirarse={titulo}
         />
       )}
 
@@ -165,6 +166,7 @@ export default function PasosParaTuCaso({
           reintentar={pasos.reintentar}
           queCarga="los pasos de la ruta"
           sinContenido="La guía todavía no tiene pasos publicados. Más abajo puedes leer la ruta completa."
+          focoAlRetirarse={titulo}
         />
       )}
 

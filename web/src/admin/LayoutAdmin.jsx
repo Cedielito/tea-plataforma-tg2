@@ -8,7 +8,9 @@
  * - noindex: mientras se está en /admin, la página pide a los buscadores que
  *   no la indexen (además del encabezado X-Robots-Tag de web/vercel.json).
  * - Sin sesión muestra el inicio de sesión; con la sesión vencida deja la
- *   página montada para no perder lo escrito (SesionVencida.jsx).
+ *   página montada para no perder lo escrito (SesionVencida.jsx). Dos minutos
+ *   antes del cierre por inactividad, un aviso arriba del contenido ofrece
+ *   «Seguir conectado» (AvisoVencimiento.jsx, criterio 2.2.1 de WCAG).
  * - Una cuenta de profesional (registro conductual, M-09) no ve el panel: un
  *   aviso la lleva a /registro (la API le responde 403 en el panel).
  */
@@ -21,7 +23,9 @@ import useFocoAlNavegar from '../componentes/useFocoAlNavegar.js';
 import useNoIndexar from '../componentes/useNoIndexar.js';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import { ESTADOS } from '../api/useDatos.js';
+import AvisoVencimiento from './AvisoVencimiento.jsx';
 import InicioSesion from './InicioSesion.jsx';
+import SesionVencida from './SesionVencida.jsx';
 import { ROLES, SESION, useSesion } from './ContextoSesion.jsx';
 
 function CuentaDeRegistro() {
@@ -29,6 +33,7 @@ function CuentaDeRegistro() {
   return (
     <div className="contenedor pagina pagina-admin">
       <h1>Esta cuenta es del registro conductual</h1>
+      <SesionVencida />
       <p className="pagina__descripcion">
         Con esta cuenta se crean y se revisan las sesiones del registro conductual. El panel de contenidos es
         solo para las cuentas de administración.
@@ -123,6 +128,7 @@ export default function LayoutAdmin() {
         </div>
       </header>
       <main id="contenido" ref={principal} tabIndex={-1}>
+        <AvisoVencimiento />
         {pagina}
       </main>
     </>

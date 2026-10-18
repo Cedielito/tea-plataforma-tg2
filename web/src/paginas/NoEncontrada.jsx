@@ -11,7 +11,7 @@ export default function NoEncontrada() {
     <div className="contenedor pagina">
       <h1>Página no encontrada</h1>
       <p className="pagina__descripcion">La dirección que escribiste no existe en este sitio.</p>
-      <p><Link to="/">Volver al inicio</Link></p>
+      <p><Link to="/" className="enlace-suelto">Volver al inicio</Link></p>
     </div>
   );
 }

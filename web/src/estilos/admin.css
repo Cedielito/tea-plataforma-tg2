@@ -137,6 +137,31 @@
 }
 .sesion-vencida h2 { font-size: var(--tipo-h3); }
 
+/* Aviso antes del cierre por inactividad (AvisoVencimiento.jsx, criterio 2.2.1): franja fija
+   arriba de la ventana mientras se desplaza la página, sin ventana emergente. La región
+   (role="status") es la que se pega arriba: su padre ocupa toda la página. Mientras se ve,
+   el desplazamiento hasta el foco deja libre su alto (--alto-aviso-vencimiento). */
+html { scroll-padding-top: var(--alto-aviso-vencimiento, 0); }
+.aviso-vencimiento__region {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.aviso-vencimiento {
+  padding-block: var(--espacio-2);
+  background: var(--color-aviso-fondo);
+  border-bottom: var(--borde-medio) solid var(--color-aviso-borde);
+}
+.aviso-vencimiento__contenido {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-1) var(--espacio-2);
+}
+.aviso-vencimiento__icono { width: var(--icono); height: var(--icono); flex: none; }
+.aviso-vencimiento__texto { flex: 1 1 18rem; margin: 0; }
+.aviso-vencimiento__mensaje { flex-basis: 100%; margin: 0; }
+
 /* ---------- Lista de contenidos ---------- */
 .grupo-seccion { max-width: var(--ancho-formulario); margin-top: var(--espacio-4); }
 .tarjetas-admin {

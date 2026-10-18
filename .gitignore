@@ -10,6 +10,9 @@ playwright-report/
 # resultados del experimento de precisión temporal (T16): van como artefacto del flujo
 web/evaluacion/precision/resultados/
 
+# resultados de la auditoría de accesibilidad (T10): se resumen en docs/evaluacion/accesibilidad.md
+web/evaluacion/accesibilidad/resultados/
+
 # secretos: NUNCA se suben
 .env
 .env.*

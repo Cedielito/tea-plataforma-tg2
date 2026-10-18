@@ -108,4 +108,10 @@ textarea.campo__control { resize: vertical; }
 .resumen-errores__titulo svg { width: var(--icono); height: var(--icono); }
 .resumen-errores__lista { margin: 0; padding-left: var(--espacio-3); }
 .resumen-errores__lista li { margin-bottom: var(--espacio-1); }
-.resumen-errores__lista a { font-weight: var(--peso-negrita); color: var(--color-texto); }
+.resumen-errores__lista a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--objetivo-tactil); /* RA-05 (T10) */
+  font-weight: var(--peso-negrita);
+  color: var(--color-texto);
+}

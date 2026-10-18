@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 import EstadoDatos from '../componentes/EstadoDatos.jsx';
-import { precargarMarkdown } from '../componentes/Markdown.jsx';
+import { precargarMarkdown, useMarkdownListo } from '../componentes/Markdown.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
 import useDatos, { ESTADOS } from '../api/useDatos.js';
@@ -37,7 +37,9 @@ export default function PreguntasFrecuentes({ seccion }) {
   const elementos = useRef(new Map());
 
   const { estado, datos, reintentar } = useDatos(RUTA_PREGUNTAS);
-  const listo = estado === ESTADOS.LISTO && datos.length > 0;
+  // Con react-markdown ya descargado, la pregunta que abre el ancla muestra su respuesta de una vez (CLS, T10).
+  const markdownListo = useMarkdownListo();
+  const listo = estado === ESTADOS.LISTO && markdownListo && datos.length > 0;
   const preguntas = listo ? datos : [];
 
   // El ancla abre su pregunta cuando llegan los datos o cuando cambia la dirección.
@@ -83,10 +85,11 @@ export default function PreguntasFrecuentes({ seccion }) {
         </ul>
       ) : (
         <EstadoDatos
-          estado={estado === ESTADOS.LISTO ? ESTADOS.NO_ENCONTRADO : estado}
+          estado={estado === ESTADOS.LISTO ? (markdownListo ? ESTADOS.NO_ENCONTRADO : ESTADOS.CARGANDO) : estado}
           reintentar={reintentar}
           queCarga="las preguntas frecuentes"
           sinContenido="Todavía no hay preguntas frecuentes publicadas."
+          reservarAlto
         />
       )}
 

@@ -15,7 +15,7 @@ import { useEffect, useId, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { RefreshCw } from 'lucide-react';
 import Buscador from '../componentes/Buscador.jsx';
-import Markdown, { precargarMarkdown } from '../componentes/Markdown.jsx';
+import Markdown, { precargarMarkdown, useMarkdownListo } from '../componentes/Markdown.jsx';
 import MigasDePan from '../componentes/MigasDePan.jsx';
 import { TEXTO_ESPERA } from '../componentes/EstadoDatos.jsx';
 import useTituloPagina from '../componentes/useTituloPagina.js';
@@ -55,14 +55,32 @@ export default function Busqueda() {
   const aviso = validar(consulta);
 
   const { estado, datos, reintentar } = useDatos(aviso ? null : `/api/buscar?q=${encodeURIComponent(consulta)}`);
-  const resultados = estado === ESTADOS.LISTO ? datos : { contenidos: [], preguntas: [] };
+  // Los resultados aparecen de una vez, con react-markdown ya descargado (CLS, T10).
+  const markdownListo = useMarkdownListo();
+  const listo = estado === ESTADOS.LISTO && markdownListo;
+  const resultados = listo ? datos : { contenidos: [], preguntas: [] };
+
+  // Al buscar otra vez estando aquí, la caja que tenía el foco se reemplaza (key) o queda
+  // oculta (el menú del encabezado se cierra en pantallas angostas): el foco pasa al resumen,
+  // que anuncia los resultados (RA-03). Al llegar desde otra página, el foco va al h1 (Layout).
+  const consultaAnterior = useRef(consulta);
+  useEffect(() => {
+    if (consultaAnterior.current === consulta) return;
+    consultaAnterior.current = consulta;
+    const activo = document.activeElement;
+    const perdido =
+      !activo || activo === document.body || (typeof activo.checkVisibility === 'function' && !activo.checkVisibility());
+    if (perdido) regionResumen.current?.focus();
+  }, [consulta]);
 
   let resumen = aviso;
-  if (estado === ESTADOS.CARGANDO) resumen = `Buscando «${consulta}». ${TEXTO_ESPERA}`;
+  if (estado === ESTADOS.CARGANDO || (estado === ESTADOS.LISTO && !markdownListo)) {
+    resumen = `Buscando «${consulta}». ${TEXTO_ESPERA}`;
+  }
   if (estado === ESTADOS.ERROR) {
     resumen = 'No pudimos hacer la búsqueda. El servidor puede estar despertando. Intenta de nuevo en unos segundos.';
   }
-  if (estado === ESTADOS.LISTO) resumen = resumir(consulta, resultados);
+  if (listo) resumen = resumir(consulta, resultados);
 
   return (
     <div className="contenedor pagina">
@@ -71,7 +89,7 @@ export default function Busqueda() {
 
       <Buscador
         key={consulta}
-        nombre="Buscar en esta página"
+        nombre="Nueva búsqueda en el sitio"
         etiqueta="¿Qué quieres buscar?"
         etiquetaVisible
         valorInicial={consulta}
@@ -127,7 +145,7 @@ export default function Busqueda() {
             ))}
           </ul>
           <p>
-            <Link to={RUTA_PREGUNTAS_WEB}>Ver todas las preguntas frecuentes</Link>
+            <Link to={RUTA_PREGUNTAS_WEB} className="enlace-suelto">Ver todas las preguntas frecuentes</Link>
           </p>
         </section>
       )}

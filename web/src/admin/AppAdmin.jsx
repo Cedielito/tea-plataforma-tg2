@@ -23,12 +23,14 @@ import EditorPregunta from './EditorPregunta.jsx';
 import ListaRecursos from './ListaRecursos.jsx';
 import EditorRecurso from './EditorRecurso.jsx';
 import BandejaMensajes from './BandejaMensajes.jsx';
+import SesionVencida from './SesionVencida.jsx';
 
 function NoEncontradaAdmin() {
   useTituloPagina('Página no encontrada · Panel');
   return (
     <div className="contenedor pagina pagina-admin">
       <h1>Página no encontrada</h1>
+      <SesionVencida />
       <p className="pagina__descripcion">Esta dirección no existe en el panel.</p>
       <p><Link to="/admin">Ir a la lista de contenidos</Link></p>
     </div>

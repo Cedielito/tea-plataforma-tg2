@@ -142,7 +142,8 @@ export default function BandejaMensajes() {
   const { estado: estadoSesion } = useSesion();
   const { estado, datos, reintentar } = useDatosAdmin(RUTA_API_MENSAJES);
   const [eliminados, setEliminados] = useState(() => new Set());
-  const [aviso, setAviso] = useState('');
+  // `numero` cambia en cada aviso: el texto se vuelve a escribir y se anuncia aunque se repita (4.1.3).
+  const [aviso, setAviso] = useState({ texto: '', numero: 0 });
   const [enfocar, setEnfocar] = useState(null);
   const titulos = useRef(new Map());
   const listo = estado === ESTADOS.LISTO;
@@ -163,7 +164,7 @@ export default function BandejaMensajes() {
     const indice = mensajes.findIndex((m) => m._id === id);
     const siguiente = mensajes[indice + 1] ?? mensajes[indice - 1] ?? null;
     setEliminados((anteriores) => new Set(anteriores).add(id));
-    setAviso(texto);
+    setAviso((anterior) => ({ texto, numero: anterior.numero + 1 }));
     setEnfocar(siguiente ? siguiente._id : 'titulo');
   }
 
@@ -180,7 +181,9 @@ export default function BandejaMensajes() {
         <Info aria-hidden="true" />
         <p>{NOTA_DATOS_SENSIBLES}</p>
       </div>
-      <p role="status" className="bandeja__aviso">{aviso}</p>
+      <p role="status" className="bandeja__aviso">
+        <span key={aviso.numero}>{aviso.texto}</span>
+      </p>
 
       {listo && <p className="secundario">{contar(mensajes.length, 'mensaje', 'mensajes')} en la bandeja.</p>}
       {listo && mensajes.length > 0 && (

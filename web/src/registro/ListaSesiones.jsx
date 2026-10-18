@@ -47,7 +47,7 @@ function TablaSesiones({ sesiones }) {
                 <td>{etiquetaEstado(sesion.estado)}</td>
                 <td>{sesion.susRespondido ? LISTA.susRespondido : LISTA.susPendiente}</td>
                 <td>
-                  <Link to={rutaSesionWeb(sesion.seudonimo)}>
+                  <Link to={rutaSesionWeb(sesion.seudonimo)} className="enlace-suelto">
                     {LISTA.ver}
                     <span className="solo-lector"> {sesion.seudonimo}</span>
                   </Link>
