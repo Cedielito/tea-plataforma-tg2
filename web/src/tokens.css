@@ -94,6 +94,15 @@
   --figura-caja: 4.5rem;              /* figura de cada caja */
   --alto-caja: 9rem;                  /* botón de cada caja: muy por encima de 44 px */
   --ancho-tarea: 44rem;
+  /* Cartel de la tarea de Navon (T14): en px A PROPÓSITO, no en rem. El tamaño de la
+     letra grande frente a las pequeñas es parte del estímulo y no cambia con el
+     tamaño de letra de la barra de accesibilidad (registro/figuraNavon.test.js).
+     200 px de ancho caben en 320 px con los márgenes de la tarea. */
+  --figura-navon-ancho: 200px;
+  --figura-navon-alto: 280px;
+  --figura-navon-ejemplo-ancho: 100px; /* ejemplo de las instrucciones */
+  --figura-navon-ejemplo-alto: 140px;
+  --alto-boton-letra: 6rem;           /* botones H y J: muy por encima de 44 px */
 }
 
 @media (min-width: 40em) {

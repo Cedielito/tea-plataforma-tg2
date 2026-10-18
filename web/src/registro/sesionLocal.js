@@ -8,21 +8,23 @@
  * fase, regla, condicion, practica, estadoItem, acierto, claseError,
  * tiempoReaccionMs, pausasDuranteItemMs, rectificaciones) y además número,
  * estímulo, respuesta, aparición, momento de la respuesta, semilla y tipo de
- * entrada. Sin seudónimo ni ningún dato de la persona (CT-11).
+ * entrada. Los de Navon (T14) llevan también `congruencia`, después de
+ * `condicion`. Sin seudónimo ni ningún dato de la persona (CT-11).
+ *
+ * Una sesión con las dos tareas une las sesiones de cada una (unirSesiones).
  */
 import { evaluarRespuesta, reglaAnterior } from './clasificacion.js';
+import { evaluarRespuestaNavon } from './clasificacionNavon.js';
 
-/** Ensayo completo: lo planeado, lo medido (motorEnsayo.js) y su evaluación. */
-export function registrarEnsayo(planificados, indice, medicion, secuencia) {
-  const ensayo = planificados[indice];
-  const anterior = reglaAnterior(ensayo, planificados[indice - 1], secuencia);
-  const { acierto, claseError } = evaluarRespuesta(ensayo, medicion.respuesta, anterior);
+/** Lo planeado, lo medido (motorEnsayo.js) y su evaluación, en el orden de los campos. */
+function armarRegistro(ensayo, medicion, { acierto, claseError }) {
   return {
     tarea: ensayo.tarea,
     bloque: ensayo.bloque,
     fase: ensayo.fase,
     regla: ensayo.regla,
     condicion: ensayo.condicion,
+    ...('congruencia' in ensayo ? { congruencia: ensayo.congruencia } : {}),
     practica: ensayo.practica,
     estadoItem: medicion.estadoItem,
     acierto,
@@ -38,6 +40,19 @@ export function registrarEnsayo(planificados, indice, medicion, secuencia) {
     semilla: ensayo.semilla,
     tipoEntrada: medicion.tipoEntrada
   };
+}
+
+/** Ensayo completo de la tarea de cambio de regla. */
+export function registrarEnsayo(planificados, indice, medicion, secuencia) {
+  const ensayo = planificados[indice];
+  const anterior = reglaAnterior(ensayo, planificados[indice - 1], secuencia);
+  return armarRegistro(ensayo, medicion, evaluarRespuesta(ensayo, medicion.respuesta, anterior));
+}
+
+/** Ensayo completo de la tarea de Navon: la respuesta es la letra elegida. */
+export function registrarEnsayoNavon(planificados, indice, medicion) {
+  const ensayo = planificados[indice];
+  return armarRegistro(ensayo, medicion, evaluarRespuestaNavon(ensayo, medicion.respuesta));
 }
 
 /** El tipo de entrada más usado fuera de la práctica (el primero que aparece, si empatan). */
@@ -67,4 +82,37 @@ export function armarSesion({ ensayos, semilla, reloj, versionCatalogo, pausas =
   };
 }
 
-export const nombreArchivo = (sesion) => `registro-prueba-cambio-regla-${sesion.semilla}.json`;
+/**
+ * Sesión de varias tareas seguidas, con la misma semilla y el mismo reloj:
+ * los ensayos de todas, en orden, y el contexto de toda la sesión.
+ */
+export function unirSesiones(sesiones) {
+  const [primera] = sesiones;
+  const sumar = (clave) => sesiones.reduce((s, x) => s + (x.contexto[clave] || 0), 0);
+  return armarSesion({
+    ensayos: sesiones.flatMap((s) => s.ensayos),
+    semilla: primera.semilla,
+    reloj: primera.reloj,
+    versionCatalogo: primera.versionCatalogo,
+    pausas: sumar('pausas'),
+    repeticionesInstruccion: sumar('repeticionesInstruccion')
+  });
+}
+
+/**
+ * Las secuencias del plan que se aplican en la página de prueba: solo la de
+ * ?tarea= si existe en el plan, o todas, en el orden del plan (cambio de
+ * regla y después Navon). `disponibles`: las tareas que tienen pantalla.
+ */
+export function elegirSecuencias(plan, tarea, disponibles) {
+  const conPantalla = plan.secuencias.filter((s) => disponibles.includes(s.tarea));
+  const sola = conPantalla.filter((s) => s.tarea === tarea);
+  return sola.length ? sola : conPantalla;
+}
+
+/** Con una sola tarea, su nombre va en el archivo; con las dos, solo la semilla. */
+export function nombreArchivo(sesion) {
+  const tareas = [...new Set((sesion.ensayos || []).map((e) => e.tarea))];
+  const tarea = tareas.length === 1 ? `${tareas[0]}-` : '';
+  return `registro-prueba-${tarea}${sesion.semilla}.json`;
+}

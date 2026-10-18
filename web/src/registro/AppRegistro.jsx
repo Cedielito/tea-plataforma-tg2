@@ -1,6 +1,6 @@
 /**
  * Registro conductual estructurado (M-09): rutas bajo /registro, con su
- * layout y sus estilos. Por ahora solo /registro/prueba (T13); el flujo del
+ * layout y sus estilos. Por ahora solo /registro/prueba (T13 y T14); el flujo del
  * profesional llega con T15. Se descarga aparte (React.lazy en rutas.jsx), no
  * tiene enlaces desde la zona pública y no se indexa.
  *
