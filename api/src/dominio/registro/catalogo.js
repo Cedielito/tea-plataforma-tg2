@@ -16,6 +16,12 @@
  * - 7 ensayos por bloque.
  * - `trMinimoMs`: un tiempo de reaccion neto menor es una anticipacion y no
  *   entra al calculo (RF-14).
+ * - `limiteRespuestaMs`: sin respuesta en ese tiempo neto, el ensayo queda
+ *   omitido (T13). `intervaloEntreEnsayosMs`: pantalla con la cruz de fijacion
+ *   antes de cada ensayo, sin nada visible que cuente el tiempo (CT-03).
+ * - `cambios`: en cada bloque mixto, despues del primer ensayo van `cambios`
+ *   ensayos con la regla distinta de la del anterior; el resto repite la regla.
+ *   El motor de ensayos de la web los ordena con una semilla (T13).
  * - `segundosPorEnsayo` y `minutosInstrucciones` son estimaciones para
  *   comprobar CT-08; T16 mide la duracion real.
  *
@@ -38,6 +44,8 @@ const REGLAS = Object.freeze({ COLOR: 'color', FORMA: 'forma' });
 const CONDICIONES = Object.freeze({ GLOBAL: 'global', LOCAL: 'local' });
 
 const TR_MINIMO_MS = 200;
+const LIMITE_RESPUESTA_MS = 5000;
+const INTERVALO_ENTRE_ENSAYOS_MS = 500;
 
 function congelar(objeto) {
   for (const valor of Object.values(objeto)) {
@@ -54,13 +62,15 @@ const CATALOGO = congelar({
     ensayosPorBloque: 7,
     bloquesMixtos: 4,
     trMinimoMs: TR_MINIMO_MS,
+    limiteRespuestaMs: LIMITE_RESPUESTA_MS,
+    intervaloEntreEnsayosMs: INTERVALO_ENTRE_ENSAYOS_MS,
     segundosPorEnsayo: 4,
     minutosInstrucciones: 1,
     bloques: [
       { id: 'CR-COLOR', fase: FASES.PRE_CAMBIO, regla: REGLAS.COLOR, senal: 'por-bloque' },
       { id: 'CR-FORMA', fase: FASES.POST_CAMBIO, regla: REGLAS.FORMA, senal: 'por-bloque' },
       // Se repite `bloquesMixtos` veces (secuenciador.js)
-      { id: 'CR-MIXTO', fase: FASES.MIXTO, regla: null, senal: 'por-ensayo', repetir: 'bloquesMixtos' }
+      { id: 'CR-MIXTO', fase: FASES.MIXTO, regla: null, senal: 'por-ensayo', cambios: 3, repetir: 'bloquesMixtos' }
     ]
   },
   [TAREAS.NAVON]: {
@@ -69,6 +79,8 @@ const CATALOGO = congelar({
     ensayosPractica: 2,
     ensayosPorBloque: 7,
     trMinimoMs: TR_MINIMO_MS,
+    limiteRespuestaMs: LIMITE_RESPUESTA_MS,
+    intervaloEntreEnsayosMs: INTERVALO_ENTRE_ENSAYOS_MS,
     segundosPorEnsayo: 4,
     minutosInstrucciones: 1,
     bloques: [
@@ -80,4 +92,14 @@ const CATALOGO = congelar({
   }
 });
 
-module.exports = { TAREAS, ORDEN_TAREAS, FASES, REGLAS, CONDICIONES, TR_MINIMO_MS, CATALOGO };
+module.exports = {
+  TAREAS,
+  ORDEN_TAREAS,
+  FASES,
+  REGLAS,
+  CONDICIONES,
+  TR_MINIMO_MS,
+  LIMITE_RESPUESTA_MS,
+  INTERVALO_ENTRE_ENSAYOS_MS,
+  CATALOGO
+};

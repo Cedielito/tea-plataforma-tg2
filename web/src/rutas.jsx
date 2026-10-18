@@ -8,7 +8,8 @@
  * de» usan la plantilla de contenido con los textos de api/contenidos/paginas.
  *
  * El panel (/admin) va fuera del layout público y se descarga aparte, solo al
- * entrar a esa dirección.
+ * entrar a esa dirección. Lo mismo el registro conductual (/registro, M-09),
+ * que no se enlaza desde la zona pública.
  */
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
@@ -33,13 +34,14 @@ import {
 } from './secciones.js';
 
 const AppAdmin = lazy(() => import('./admin/AppAdmin.jsx'));
+const AppRegistro = lazy(() => import('./registro/AppRegistro.jsx'));
 
-/** Mientras se descarga el panel. Sin animación ni temporizadores. */
-function CargandoPanel() {
+/** Mientras se descarga el panel o el registro. Sin animación ni temporizadores. */
+function CargandoAparte({ queCarga }) {
   return (
     <main id="contenido">
       <div className="contenedor pagina">
-        <p role="status">Estamos cargando el panel de administración.</p>
+        <p role="status">Estamos cargando {queCarga}.</p>
       </div>
     </main>
   );
@@ -72,8 +74,16 @@ export const enrutador = createBrowserRouter([
   {
     path: '/admin/*',
     element: (
-      <Suspense fallback={<CargandoPanel />}>
+      <Suspense fallback={<CargandoAparte queCarga="el panel de administración" />}>
         <AppAdmin />
+      </Suspense>
+    )
+  },
+  {
+    path: '/registro/*',
+    element: (
+      <Suspense fallback={<CargandoAparte queCarga="la tarea" />}>
+        <AppRegistro />
       </Suspense>
     )
   }

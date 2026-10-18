@@ -35,7 +35,7 @@ Navegador ──HTTPS──> Vercel (tea-plataforma-tg2.vercel.app)
 | Render | `ADMIN_CLAVE` | Solo para crear el primer administrador; **se borra después** |
 | Render | `SALTOS_PROXY` | No se define: vale 2 (ver «Formulario de contacto»). Solo si la comprobación del límite falla |
 | Render | `PORT` | No se define: Render la asigna |
-| Vercel | — | Ninguna por ahora |
+| Vercel | `VITE_RELOJ_REGISTRO` | No se define: vale `animacion`. `referencia` cambia el reloj del registro conductual (M-09) para el experimento de precisión temporal (T16); en `/registro/prueba` también se puede elegir con `?reloj=` |
 
 Los valores reales **solo** viven en los paneles de Render y Atlas. Nunca en el
 repositorio, en un issue, en un PR ni en un chat.
@@ -66,9 +66,10 @@ Con `NODE_ENV=production`, el `npm install` de Render no instala las dependencia
 desarrollo (Jest, supertest, mongodb-memory-server). La API no las necesita para
 funcionar: verificamos que arranca con `npm ci --omit=dev` seguido de `node src/index.js`.
 
-**Vercel** (*Add New → Project*): Root Directory `web`, preset Vite. Sin variables.
-`web/vercel.json` también envía `X-Robots-Tag: noindex, nofollow` en `/admin`, para
-que los buscadores no indexen el panel.
+**Vercel** (*Add New → Project*): Root Directory `web`, preset Vite. Sin variables
+(`VITE_RELOJ_REGISTRO` es opcional).
+`web/vercel.json` también envía `X-Robots-Tag: noindex, nofollow` en `/admin` y en
+`/registro`, para que los buscadores no indexen el panel ni el registro conductual.
 
 ## Comprobar que todo funciona
 

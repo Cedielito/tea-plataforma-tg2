@@ -6,6 +6,7 @@ const { crearRutasPublicas } = require('./rutas/publicas');
 const { crearRutasSesion } = require('./rutas/sesion');
 const { crearRutasAdmin } = require('./rutas/admin');
 const { crearRutasContacto } = require('./rutas/contacto');
+const { crearRutasRegistro } = require('./rutas/registro');
 const { paginasFijas } = require('../datos/paginasFijas');
 
 /**
@@ -13,7 +14,8 @@ const { paginasFijas } = require('../datos/paginasFijas');
  * contenidos, preguntas frecuentes, recursos y buscador (T2), pasos de la
  * ruta (T5), directorio (T6), inicio de sesion y panel de administracion
  * (T4), con las preguntas frecuentes y los recursos (T7), y el formulario de
- * contacto, las paginas fijas y la bandeja de mensajes (T8).
+ * contacto, las paginas fijas y la bandeja de mensajes (T8), y el plan de la
+ * sesion del registro conductual (T13, M-09).
  *
  * RS-05: todo /api/admin/* pasa primero por exigirSesion, sin excepciones
  * (tambien las rutas que no existen responden 401 sin sesion). El inicio de
@@ -51,6 +53,7 @@ function crearServidor({
   app.use('/api/sesion', crearRutasSesion({ ahora, produccion, registro }));
   app.use('/api/admin', crearExigirSesion({ ahora, produccion }), crearRutasAdmin({ produccion }));
   app.use('/api/contacto', crearRutasContacto({ ahora, paginas }));
+  app.use('/api/registro', crearRutasRegistro());
   app.use('/api', crearRutasPublicas({ paginas }));
 
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Recurso no encontrado' }));

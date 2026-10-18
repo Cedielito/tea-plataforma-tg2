@@ -45,6 +45,34 @@ describe('M-09 catálogo de las dos tareas', () => {
     for (const t of ORDEN_TAREAS) expect(construirSecuencia(t).trMinimoMs).toBe(200);
   });
 
+  test('las dos tareas fijan el limite de respuesta en 5 s y el intervalo entre ensayos en 500 ms', () => {
+    for (const t of ORDEN_TAREAS) {
+      const s = construirSecuencia(t);
+      expect(s.limiteRespuestaMs).toBe(5000);
+      expect(s.intervaloEntreEnsayosMs).toBe(500);
+    }
+  });
+
+  test('cada bloque mixto trae 3 cambios; los bloques de una regla no traen cambios', () => {
+    const { bloques } = construirSecuencia('cambio-regla');
+    expect(bloques.filter((b) => b.fase === 'mixto').map((b) => b.cambios)).toEqual([3, 3, 3, 3]);
+    expect(bloques.filter((b) => b.fase !== 'mixto').every((b) => b.cambios === undefined)).toBe(true);
+    expect(bloques.every((b) => b.repetir === undefined)).toBe(true);
+  });
+
+  test.each([0, 6, 7, 2.5])('rechaza un bloque mixto con %s cambios', (cambios) => {
+    jest.isolateModules(() => {
+      jest.doMock('../src/dominio/registro/catalogo', () => {
+        const real = jest.requireActual('../src/dominio/registro/catalogo');
+        const cfg = real.CATALOGO['cambio-regla'];
+        const bloques = cfg.bloques.map((b) => (b.fase === 'mixto' ? { ...b, cambios } : b));
+        return { ...real, CATALOGO: { ...real.CATALOGO, 'cambio-regla': { ...cfg, bloques } } };
+      });
+      const { construirSecuencia: construir } = require('../src/dominio/registro/secuenciador');
+      expect(() => construir('cambio-regla')).toThrow(/cambios fuera de rango/);
+    });
+  });
+
   test('el catalogo no se puede modificar', () => {
     expect(() => {
       CATALOGO['cambio-regla'].bloquesMixtos = 10;

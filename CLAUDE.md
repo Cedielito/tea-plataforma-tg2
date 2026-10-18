@@ -134,6 +134,9 @@ web/src/directorio/  directorio (M-04): página, tarjetas, filtros y entidades p
 web/src/recursos/    recursos (M-05): página, tarjetas y texto de cada enlace
 web/src/preguntas/   preguntas frecuentes (M-05): acordeón y ancla #slug
 web/src/contacto/    contacto (M-06): formulario, validación y borrador en memoria
+web/src/registro/    registro conductual (M-09): generador con semilla, reloj, motor de
+                     un ensayo, clase de error, vistaDeEnsayo (copia probada), textos,
+                     tarea de cambio de regla y página /registro/prueba
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
@@ -206,7 +209,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T9 y T12 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9, T12 y T13 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -353,4 +356,33 @@ en el catálogo sube su versión y agrega su fila en `registroRestricciones.test
 recursivo. Las pruebas usan la sesión fija `api/test/ayudas/sesionRegistro.js`.
 Decisión en `docs/decisiones/0007-registro-conductual.md`.
 
-Siguiente: T13 (`feat/motor-tareas`). Ver `docs/backlog-fase-i.md`.
+Motor de ensayos y tarea de cambio de regla (T13, M-09): la web no copia el catálogo
+ni el secuenciador: `GET /api/registro/plan` (`api/rutas/registro.js`, solo lectura)
+devuelve `planificarSesion()`. Catálogo 1.1.0: `limiteRespuestaMs: 5000`,
+`intervaloEntreEnsayosMs: 500` y `cambios: 3` por bloque mixto. En `web/src/registro/`:
+`generador.js` arma los ensayos con una semilla (`azar.js`, mulberry32) que va en cada
+ensayo: práctica solo con la regla de color, estímulos 4 y 3 por bloque y, en los
+mixtos, 3 cambios y 3 repeticiones barajados; el tipo de ensayo lo calcula el dominio.
+`estimulos.js`: cajas conejo rojo (F) y barco azul (J), estímulos conejo azul y barco
+rojo, siempre en conflicto. `reloj.js` (CT-07): variante `animacion` (aparición con
+`performance.now()` en el `requestAnimationFrame` y respuesta con `event.timeStamp`) y
+`referencia` (`setTimeout` y `Date.now()`), elegidas con `VITE_RELOJ_REGISTRO` o
+`?reloj=`. `motorEnsayo.js` mide un ensayo sin DOM: primera respuesta, pausas por
+`visibilitychange` en `pausasDuranteItemMs` (no cuentan para el límite) y omisión a
+los 5 s netos. `clasificacion.js`: `claseError` frente a la regla anterior (la de
+color en el bloque de forma; la del ensayo anterior del mismo bloque en los mixtos);
+una omisión no tiene clase de error. `vista.js` es la copia de `vistaDeEnsayo`, con
+una prueba de equivalencia, y `retroalimentacion` (solo en la práctica, CT-03).
+`textos.js` tiene todos los textos (pasan por `buscarVocabularioProhibido`) y los
+principios neuroeducativos de las dinámicas. `/registro/*` se descarga aparte
+(`AppRegistro.jsx`), con layout propio que no nombra la plataforma, noindex y sin
+enlaces desde la zona pública; `/registro/prueba` (`?semilla=` repite los ensayos)
+recorre instrucciones, práctica, una pantalla de instrucciones en cada cambio de
+regla, bloques con barra de progreso y pausas con ánimo, y termina con la tabla de
+ensayos y «Descargar JSON», sin enviar nada. Los colores `--estimulo-*` de
+`tokens.css` no cambian con el alto contraste (prueba). `sesionSimulada.js` produce
+`api/test/ayudas/sesionWebCambioRegla.json`, que `registroSesionWeb.test.js` procesa
+con `procesarSesion` (se regenera con `ACTUALIZAR_SESION_SIMULADA=1 npm test -w web`).
+Decisión en `docs/decisiones/0008-motor-ensayos.md`.
+
+Siguiente: T14 (`feat/tarea-navon`). Ver `docs/backlog-fase-i.md`.
