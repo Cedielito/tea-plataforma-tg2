@@ -4,6 +4,11 @@ node_modules/
 # builds y reportes
 web/dist/
 coverage/
+test-results/
+playwright-report/
+
+# resultados del experimento de precisión temporal (T16): van como artefacto del flujo
+web/evaluacion/precision/resultados/
 
 # secretos: NUNCA se suben
 .env
