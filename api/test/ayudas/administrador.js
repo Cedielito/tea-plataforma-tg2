@@ -1,6 +1,6 @@
 'use strict';
 const administradores = require('../../src/datos/repositorios/administradores');
-const { cifrarClave } = require('../../src/dominio/autenticacion');
+const { ROLES, cifrarClave } = require('../../src/dominio/autenticacion');
 const { crearServidor } = require('../../src/api/servidor');
 
 /**
@@ -18,6 +18,13 @@ const MINUTO = 60 * 1000;
 
 async function crearAdministrador({ usuario = USUARIO, clave = CLAVE } = {}) {
   return administradores.crear({ usuario, claveCifrada: await cifrarClave(clave, 4) });
+}
+
+/** Cuenta con rol profesional (registro conductual, M-09). */
+const USUARIO_PROFESIONAL = 'profesional.registro';
+
+async function crearProfesional({ usuario = USUARIO_PROFESIONAL, clave = CLAVE } = {}) {
+  return administradores.crear({ usuario, claveCifrada: await cifrarClave(clave, 4), rol: ROLES.PROFESIONAL });
 }
 
 /** Registro falso: guarda todo lo que se escribe para revisarlo. */
@@ -49,16 +56,18 @@ function iniciarSesion(agente, { usuario = USUARIO, clave = CLAVE } = {}) {
 }
 
 /** Valor de la cookie de sesion en una respuesta, o null. */
-function cookieDeSesion(respuesta) {
+function cookieDeSesion(respuesta, nombre = 'sesion_admin') {
   const cookies = respuesta.headers['set-cookie'] || [];
-  return cookies.find((cookie) => cookie.startsWith('sesion_admin=')) || null;
+  return cookies.find((cookie) => cookie.startsWith(`${nombre}=`)) || null;
 }
 
 module.exports = {
   USUARIO,
+  USUARIO_PROFESIONAL,
   CLAVE,
   INICIO,
   crearAdministrador,
+  crearProfesional,
   crearRegistro,
   crearAppDePrueba,
   iniciarSesion,

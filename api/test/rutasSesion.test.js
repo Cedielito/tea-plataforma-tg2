@@ -81,7 +81,7 @@ describe('RF-09 inicio de sesion', () => {
   test('con usuario y clave correctos entrega la cookie de sesion', async () => {
     const res = await iniciarSesion(agente);
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ usuario: USUARIO });
+    expect(res.body).toEqual({ usuario: USUARIO, rol: 'administrador' });
     expect(res.headers['cache-control']).toBe('no-store');
 
     const cookie = cookieDeSesion(res);
@@ -94,7 +94,7 @@ describe('RF-09 inicio de sesion', () => {
 
     const sesion = await agente.get('/api/admin/sesion');
     expect(sesion.status).toBe(200);
-    expect(sesion.body).toEqual({ usuario: USUARIO });
+    expect(sesion.body).toEqual({ usuario: USUARIO, rol: 'administrador' });
   });
 
   test('en produccion la cookie lleva Secure', async () => {

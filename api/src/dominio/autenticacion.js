@@ -13,6 +13,10 @@ const bcrypt = require('bcryptjs');
  *   su hash SHA-256, asi que una copia de la base no sirve para entrar.
  * - La sesion vence tras 30 minutos sin actividad y, en todo caso, 8 horas
  *   despues de iniciada. Cada administrador guarda como maximo 5 sesiones.
+ * - Cada cuenta tiene un rol (T15): `administrador` (contenidos, ruta,
+ *   directorio, preguntas, recursos y mensajes) o `profesional` (registro
+ *   conductual, M-09). Los roles no se mezclan. Una cuenta guardada antes de
+ *   T15 no tiene rol y es de administrador.
  *
  * Nada de este modulo escribe en el registro: la clave y el token nunca se
  * muestran, ni siquiera en los mensajes de error.
@@ -42,6 +46,8 @@ const PATRON_TOKEN = /^[A-Za-z0-9_-]{43}$/;
  */
 const HASH_FICTICIO = '$2b$10$q7Z5FXeE9m5WF7hWBI7g4uSfEZ2bxBfgGOvWCqL8a2OqfZamfFm2C';
 
+const ROLES = Object.freeze({ ADMINISTRADOR: 'administrador', PROFESIONAL: 'profesional' });
+
 const MENSAJES = Object.freeze({
   CREDENCIALES_INCOMPLETAS: 'Escribe tu usuario y tu contraseña.',
   CREDENCIALES_INCORRECTAS: 'Usuario o contraseña incorrectos.',
@@ -49,8 +55,14 @@ const MENSAJES = Object.freeze({
     'El usuario debe tener de 3 a 40 caracteres: letras minúsculas sin tildes, números, punto, guion o guion bajo.',
   CLAVE_CORTA: `La contraseña debe tener al menos ${LARGO_MINIMO_CLAVE} caracteres.`,
   CLAVE_LARGA: `La contraseña puede tener como máximo ${BYTES_MAXIMOS_CLAVE} bytes (unos ${BYTES_MAXIMOS_CLAVE} caracteres sin tildes ni ñ).`,
-  SIN_SESION: 'Inicia sesión para continuar.'
+  SIN_SESION: 'Inicia sesión para continuar.',
+  SIN_PERMISO: 'Tu cuenta no tiene acceso a esta sección.'
 });
+
+/** Rol de una cuenta; las guardadas antes de T15 no lo tienen y son de administrador. */
+function rolDe(cuenta) {
+  return cuenta && cuenta.rol === ROLES.PROFESIONAL ? ROLES.PROFESIONAL : ROLES.ADMINISTRADOR;
+}
 
 const esTexto = (valor) => typeof valor === 'string';
 const bytesDe = (texto) => Buffer.byteLength(texto, 'utf8');
@@ -152,7 +164,9 @@ module.exports = {
   LARGO_MINIMO_CLAVE,
   BYTES_MAXIMOS_CLAVE,
   HASH_FICTICIO,
+  ROLES,
   MENSAJES,
+  rolDe,
   normalizarUsuario,
   leerCredenciales,
   validarCredencialesNuevas,

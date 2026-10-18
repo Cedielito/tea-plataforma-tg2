@@ -7,19 +7,26 @@ const { crearRutasSesion } = require('./rutas/sesion');
 const { crearRutasAdmin } = require('./rutas/admin');
 const { crearRutasContacto } = require('./rutas/contacto');
 const { crearRutasRegistro } = require('./rutas/registro');
+const { crearRutasAplicacionRegistro } = require('./rutas/aplicacionRegistro');
 const { paginasFijas } = require('../datos/paginasFijas');
+const { cuestionarioSus: cuestionarioPorDefecto } = require('../datos/cuestionarioSus');
 
 /**
  * Servidor HTTP de la Fase I: estado del servicio, rutas publicas de
  * contenidos, preguntas frecuentes, recursos y buscador (T2), pasos de la
  * ruta (T5), directorio (T6), inicio de sesion y panel de administracion
  * (T4), con las preguntas frecuentes y los recursos (T7), y el formulario de
- * contacto, las paginas fijas y la bandeja de mensajes (T8), y el plan de la
- * sesion del registro conductual (T13, M-09).
+ * contacto, las paginas fijas y la bandeja de mensajes (T8), el plan de la
+ * sesion del registro conductual (T13, M-09) y el flujo del profesional, la
+ * aplicacion y el SUS (T15).
  *
  * RS-05: todo /api/admin/* pasa primero por exigirSesion, sin excepciones
  * (tambien las rutas que no existen responden 401 sin sesion). El inicio de
- * sesion vive aparte, en POST /api/sesion.
+ * sesion vive aparte, en POST /api/sesion. Despues, cada ruta exige el rol de
+ * la cuenta: /api/admin/registro es del profesional y el resto, del
+ * administrador (admin.js). La aplicacion de una sesion
+ * (/api/registro/aplicacion) usa su propia cookie, que no abre el panel
+ * (aplicacionRegistro.js).
  *
  * RS-02: la IP de quien envia el formulario de contacto llega en
  * X-Forwarded-For, a traves del reenvio de Vercel y del balanceador de Render
@@ -29,16 +36,18 @@ const { paginasFijas } = require('../datos/paginasFijas');
  * cambiar con la variable SALTOS_PROXY sin tocar el codigo.
  *
  * @param {{ahora?: () => Date, produccion?: boolean, registro?: Console,
- *   saltosProxy?: number, paginas?: object}} opciones el reloj, el registro y
- *   las paginas fijas se pueden cambiar en las pruebas; `produccion` decide si
- *   la cookie de sesion lleva Secure (por defecto, NODE_ENV=production)
+ *   saltosProxy?: number, paginas?: object, cuestionarioSus?: object}} opciones
+ *   el reloj, el registro, las paginas fijas y el cuestionario SUS se pueden
+ *   cambiar en las pruebas; `produccion` decide si las cookies llevan Secure
+ *   (por defecto, NODE_ENV=production)
  */
 function crearServidor({
   ahora = () => new Date(),
   produccion = process.env.NODE_ENV === 'production',
   registro = console,
   saltosProxy = leerSaltosProxy(process.env.SALTOS_PROXY),
-  paginas = paginasFijas
+  paginas = paginasFijas,
+  cuestionarioSus = cuestionarioPorDefecto
 } = {}) {
   const app = express();
   app.disable('x-powered-by');
@@ -51,8 +60,9 @@ function crearServidor({
   app.get('/api/salud', salud);
 
   app.use('/api/sesion', crearRutasSesion({ ahora, produccion, registro }));
-  app.use('/api/admin', crearExigirSesion({ ahora, produccion }), crearRutasAdmin({ produccion }));
+  app.use('/api/admin', crearExigirSesion({ ahora, produccion }), crearRutasAdmin({ ahora, produccion, cuestionarioSus }));
   app.use('/api/contacto', crearRutasContacto({ ahora, paginas }));
+  app.use('/api/registro/aplicacion', crearRutasAplicacionRegistro({ ahora, produccion, cuestionarioSus }));
   app.use('/api/registro', crearRutasRegistro());
   app.use('/api', crearRutasPublicas({ paginas }));
 

@@ -1,7 +1,8 @@
 'use strict';
 const express = require('express');
 const { envolver } = require('../envolver');
-const { NOMBRE_COOKIE, opcionesCookie } = require('../autenticacion');
+const { NOMBRE_COOKIE, opcionesCookie, exigirRol } = require('../autenticacion');
+const { ROLES } = require('../../dominio/autenticacion');
 const { MENSAJES: MENSAJES_GUARDADO, responderErrorDeGuardado } = require('../erroresDeGuardado');
 const administradores = require('../../datos/repositorios/administradores');
 const contenidos = require('../../datos/repositorios/contenidos');
@@ -12,14 +13,21 @@ const { crearRutasAdminDirectorio } = require('./adminDirectorio');
 const { crearRutasAdminPreguntas } = require('./adminPreguntas');
 const { crearRutasAdminRecursos } = require('./adminRecursos');
 const { crearRutasAdminMensajes } = require('./adminMensajes');
+const { crearRutasAdminRegistro } = require('./adminRegistro');
 
 /**
  * Rutas del panel de administracion, todas detras de exigirSesion (ver
- * servidor.js). M-03, M-04, M-05, M-06, M-08, RF-09, RF-10, RF-11, RS-04, RS-05,
- * RCN-01, RCN-02
+ * servidor.js). M-03, M-04, M-05, M-06, M-08, M-09, RF-09, RF-10, RF-11, RS-04,
+ * RS-05, RCN-01, RCN-02
  *
- * - GET    /sesion            administrador de la sesion
+ * Para cualquier rol:
+ * - GET    /sesion            usuario y rol de la sesion
  * - DELETE /sesion            cerrar sesion (la borra de la base)
+ *
+ * Solo para el rol `profesional` (exigirRol, 403 para otro rol):
+ * - /registro                  registro conductual (adminRegistro.js, M-09)
+ *
+ * Solo para el rol `administrador`:
  * - GET    /contenidos        todos, publicados y borradores
  * - GET    /contenidos/:id    uno, con cuerpo y fuentes
  * - POST   /contenidos        crear (borrador o publicado)
@@ -47,12 +55,12 @@ function responderDatosInvalidos(campos, res) {
   return res.status(422).json({ error, campos });
 }
 
-function crearRutasAdmin({ produccion }) {
+function crearRutasAdmin({ ahora, produccion, cuestionarioSus }) {
   const rutas = express.Router();
   const cookie = opcionesCookie({ produccion });
 
   rutas.get('/sesion', (req, res) => {
-    res.json({ usuario: req.administrador.usuario });
+    res.json({ usuario: req.administrador.usuario, rol: req.administrador.rol });
   });
 
   rutas.delete(
@@ -63,6 +71,15 @@ function crearRutasAdmin({ produccion }) {
       res.status(204).end();
     })
   );
+
+  rutas.use(
+    '/registro',
+    exigirRol(ROLES.PROFESIONAL),
+    crearRutasAdminRegistro({ ahora, produccion, cuestionarioSus })
+  );
+
+  // Todo lo que sigue, tambien las rutas que no existen, es del administrador.
+  rutas.use(exigirRol(ROLES.ADMINISTRADOR));
 
   rutas.get(
     '/contenidos',

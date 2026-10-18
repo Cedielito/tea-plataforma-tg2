@@ -117,15 +117,19 @@ api/src/api/         Express: servidor, rutas y middleware (las rutas solo valid
 api/src/dominio/     lógica pura y validaciones de las reglas de dominio
 api/src/dominio/registro/  núcleo de M-09: catálogo y secuenciador de las dos tareas,
                      indicadores (CC-08, CC-09, CC-10, CC-12), motor, versión,
-                     seudónimo y vocabulario prohibido
+                     seudónimo y vocabulario prohibido; con T15, la sesión del
+                     profesional, el envío de cada tarea, el resultado guardado, el
+                     SUS, el navegador y la exportación en CSV
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
                      slug (datos/sincronizacionListas.js); igual directorio/entidades.yaml,
                      preguntas/preguntas.yaml y recursos/recursos.yaml
+api/contenidos/registro/  sus.yaml: los 10 ítems del SUS de M-09 (no va a la base)
 api/test/            pruebas Jest; ayudas/baseEnMemoria.js levanta MongoDB en memoria;
-                     ayudas/sesionRegistro.js es la sesión fija de M-09
+                     ayudas/sesionRegistro.js es la sesión fija de M-09;
+                     ayudas/registro.js y envioRegistro.js, el flujo del profesional
 web/src/             React + Vite; tokens.css es el sistema visual; secciones.js define
                      navegación, tarjetas, rutas y enlaces del buscador
 web/src/api/         cliente de la API (rutas relativas /api, un reintento) y useDatos
@@ -137,7 +141,9 @@ web/src/contacto/    contacto (M-06): formulario, validación y borrador en memo
 web/src/registro/    registro conductual (M-09): generador con semilla, reloj, motor de
                      un ensayo, clase de error, vistaDeEnsayo (copia probada), textos,
                      pantalla de ensayo compartida, tareas de cambio de regla y de
-                     Navon y página /registro/prueba
+                     Navon y página /registro/prueba; con T15, la zona del profesional
+                     (/registro: sesiones, nueva, detalle, CSV y eliminar) y la
+                     aplicación (/registro/aplicacion: cola de envíos y SUS)
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
@@ -210,7 +216,7 @@ npm run build:web    compila el frontend
 
 ## Estado actual
 
-T0 a T9 y T12 a T14 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T9 y T12 a T15 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -409,4 +415,48 @@ las letras pequeñas» con un ejemplo antes de cada bloque y de cada ensayo de p
 `registroSesionDosTareas.test.js` procesa con `procesarSesion` (CC-08, CC-09, CC-10 y
 CC-12). Decisión en `docs/decisiones/0009-tarea-navon.md`.
 
-Siguiente: T15 (`feat/flujo-profesional`). Ver `docs/backlog-fase-i.md`.
+Flujo del profesional, SUS y exportación (T15, M-09, HU-16 a HU-19): la colección
+`administrador` tiene `rol` (`administrador` | `profesional`; sin rol es administrador).
+La cuenta del profesional se crea al arrancar con `PROFESIONAL_USUARIO` y
+`PROFESIONAL_CLAVE` (`datos/profesionalInicial.js`, pasos en `docs/despliegue.md`).
+Mismo `POST /api/sesion` (responde `{ usuario, rol }`) y misma cookie; `exigirRol`
+(`api/autenticacion.js`, 403) deja `/api/admin/registro/*` al profesional y el resto
+del panel al administrador. Rutas del profesional (`api/rutas/adminRegistro.js`):
+`POST|GET /sesiones`, `GET|DELETE /sesiones/:seudonimo` (con `normalizarSeudonimo`; 404
+si es de otro profesional), `POST /sesiones/:seudonimo/entrega` y
+`GET /exportacion/ensayos.csv|valores.csv` (coma, punto decimal, UTF-8, CRLF). La
+sesión se crea solo con `{ consentimientoFirmado: true, versionConsentimiento,
+mayorDeEdad: true }` (`dominio/registro/sesionRegistro.js`); la API genera el seudónimo
+(índice único, reintento si choca), la semilla y `reloj: 'animacion'`. La entrega cierra
+la sesión del profesional en ese navegador y deja la cookie `aplicacion_registro`
+(HttpOnly, SameSite=Strict, `Path=/api/registro/aplicacion`, hash en la sesión), que solo
+sirve para esa sesión y vence a las 2 horas de creada o al terminar; también guarda el
+navegador como familia y versión mayor (`navegador.js`; el esquema no acepta otra
+cosa). Rutas de la aplicación (`api/rutas/aplicacionRegistro.js`): `GET /` (plan,
+semilla, reloj, lo recibido y el SUS, sin seudónimo ni valores),
+`PUT /tareas/:tarea` (`envioTarea.js` revisa catálogo, semilla, reloj y que los ensayos
+sean los del plan; idempotente), `PUT /sus` y `POST /interrupcion`. Colecciones
+`sesion_registro` (constancia, estado, versiones, contextos, `resultado`, `sus`) y
+`ensayo_registro` (un documento por ensayo, índice único sesión-tarea-número), con
+`strict: 'throw'` también en los subesquemas y el plugin `sinDatosIdentificables`
+(`contieneDatoIdentificable` en `pre('validate')`). Estados: `en_curso`, `completada`
+(llegan las dos tareas; el SUS no hace falta), `interrumpida` (la página se recargó con
+una tarea pendiente) y `abandonada` (2 horas sin completarse). Al completarse,
+`procesarSesion` corre una vez y el resultado se guarda con su `versionAlgoritmo`
+(`resultado.js`, CT-13); las incompletas no tienen valores (RF-15). SUS en
+`api/contenidos/registro/sus.yaml` (`datos/cuestionarioSus.js`, en memoria):
+`valorSUS` = 2,5 × (Σ impares (r − 1) + Σ pares (5 − r)) (`dominio/registro/sus.js`);
+nunca se muestra al participante. En la web, la zona del profesional va en `/registro`
+con el layout de M-09 (`ZonaProfesional.jsx` reutiliza `ProveedorSesion`,
+`FormularioAcceso` y `SesionVencida`): `ListaSesiones`, `NuevaSesion` (seudónimo en
+grande con «Copiar»), `DetalleSesion` y `ValoresSesion` (aviso de M-09, valores con su
+unidad, contexto aparte), `DescargasCsv` y `EliminarSesion`. `/registro/aplicacion`
+(`PaginaAplicacion.jsx`, sin enlaces): cambio de regla, pausa, Navon, SUS
+(`CuestionarioSus.jsx`) y «Gracias»; reloj fijo `animacion`; `colaEnvios.js` conserva y
+reintenta los envíos (una vez de inmediato, al volver la conexión, con el siguiente
+envío o con «Intentar de nuevo»); `aplicacion.js` decide la pantalla al abrir (una
+recarga con una tarea pendiente interrumpe la sesión). Una cuenta profesional en
+`/admin` ve un aviso hacia `/registro`. Decisión en
+`docs/decisiones/0010-flujo-profesional.md`.
+
+Siguiente: T16 (`test/precision-temporal`). Ver `docs/backlog-fase-i.md`.

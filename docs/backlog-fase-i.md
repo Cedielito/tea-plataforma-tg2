@@ -55,7 +55,7 @@ Reglas:
 | T12 ✅ | `feat/nucleo-registro` | Núcleo del registro: indicadores, catálogo, secuenciador, motor, versión y seudónimo traídos de `fase-ii` | M-09, CC-08, CC-09, CC-10, CC-12, CT-03, CT-08, CT-11, CT-13, CP-01, CP-04, RF-13 a RF-15 | 2 (18 oct) |
 | T13 ✅ | `feat/motor-tareas` | Motor de ensayos, reloj y tarea de cambio de regla gamificada | M-09, HU-17, CT-03, CT-07, CP-01, CP-04, RF-13, RF-14 | 3 (20 oct) |
 | T14 ✅ | `feat/tarea-navon` | Tarea de Navon | M-09, HU-17, CC-10, CP-01, CP-04 | 3 (21 oct) |
-| T15 | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
+| T15 ✅ | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
 | T16 | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
 | T10 | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
 | T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
@@ -68,6 +68,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T15 | El documento debe reflejar lo que cambió con T15. En el Cuadro 13 entran `sesion_registro` (seudónimo, constancia del consentimiento con la versión del formato y la mayoría de edad, estado, versiones del catálogo y del algoritmo, semilla, reloj, navegador, contexto, resultado y SUS) y `ensayo_registro` (un documento por ensayo), y `administrador` lleva el rol (`administrador` o `profesional`). Los criterios de HU-16 suman la mayoría de edad y la versión del formato; los de HU-19, los dos CSV (ensayos; valores y SUS). La sesión se aplica en el mismo dispositivo en las 2 horas siguientes a su creación; al entregarlo se cierra la sesión del profesional; una recarga a mitad de una tarea deja la sesión interrumpida y sin procesar (RF-15). El SUS usa una traducción de trabajo: reemplazarla por la validada de Sevilla-González y colaboradores (2020) en `api/contenidos/registro/sus.yaml` antes de la prueba con voluntarios, y crear en Render la cuenta del profesional (`docs/despliegue.md`). | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 |
 | T14 | El documento debe reflejar cómo se aplica la tarea de Navon con T14. La práctica tiene un ensayo de cada nivel y los dos son incongruentes (en uno congruente se acierta mirando cualquier nivel). Cada bloque tiene 3 y 4 ensayos congruentes e incongruentes y la letra correcta repartida 4 y 3; cada nivel queda con 7 congruentes, 7 incongruentes, 7 H y 7 S. El cartel tiene un tamaño fijo en píxeles. Un error en Navon es siempre `aleatoria` y una omisión no tiene clase de error. En la sesión, las dos tareas van seguidas (cambio de regla, pausa, Navon) (`docs/decisiones/0009-tarea-navon.md`). | M-09, CC-10, CP-04, RF-14, HU-17 |
 | T13 | El documento debe reflejar lo que cambió con T13. El catálogo pasa a la versión 1.1.0, con el límite de respuesta de 5 s (después, el ensayo queda omitido), 500 ms entre ensayos y 3 cambios y 3 repeticiones por bloque mixto. Con dos cajas y estímulos siempre en conflicto, todo error del bloque de forma es perseverativo, así que CC-08 equivale a la proporción de errores de ese bloque. La práctica usa solo la regla de color y cada cambio de regla tiene su pantalla de instrucciones. Una omisión no tiene clase de error. La señal y el estímulo aparecen juntos y el tiempo de reacción se mide desde esa aparición (`docs/decisiones/0008-motor-ensayos.md`). | M-09, CC-08, CT-07, RF-14, HU-17 |
 | T12 | El documento 2.3 debe reflejar lo que cambió con T12. CC-09 pasa a la definición por ensayo (cambio menos repetición, solo en los bloques mixtos y solo con aciertos), CC-10 se llama «Diferencia global-local» y CC-12 informa si el criterio no se alcanzó. RF-14 suma las anticipaciones (tiempo neto menor de 200 ms) y no hay recorte por desviación estándar. Los criterios de aceptación de HU-16 a HU-19 en `docs/requisitos-fase-i.md` son una propuesta del equipo de desarrollo: revisarlos contra el documento. CT-08 se comprueba con una duración estimada (4 s por ensayo); T16 mide la real. | M-09, CC-09, CC-10, CC-12, RF-14, CT-08 |
@@ -436,11 +437,65 @@ tareas y obtiene CC-08, CC-09, CC-10 y CC-12.
 Propón el plan antes de escribir código.
 ```
 
-### T15 — Flujo del profesional, SUS y exportación
-Prompt pendiente. Alcance: colecciones del registro (sin datos identificables, índice
-único del seudónimo), creación de la sesión con la constancia del consentimiento
-(HU-16), vista de valores observados con el aviso de M-09 (HU-18), exportación CSV de
-ensayos y valores y eliminación por seudónimo (HU-19), y el cuestionario SUS.
+### T15 — Flujo del profesional, SUS y exportación ✅
+Hecha. Decisiones acordadas al aprobar el plan: la cuenta del profesional se crea al
+arrancar con `PROFESIONAL_USUARIO` y `PROFESIONAL_CLAVE` (`docs/despliegue.md`) y los roles
+no se mezclan (`exigirRol`, 403); la zona del profesional va en `/registro` y no en
+`/admin`, porque el encabezado del panel nombra la plataforma. Para que el participante no
+vea otras sesiones, la entrega del dispositivo cierra la sesión del profesional en ese
+navegador y deja una cookie que solo sirve para aplicar esa sesión, hasta 2 horas después
+de creada. La sesión queda completa cuando llegan las dos tareas (el SUS no hace falta
+para procesarla); una recarga a mitad de una tarea la deja interrumpida; si no se
+completa en 2 horas, queda sin completar. El resultado de `procesarSesion` se guarda al
+completarse, con su versión del algoritmo (CT-13). CSV con coma, punto decimal y UTF-8.
+No se trajo nada de `fase-ii`. Hecha en la rama `claude/jolly-ptolemy-h6pz0r` (la que
+asignó el entorno de Claude Code; corresponde a `feat/flujo-profesional`). Decisión en
+`docs/decisiones/0010-flujo-profesional.md`.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea T15, rama feat/flujo-profesional.
+
+Flujo del profesional de M-09 de punta a punta (HU-16 a HU-19), sobre las dos
+tareas de T13 y T14. /registro/prueba se queda como está: la usa T16.
+
+1. Acceso: el profesional entra con una cuenta del panel con rol
+   «profesional» (reutiliza la autenticación de T4; sin registro público).
+   Propón cómo se crea la cuenta y cómo se protegen las rutas nuevas de la API.
+2. Nueva sesión: el profesional marca que el adulto firmó el consentimiento en
+   papel (con la versión del formato) y que es mayor de edad; sin las dos
+   marcas la sesión no se crea (prueba). La API genera el seudónimo de T12, con
+   índice único, y la web lo muestra en grande para copiarlo en la copia del
+   consentimiento que se lleva el participante.
+3. El participante hace en el mismo dispositivo las dos tareas y al final el
+   SUS de 10 ítems (texto abajo, en api/contenidos/registro/sus.yaml para poder
+   cambiarlo). El reloj es siempre 'animacion' (sin ?reloj=) y queda guardado
+   en la sesión. Los ensayos se envían al terminar cada tarea; si el envío
+   falla, la web reintenta sin perder lo registrado. Al final el participante
+   solo ve «Gracias»: ningún valor (no hay resultados individuales). Durante la
+   aplicación la pantalla no tiene enlaces al panel; propón cómo evitar que el
+   participante vea otras sesiones.
+4. Nada identificable: los esquemas rechazan campos extra (strict: 'throw'),
+   contieneDatoIdentificable se aplica al guardar y del navegador solo se
+   guardan la familia y la versión mayor (por ejemplo, «Firefox 131»), nunca la
+   cadena completa.
+5. El profesional ve sus sesiones por seudónimo, con su estado, y en cada
+   sesión completa los valores de procesarSesion por tarea, con el aviso de
+   M-09. Las incompletas se guardan pero no se procesan (RF-15). Prueba: ni la
+   vista ni la API tienen vocabulario prohibido.
+6. Exporta dos CSV (ensayos; valores y SUS) con seudónimo, versión del
+   algoritmo y del catálogo, reloj y navegador, y elimina una sesión por su
+   seudónimo (normalizarSeudonimo) con todos sus ensayos (Ley 1581).
+7. SUS: escala de 1 (Totalmente en desacuerdo) a 5 (Totalmente de acuerdo). El
+   valor es la suma de (respuesta − 1) en los ítems impares y (5 − respuesta)
+   en los pares, multiplicada por 2,5. Valora la herramienta, no a la persona:
+   se guarda como valorSUS, sin la palabra «puntaje».
+Cada colección nueva va a COLECCIONES.
+
+Ítems del SUS (traducción de trabajo; se reemplazará por la versión validada
+de Sevilla-González y colaboradores, 2020): los 10 de
+api/contenidos/registro/sus.yaml.
+
+Propón el plan antes de escribir código.
+```
 
 ### T16 — Precisión temporal, perfiles simulados y reproducibilidad
 Prompt pendiente. Alcance: experimento que mide el error del registro del tiempo de

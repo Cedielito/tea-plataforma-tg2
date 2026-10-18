@@ -3,7 +3,8 @@ const administradores = require('../datos/repositorios/administradores');
 const { MENSAJES, esTokenConFormato, hashToken, sesionVigente } = require('../dominio/autenticacion');
 
 /**
- * Cookie de sesion y middleware que protege /api/admin/*. M-08, RF-09, RS-05
+ * Cookie de sesion y middleware que protege /api/admin/*. M-08, M-09, RF-09,
+ * RS-05
  *
  * Cookie `sesion_admin`:
  * - HttpOnly: el JavaScript de la pagina no la puede leer.
@@ -16,6 +17,10 @@ const { MENSAJES, esTokenConFormato, hashToken, sesionVigente } = require('../do
  *   minutos sin actividad, 8 horas en total) lo controla el servidor.
  *
  * El token nunca se escribe en el registro ni se devuelve en una respuesta.
+ *
+ * exigirRol (T15) va despues de exigirSesion: una cuenta con otro rol recibe
+ * 403. Las rutas del panel piden `administrador` y las del registro
+ * conductual (/api/admin/registro), `profesional`.
  */
 
 const NOMBRE_COOKIE = 'sesion_admin';
@@ -33,7 +38,7 @@ function sinCache(_req, res, next) {
 
 /**
  * @param {{ahora: () => Date, produccion: boolean}} opciones
- * @returns middleware que deja en req.administrador {_id, usuario,
+ * @returns middleware que deja en req.administrador {_id, usuario, rol,
  *   fechaUltimoAcceso, tokenHash} o responde 401
  */
 function crearExigirSesion({ ahora, produccion }) {
@@ -59,8 +64,8 @@ function crearExigirSesion({ ahora, produccion }) {
       }
 
       await administradores.registrarActividad(tokenHash, momento);
-      const { _id, usuario, fechaUltimoAcceso } = encontrado;
-      req.administrador = { _id, usuario, fechaUltimoAcceso, tokenHash };
+      const { _id, usuario, rol, fechaUltimoAcceso } = encontrado;
+      req.administrador = { _id, usuario, rol, fechaUltimoAcceso, tokenHash };
       return next();
     } catch (error) {
       return next(error);
@@ -68,4 +73,12 @@ function crearExigirSesion({ ahora, produccion }) {
   };
 }
 
-module.exports = { NOMBRE_COOKIE, RUTA_COOKIE, opcionesCookie, sinCache, crearExigirSesion };
+/** @param {string} rol uno de ROLES (dominio/autenticacion.js) */
+function exigirRol(rol) {
+  return function exigirRolDeCuenta(req, res, next) {
+    if (req.administrador && req.administrador.rol === rol) return next();
+    return res.status(403).json({ error: MENSAJES.SIN_PERMISO });
+  };
+}
+
+module.exports = { NOMBRE_COOKIE, RUTA_COOKIE, opcionesCookie, sinCache, crearExigirSesion, exigirRol };
