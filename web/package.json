@@ -12,7 +12,8 @@
     "accesibilidad": "npm run accesibilidad:axe && npm run accesibilidad:lighthouse && npm run accesibilidad:resumen",
     "accesibilidad:axe": "playwright test -c evaluacion/accesibilidad/playwright.config.js",
     "accesibilidad:lighthouse": "node evaluacion/accesibilidad/lighthouse.js",
-    "accesibilidad:resumen": "node evaluacion/accesibilidad/resumir.js"
+    "accesibilidad:resumen": "node evaluacion/accesibilidad/resumir.js",
+    "aceptacion": "playwright test -c evaluacion/aceptacion/playwright.config.js"
   },
   "dependencies": {
     "@fontsource/atkinson-hyperlegible": "^5.3.0",

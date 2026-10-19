@@ -154,12 +154,15 @@ web/evaluacion/accesibilidad/  auditoría de accesibilidad y rendimiento (T10): 
                      del build con la API y MongoDB en memoria, axe-core con Playwright
                      por variante (normal, alto contraste, 320 px), Lighthouse móvil con
                      npx y resumen (no corre en el CI normal)
+web/evaluacion/aceptacion/  casos de aceptación de extremo a extremo (T11, HU-01 a
+                     HU-19): Playwright sobre el servidor de la auditoría de T10, en el
+                     puerto 4330 (no corre en el CI normal)
 web/src/admin/       panel de administración (M-08): sesión, listas y editores
 web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fuentes y
                      revisión, pestañas accesibles, estados de carga y error, campos
                      de formulario y resumen de errores
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/,
-                     evaluacion/ (precision.md)
+                     evaluacion/ (precision.md, accesibilidad.md, casos-aceptacion.md)
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
 
@@ -181,6 +184,9 @@ npm run precision -w web -- --project=chromium
 npm run accesibilidad -w web
                      auditoría de accesibilidad y rendimiento (T10) sobre el build:
                      axe-core, Lighthouse y resumen (docs/evaluacion/accesibilidad.md)
+npm run aceptacion -w web
+                     casos de aceptación de extremo a extremo (T11) sobre el build
+                     (docs/evaluacion/casos-aceptacion.md)
 ```
 
 ## Convenciones
@@ -233,7 +239,7 @@ npm run accesibilidad -w web
 
 ## Estado actual
 
-T0 a T10 y T12 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -526,4 +532,17 @@ en `role="status"`, sin mover el foco, con la hora de cierre y «Seguir conectad
 zona del profesional. Método, resultados y revisión manual en
 `docs/evaluacion/accesibilidad.md`; decisión en `docs/decisiones/0012-accesibilidad-rendimiento.md`.
 
-Siguiente: T11 (`docs/casos-aceptacion`). Ver `docs/backlog-fase-i.md`.
+Casos de aceptación (T11, HU-01 a HU-19): `docs/evaluacion/casos-aceptacion.md` tiene un
+caso por historia (criterio, pasos, resultado esperado, evidencia con archivo y prueba, y
+resultado obtenido) y una tabla de resumen. La evidencia es primero la que ya existía (Jest,
+`node --test`, T10 y la corrida 39153850094 de T16 para CT-07); donde faltaba, 16 pruebas de
+extremo a extremo en `web/evaluacion/aceptacion/aceptacion.spec.js` (`npm run aceptacion -w
+web`, sobre `npm run build:web`; no corre en el CI normal). Usan el servidor de T10 sin
+cambios (`accesibilidad/servidor.js`, puerto 4330) y toman los valores esperados de la API y
+de los módulos puros de la web; la aplicación de M-09 se recorre solo con el teclado, sin
+tocar la medición. Los 19 casos cumplen en lo automático; quedan como «Pendiente (revisión
+manual)» la redacción de S1 (HU-01), el orden visual del foco (HU-11) y la duración real con
+voluntarios (HU-17). `docs/evaluacion/precision.md` trae la tabla de la corrida completa de
+T16.
+
+Siguiente: versión congelada el 26 de octubre y los pendientes de `docs/backlog-fase-i.md`.

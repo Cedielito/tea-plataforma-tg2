@@ -37,6 +37,7 @@ Reglas:
 | ✅ Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Hecha: vigente desde el 7 de octubre de 2026; si T8 se fusiona otro día, se cambia antes de fusionar | Antes de fusionar T8 | T8 |
 | Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
 | Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
+| Repetir las tareas T1 a T8 del Cuadro B.1 en el sitio desplegado (Vercel) y anotar el resultado en `docs/evaluacion/casos-aceptacion.md`: los casos automáticos de T11 corren sobre el build local, con la API y MongoDB en memoria, y el Cuadro 19 pide ejecutarlos en el entorno desplegado | Ambos | Sobre la versión congelada (26 oct) | Cuadro 19 del documento |
 
 ## Tareas de desarrollo (una por sesión de Claude Code, en su propia rama)
 
@@ -58,7 +59,7 @@ Reglas:
 | T15 ✅ | `feat/flujo-profesional` | Flujo del profesional, SUS y exportación | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 | 3 (23 oct) |
 | T16 ✅ | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
 | T10 ✅ | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
-| T11 | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
+| T11 ✅ | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
 
 Reglas de cada sesión (Claude Code web): sesión nueva desde `main` → pegar el prompt → revisar y aprobar el plan → Claude programa, prueba, hace commit y push **a la rama de la tarea** y abre el Pull Request → revisar CI y vista previa → el otro integrante aprueba → *Squash and merge* → borrar la rama.
 
@@ -68,6 +69,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T11 | El documento debe reflejar los casos de aceptación (`docs/evaluacion/casos-aceptacion.md`): los 19 casos cumplen en lo automático y ninguno dio «No cumple». El Cuadro 19 dice «las quince historias de usuario»: son 19. Quedan tres partes para revisión manual: la redacción de S1 (HU-01, RCN-06), el orden visual del foco y el teclado en el panel y en la zona del profesional (HU-11, con la revisión manual de T10) y la duración real y la aplicación sin ayuda con los voluntarios (HU-17, CT-08). Anotar en ese documento el resultado de cada una. | HU-01 a HU-19, RCN-06, RA-03, RA-11, CT-08 |
 | T10 | Hacer la revisión manual de `docs/evaluacion/accesibilidad.md` («Lo que no se revisa automáticamente») sobre la vista previa de Vercel: NVDA, TalkBack y VoiceOver, zoom al 200 % con «Letra muy grande», solo teclado y reducir movimiento; anotar el resultado en ese documento. Agregar al protocolo de aplicación de M-09 la pregunta por la visión de color y la revisión de que el dispositivo no tenga filtros de color ni escala de grises (el rojo y el azul de la tarea de cambio de regla tienen casi la misma luminancia). El documento debe reflejar los límites de tiempo de WCAG 2.2.1: los 5 s por ensayo son la excepción «esencial» (no hay temporizadores visibles, CT-03); el panel y la zona del profesional avisan 2 minutos antes del cierre por inactividad con «Seguir conectado»; el tope de 8 horas y las 2 horas de la aplicación son límites de seguridad. | M-08, M-09, RA-01 a RA-11, CT-03 |
 | T16 | El documento debe reflejar el resultado de la corrida completa 39153850094 (`docs/evaluacion/precision.md`): con el reloj de la aplicación y sin carga, el 100 % de los ensayos con error de 50 ms o menos en los tres motores; las dos celdas de Firefox con el hilo ocupado se leen con la cota superior (¹). Además, el método de CT-07: se mide el error del software frente a una aparición y una pulsación de referencia medidas en el navegador, no la latencia del teclado ni de la pantalla, y una latencia constante se cancela en CC-09 y CC-10. También, que los 6 perfiles simulados recuperan sus parámetros con ±1 ms y que la misma entrada da la misma salida al pasar por la API (CT-13). | M-09, CT-07, CT-13 |
 | T15 | El documento debe reflejar lo que cambió con T15. En el Cuadro 13 entran `sesion_registro` (seudónimo, constancia del consentimiento con la versión del formato y la mayoría de edad, estado, versiones del catálogo y del algoritmo, semilla, reloj, navegador, contexto, resultado y SUS) y `ensayo_registro` (un documento por ensayo), y `administrador` lleva el rol (`administrador` o `profesional`). Los criterios de HU-16 suman la mayoría de edad y la versión del formato; los de HU-19, los dos CSV (ensayos; valores y SUS). La sesión se aplica en el mismo dispositivo en las 2 horas siguientes a su creación; al entregarlo se cierra la sesión del profesional; una recarga a mitad de una tarea deja la sesión interrumpida y sin procesar (RF-15). El SUS usa una traducción de trabajo: reemplazarla por la validada de Sevilla-González y colaboradores (2020) en `api/contenidos/registro/sus.yaml` antes de la prueba con voluntarios, y crear en Render la cuenta del profesional (`docs/despliegue.md`). | M-09, HU-16, HU-18, HU-19, CT-11, CT-13, RF-15 |
@@ -570,7 +572,7 @@ y vuelve a medir. Metas: 0 críticas o graves, Lighthouse accesibilidad ≥ 90 y
 rendimiento ≥ 80. Propón el plan antes de escribir código.
 ```
 
-### T11 — Casos de aceptación
+### T11 — Casos de aceptación ✅
 ```
 Lee CLAUDE.md. Tarea T11, rama docs/casos-aceptacion.
 
