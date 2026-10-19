@@ -4,10 +4,9 @@ Evaluación de la capa 1 de M-09, sin participantes (T16). CT-07 pide que el sis
 registre el tiempo de reacción de cada ensayo con un error de 50 ms o menos. Este documento
 explica cómo lo medimos y trae la tabla por celda.
 
-**Estado.** La tabla de esta versión es la de una **corrida corta de comprobación**, solo
-con Chromium, hecha en la sesión de desarrollo. El experimento completo (tres motores) se
-corre con el flujo manual de GitHub Actions; GitHub solo deja lanzarlo cuando el flujo está
-en `main`. Al tenerlo, pegamos aquí su tabla (ver «Cómo se ejecuta»).
+**Estado.** La tabla es la del **experimento completo**: la corrida 39153850094 del flujo
+«Precisión temporal (M-09)» en GitHub Actions, sobre el commit 3f51108, el 18 de octubre de
+2026, con 222 ensayos por celda en Chromium, Firefox y WebKit (ver «Resultados»).
 
 ## Qué se mide y qué no
 
@@ -129,63 +128,85 @@ Las celdas con menos de 200 ensayos llevan la marca ² (corrida de comprobación
 
 ## Resultados
 
-### Corrida corta de comprobación (sesión de desarrollo)
+### Experimento completo
 
-La corrimos para comprobar que el arnés funciona, no para concluir sobre CT-07: un solo
-motor, 1 sesión por celda (74 ensayos, menos de los 200 del diseño) y un contenedor de
-desarrollo sin pantalla. Las 6 celdas terminaron sin fallas de emparejamiento.
+Corrida 39153850094 del flujo «Precisión temporal (M-09)» en GitHub Actions, con 3 sesiones
+por celda, sobre el commit 3f51108, el 18 de octubre de 2026. Las 14 celdas tienen 222
+ensayos cada una. Las tablas son las del resumen de la corrida (`resumen.md` del artefacto
+`precision-resumen`), tal cual.
 
 #### Entorno
 
 | Motor | Playwright | Sistema | CPU | Sesiones por celda | Catálogo / algoritmo | Commit | Fecha |
 |---|---|---|---|---:|---|---|---|
-| chromium 141.0.7390.37 | 1.64.1 | Linux 6.18.44-fc-v139 x64 | Intel(R) Xeon(R) Processor @ 2.80GHz (4 núcleos) | 1 | 1.1.0 / 1.0.0 | 79de5da | 2026-10-18 |
+| chromium 156.0.8078.4 | 1.64.1 | Linux 6.17.0-1022-azure x64 | AMD EPYC 7763 64-Core Processor (2 núcleos) | 3 | 1.1.0 / 1.0.0 | 3f51108 | 2026-10-18 |
+| firefox 157.0 | 1.64.1 | Linux 6.17.0-1022-azure x64 | AMD EPYC 9V45 96-Core Processor (2 núcleos) | 3 | 1.1.0 / 1.0.0 | 3f51108 | 2026-10-18 |
+| webkit 27.2 | 1.64.1 | Linux 6.17.0-1022-azure x64 | AMD EPYC 7763 64-Core Processor (2 núcleos) | 3 | 1.1.0 / 1.0.0 | 3f51108 | 2026-10-18 |
 
 #### Error del tiempo de reacción registrado (TR registrado − latencia efectiva del arnés)
 
 | Motor | Reloj | Carga | n | Media (ms) | DE (ms) | P95 abs. (ms) | ≤ 50 ms |
 |---|---|---|---:|---:|---:|---:|---:|
-| chromium 141.0.7390.37 | animacion | normal² | 74 | 1,2 | 0,7 | 1,6 | 100,0 % |
-| chromium 141.0.7390.37 | animacion | hilo-ocupado² | 74 | 1,1 | 0,4 | 1,7 | 100,0 % |
-| chromium 141.0.7390.37 | animacion | cpu-x4² | 74 | 5,7 | 2,2 | 9,9 | 100,0 % |
-| chromium 141.0.7390.37 | referencia | normal² | 74 | 2,6 | 0,6 | 3,8 | 100,0 % |
-| chromium 141.0.7390.37 | referencia | hilo-ocupado² | 74 | 11,0 | 20,0 | 59,2 | 89,2 % |
-| chromium 141.0.7390.37 | referencia | cpu-x4² | 74 | 3,1 | 3,2 | 10,0 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | normal | 222 | 1,2 | 0,5 | 2,0 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | hilo-ocupado | 222 | 1,1 | 0,5 | 1,9 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | cpu-x4 | 222 | 4,1 | 1,4 | 6,3 | 100,0 % |
+| chromium 156.0.8078.4 | referencia | normal | 222 | 1,9 | 0,8 | 3,2 | 100,0 % |
+| chromium 156.0.8078.4 | referencia | hilo-ocupado | 222 | 9,4 | 18,2 | 48,6 | 95,0 % |
+| chromium 156.0.8078.4 | referencia | cpu-x4 | 222 | 4,6 | 3,4 | 10,1 | 100,0 % |
+| firefox 157.0 | animacion | normal | 222 | 1,8 | 0,7 | 3,0 | 100,0 % |
+| firefox 157.0 | animacion | hilo-ocupado¹ | 222 | 1,7 | 0,6 | 2,0 | 100,0 % |
+| firefox 157.0 | referencia | normal | 222 | 0,3 | 0,8 | 2,0 | 100,0 % |
+| firefox 157.0 | referencia | hilo-ocupado¹ | 222 | 0,1 | 0,8 | 1,0 | 100,0 % |
+| webkit 27.2 | animacion | normal | 222 | 1,1 | 0,7 | 2,0 | 100,0 % |
+| webkit 27.2 | animacion | hilo-ocupado | 222 | 1,2 | 0,7 | 2,0 | 100,0 % |
+| webkit 27.2 | referencia | normal | 222 | 12,5 | 5,7 | 18,0 | 100,0 % |
+| webkit 27.2 | referencia | hilo-ocupado | 222 | 20,0 | 19,1 | 67,9 | 91,0 % |
 
 #### Cota superior (TR registrado − latencia programada)
 
 | Motor | Reloj | Carga | n | Media (ms) | DE (ms) | P95 abs. (ms) | ≤ 50 ms |
 |---|---|---|---:|---:|---:|---:|---:|
-| chromium 141.0.7390.37 | animacion | normal² | 74 | 4,3 | 4,1 | 5,4 | 100,0 % |
-| chromium 141.0.7390.37 | animacion | hilo-ocupado² | 74 | 3,7 | 0,9 | 4,5 | 100,0 % |
-| chromium 141.0.7390.37 | animacion | cpu-x4² | 74 | 4,4 | 0,9 | 6,2 | 100,0 % |
-| chromium 141.0.7390.37 | referencia | normal² | 74 | 4,9 | 1,0 | 7,0 | 100,0 % |
-| chromium 141.0.7390.37 | referencia | hilo-ocupado² | 74 | 13,2 | 20,0 | 62,0 | 89,2 % |
-| chromium 141.0.7390.37 | referencia | cpu-x4² | 74 | 1,6 | 4,0 | 9,3 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | normal | 222 | 2,4 | 1,0 | 3,6 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | hilo-ocupado | 222 | 2,2 | 0,8 | 3,3 | 100,0 % |
+| chromium 156.0.8078.4 | animacion | cpu-x4 | 222 | 2,9 | 0,9 | 4,3 | 100,0 % |
+| chromium 156.0.8078.4 | referencia | normal | 222 | 3,0 | 0,9 | 4,0 | 100,0 % |
+| chromium 156.0.8078.4 | referencia | hilo-ocupado | 222 | 10,4 | 18,3 | 49,8 | 95,0 % |
+| chromium 156.0.8078.4 | referencia | cpu-x4 | 222 | 3,4 | 3,7 | 9,0 | 100,0 % |
+| firefox 157.0 | animacion | normal | 222 | 3,0 | 1,0 | 4,9 | 100,0 % |
+| firefox 157.0 | animacion | hilo-ocupado | 222 | 11,4 | 19,3 | 58,9 | 92,8 % |
+| firefox 157.0 | referencia | normal | 222 | 1,4 | 1,0 | 3,0 | 100,0 % |
+| firefox 157.0 | referencia | hilo-ocupado | 222 | 8,6 | 18,0 | 56,0 | 93,7 % |
+| webkit 27.2 | animacion | normal | 222 | 2,9 | 0,8 | 4,0 | 100,0 % |
+| webkit 27.2 | animacion | hilo-ocupado | 222 | 2,7 | 1,0 | 4,0 | 100,0 % |
+| webkit 27.2 | referencia | normal | 222 | 14,1 | 5,7 | 19,0 | 100,0 % |
+| webkit 27.2 | referencia | hilo-ocupado | 222 | 21,5 | 19,1 | 69,9 | 90,1 % |
 
 «≤ 50 ms»: porcentaje de ensayos con error absoluto de 50 ms o menos (CT-07).
 
-² Menos de 200 ensayos: corrida de comprobación, no del experimento.
+¹ Con la carga, el percentil 95 del desvío del arnés sube más de 10 ms frente a la carga
+normal: la tecla llegó tarde, el arnés no pudo separar esa espera y en esta celda vale la
+cota superior.
 
-Lectura breve, solo para esta corrida:
+Lectura breve:
 
-- Con `animacion`, el error de la respuesta fue 0 ms en todos los ensayos: la web usa la
-  misma marca del navegador que la referencia. El error que queda es de la aparición: la
-  web marca el comienzo del fotograma y la referencia, el final del dibujo, así que el
-  tiempo registrado sale en promedio 1,2 ms más largo (como máximo 5,7 ms), y 5,7 ms con
-  la CPU ×4 (como máximo 12,5 ms), porque el dibujo tarda más. El hilo ocupado no lo
-  cambió.
-- Con `referencia` y el hilo ocupado, el error de la respuesta llegó a 81 ms: `Date.now()`
-  se toma cuando la web atiende la tecla, después de la tarea larga. 8 de los 74 ensayos
-  pasaron de 50 ms.
-- El desvío del arnés frente a la latencia programada fue pequeño en todas las celdas
-  (percentil 95 de 6 ms o menos) y no creció con la carga, así que ninguna celda quedó
-  marcada (¹): en Chromium, el arnés separó su latencia.
-
-### Experimento completo
-
-Pendiente: ejecutar el flujo «Precisión temporal (M-09)» después de fusionar y pegar aquí
-la tabla del resumen de la corrida.
+- **El reloj de la aplicación (`animacion`) sin carga** registró el tiempo con un error de
+  50 ms o menos en el 100 % de los ensayos de los tres motores: media de 1,1 a 1,8 ms y
+  percentil 95 de 3,0 ms o menos. La cota superior también quedó en el 100 %.
+- **Con la CPU 4 veces más lenta** (solo Chromium), el error medio con `animacion` subió a
+  4,1 ms (percentil 95 de 6,3 ms), con el 100 % dentro de 50 ms.
+- **Con el hilo ocupado**, Chromium y WebKit con `animacion` siguieron en el 100 %. Las dos
+  celdas de Firefox con el hilo ocupado quedaron marcadas (¹): el desvío del arnés creció
+  con la carga, porque la tecla inyectada esperó a la tarea larga, y el arnés no pudo separar
+  esa espera («Lo que no se puede separar»). **En esas celdas vale la cota superior**: con
+  `animacion`, media de 11,4 ms, percentil 95 de 58,9 ms y el 92,8 % de los ensayos dentro
+  de 50 ms. La cota incluye la latencia del arnés, así que el error real está entre la
+  primera tabla y la segunda.
+- **El reloj `referencia`** (`setTimeout` y `Date.now()`), que la aplicación no usa, tuvo
+  más error: 12,5 ms de media en WebKit sin carga y, con el hilo ocupado, el 95,0 % de los
+  ensayos dentro de 50 ms en Chromium y el 91,0 % en WebKit. Con el hilo ocupado,
+  `Date.now()` se toma cuando la web atiende la tecla, después de la tarea larga.
+- La carga `hilo-ocupado` es una condición de esfuerzo: tareas largas de 30 a 100 ms que
+  ocupan el hilo principal cerca del 25 % del tiempo.
 
 ## Cómo se ejecuta
 
