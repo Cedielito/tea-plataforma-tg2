@@ -13,6 +13,9 @@ web/evaluacion/precision/resultados/
 # resultados de la auditoría de accesibilidad (T10): se resumen en docs/evaluacion/accesibilidad.md
 web/evaluacion/accesibilidad/resultados/
 
+# resultados de los casos de aceptación (T11): se resumen en docs/evaluacion/casos-aceptacion.md
+web/evaluacion/aceptacion/resultados/
+
 # secretos: NUNCA se suben
 .env
 .env.*
