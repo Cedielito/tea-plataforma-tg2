@@ -121,6 +121,10 @@ api/src/dominio/registro/  núcleo de M-09: catálogo y secuenciador de las dos 
                      profesional, el envío de cada tarea, el resultado guardado, el
                      SUS, el navegador y la exportación en CSV
 api/src/datos/       conexión, esquemas Mongoose (modelos/) y repositorios
+api/scripts/         análisis de la evaluación con adultos (T17): analisisEvaluacion.js
+                     lee los dos CSV del profesional y escribe resumen.md y resumen.json
+                     (solo agregados); estadistica.js (IC con t de Student, Pearson,
+                     Spearman-Brown)
 api/contenidos/      textos S1-S5 en Markdown con fuentes y fecha; la API los carga a
                      la base al arrancar (datos/sincronizacionContenidos.js)
 api/contenidos/ruta/ pasos de la ruta (pasos.yaml); el id de cada uno se guarda como
@@ -162,7 +166,8 @@ web/src/componentes/ layout y piezas comunes: Markdown seguro, migas de pan, fue
                      revisión, pestañas accesibles, estados de carga y error, campos
                      de formulario y resumen de errores
 docs/                requisitos-fase-i.md, backlog-fase-i.md, GUIA_EQUIPO.md, decisiones/,
-                     evaluacion/ (precision.md, accesibilidad.md, casos-aceptacion.md)
+                     evaluacion/ (precision.md, accesibilidad.md, casos-aceptacion.md,
+                     analisis-adultos.md)
 docs/fase-ii/        documentos del prototipo gamificado; solo referencia, no se editan
 ```
 
@@ -187,6 +192,10 @@ npm run accesibilidad -w web
 npm run aceptacion -w web
                      casos de aceptación de extremo a extremo (T11) sobre el build
                      (docs/evaluacion/casos-aceptacion.md)
+node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv>
+                     análisis de la evaluación con adultos (T17): resumen.md y
+                     resumen.json junto al CSV de valores, o en --salida <carpeta>
+                     (docs/evaluacion/analisis-adultos.md)
 ```
 
 ## Convenciones
@@ -239,7 +248,7 @@ npm run aceptacion -w web
 
 ## Estado actual
 
-T0 a T16 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T17 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -544,5 +553,26 @@ tocar la medición. Los 19 casos cumplen en lo automático; quedan como «Pendie
 manual)» la redacción de S1 (HU-01), el orden visual del foco (HU-11) y la duración real con
 voluntarios (HU-17). `docs/evaluacion/precision.md` trae la tabla de la corrida completa de
 T16.
+
+Análisis de la evaluación con adultos (T17, M-09, capa 2): valores.csv suma `entregada`
+(true o false) y `duracionMin` (de la última entrega a la llegada de las dos tareas, sin el
+SUS; vacía si no se completó; `duracionMinutos` en `exportacion.js`); las fechas siguen sin
+exportarse. `api/scripts/analisisEvaluacion.js` (Node, sin dependencias ni base) lee los dos
+CSV y escribe `resumen.md` y `resumen.json` junto al de valores (o en `--salida`): solo
+agregados y n, sin seudónimos ni fecha de generación (misma entrada, mismos archivos).
+Replicación: CC-09 y CC-10 de valores.csv (sesiones completas, RF-15) con media, DE e IC
+95 % con la t de Student (cuantil calculado en `estadistica.js`); cumple si el IC queda
+entero del lado esperado (CC-09 > 0, CC-10 < 0). Consistencia por mitades: con ensayos.csv,
+`soloAciertos` y `clasificarEnsayosMixtos` del dominio, tiempo neto medio de los ensayos
+impares y pares (contados después de los filtros de RF-14) por participante en cambio,
+repetición, global y local; Pearson entre mitades y Spearman-Brown ≥ 0,70; CC-09 y CC-10 por
+mitad como exploratorio, sin criterio. Usabilidad: media del valorSUS ≥ 68 con su IC.
+Eficacia: completas ÷ entregadas ≥ 85 % (se informan creadas, entregadas y completas) y
+todas las completas en 20 minutos o menos (CT-08). Comprobación: CC-09 y CC-10 se recalculan
+desde ensayos.csv con `procesarSesion` y se comparan con valores.csv. Criterios en
+`CRITERIOS`; H3 a H5 y el Cuadro 31 solo se nombran en `resumen.md` y en
+`docs/evaluacion/analisis-adultos.md`, no en el código ni en los `describe`.
+`api/test/analisisEvaluacion.test.js` pasa los 6 perfiles de T16 por la API y la
+exportación, con una sesión interrumpida y una sin entregar.
 
 Siguiente: versión congelada el 26 de octubre y los pendientes de `docs/backlog-fase-i.md`.
