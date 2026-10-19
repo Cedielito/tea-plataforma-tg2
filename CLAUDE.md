@@ -194,7 +194,8 @@ npm run aceptacion -w web
                      (docs/evaluacion/casos-aceptacion.md)
 node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv>
                      análisis de la evaluación con adultos (T17): resumen.md y
-                     resumen.json junto al CSV de valores, o en --salida <carpeta>
+                     resumen.json junto al CSV de valores, o en --salida <carpeta>;
+                     con varias cuentas, --par <ensayos> <valores> por profesional
                      (docs/evaluacion/analisis-adultos.md)
 ```
 
@@ -558,8 +559,10 @@ Análisis de la evaluación con adultos (T17, M-09, capa 2): valores.csv suma `e
 (true o false) y `duracionMin` (de la última entrega a la llegada de las dos tareas, sin el
 SUS; vacía si no se completó; `duracionMinutos` en `exportacion.js`); las fechas siguen sin
 exportarse. `api/scripts/analisisEvaluacion.js` (Node, sin dependencias ni base) lee los dos
-CSV y escribe `resumen.md` y `resumen.json` junto al de valores (o en `--salida`): solo
-agregados y n, sin seudónimos ni fecha de generación (misma entrada, mismos archivos).
+CSV, o un par por cuenta de profesional con `--par` (une las filas y termina con código 1 si
+un seudónimo aparece en dos pares; `unirPares`), y escribe `resumen.md` y `resumen.json`
+junto al de valores del primer par (o en `--salida`): solo agregados y n, sin seudónimos ni
+fecha de generación (misma entrada, mismos archivos).
 Replicación: CC-09 y CC-10 de valores.csv (sesiones completas, RF-15) con media, DE e IC
 95 % con la t de Student (cuantil calculado en `estadistica.js`); cumple si el IC queda
 entero del lado esperado (CC-09 > 0, CC-10 < 0). Consistencia por mitades: con ensayos.csv,
@@ -567,12 +570,13 @@ entero del lado esperado (CC-09 > 0, CC-10 < 0). Consistencia por mitades: con e
 impares y pares (contados después de los filtros de RF-14) por participante en cambio,
 repetición, global y local; Pearson entre mitades y Spearman-Brown ≥ 0,70; CC-09 y CC-10 por
 mitad como exploratorio, sin criterio. Usabilidad: media del valorSUS ≥ 68 con su IC.
-Eficacia: completas ÷ entregadas ≥ 85 % (se informan creadas, entregadas y completas) y
-todas las completas en 20 minutos o menos (CT-08). Comprobación: CC-09 y CC-10 se recalculan
+Eficacia (CT-08): (completas con `duracionMin` ≤ 20) ÷ entregadas ≥ 85 %; se informan
+creadas, entregadas y completas, y la mediana, el máximo y cuántas completas pasan de 20. Comprobación: CC-09 y CC-10 se recalculan
 desde ensayos.csv con `procesarSesion` y se comparan con valores.csv. Criterios en
 `CRITERIOS`; H3 a H5 y el Cuadro 31 solo se nombran en `resumen.md` y en
 `docs/evaluacion/analisis-adultos.md`, no en el código ni en los `describe`.
 `api/test/analisisEvaluacion.test.js` pasa los 6 perfiles de T16 por la API y la
-exportación, con una sesión interrumpida y una sin entregar.
+exportación, con una sesión interrumpida y una sin entregar, y un segundo profesional para
+los dos pares.
 
 Siguiente: versión congelada el 26 de octubre y los pendientes de `docs/backlog-fase-i.md`.

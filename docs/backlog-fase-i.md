@@ -37,7 +37,7 @@ Reglas:
 | ✅ Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Hecha: vigente desde el 7 de octubre de 2026; si T8 se fusiona otro día, se cambia antes de fusionar | Antes de fusionar T8 | T8 |
 | Consentimiento escrito (Anexo A), impreso y en el formato del comité de ética, con su versión (la que el profesional marca al crear la sesión). El SUS y el registro de las tareas ya están en M-09 (T15) | Santiago | Antes del 26 oct | Prueba con voluntarios (semana 4) |
 | Lista de 15 a 20 adultos interesados. Las sesiones se agendan solo con el aval escrito del comité de ética | Ambos | 23 oct (agendar: con el aval) | Prueba con voluntarios (semana 4) |
-| Al terminar la prueba: exportar los dos CSV con la cuenta del profesional, correr el análisis de T17 y pasar `resumen.md` al documento (pasos en `docs/evaluacion/analisis-adultos.md`) | Ambos | Antes del 6 nov | Resultados de la capa 2 en el documento |
+| Al terminar la prueba: cada profesional exporta los dos CSV de su propia cuenta (la cuenta de prueba del equipo no se exporta), correr el análisis de T17 con un `--par` por cuenta y pasar `resumen.md` al documento (pasos en `docs/evaluacion/analisis-adultos.md`) | Ambos | Antes del 6 nov | Resultados de la capa 2 en el documento |
 | Repetir las tareas T1 a T8 del Cuadro B.1 en el sitio desplegado (Vercel) y anotar el resultado en `docs/evaluacion/casos-aceptacion.md`: los casos automáticos de T11 corren sobre el build local, con la API y MongoDB en memoria, y el Cuadro 19 pide ejecutarlos en el entorno desplegado | Ambos | Sobre la versión congelada (26 oct) | Cuadro 19 del documento |
 
 ## Tareas de desarrollo (una por sesión de Claude Code, en su propia rama)
@@ -71,7 +71,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
-| T17 | El documento debe reflejar el método de la capa 2 (`docs/evaluacion/analisis-adultos.md`): CC-09 y CC-10 se toman del resultado guardado de cada sesión completa; las mitades de H4 se cuentan en el orden de presentación después de los filtros de RF-14; la proporción de sesiones completas va sobre las entregadas (las creadas que nunca se entregaron no son incompletas) y se informan creadas, entregadas y completas; la duración va de la entrega del dispositivo a la llegada de las dos tareas, sin el SUS, y el criterio de 20 minutos se lee con el máximo. En los criterios de HU-19, valores.csv suma `entregada` y `duracionMin`. | M-09, HU-19, CC-09, CC-10, CT-08, RF-14, RF-15 |
+| T17 | El documento debe reflejar el método de la capa 2 (`docs/evaluacion/analisis-adultos.md`): CC-09 y CC-10 se toman del resultado guardado de cada sesión completa; las mitades de H4 se cuentan en el orden de presentación después de los filtros de RF-14; la eficacia cumple si al menos el 85 % de las sesiones entregadas se completaron en 20 minutos o menos (las creadas que nunca se entregaron no cuentan; una incompleta y una completa de más de 20 minutos cuentan igual en contra) y se informan creadas, entregadas y completas, con la mediana, el máximo y cuántas completas pasan de 20 minutos; la duración va de la entrega del dispositivo a la llegada de las dos tareas, sin el SUS; con varias cuentas, cada profesional exporta su par de CSV y el programa los une. En los criterios de HU-19, valores.csv suma `entregada` y `duracionMin`. | M-09, HU-19, CC-09, CC-10, CT-08, RF-14, RF-15 |
 | T11 | El documento debe reflejar los casos de aceptación (`docs/evaluacion/casos-aceptacion.md`): los 19 casos cumplen en lo automático y ninguno dio «No cumple». El Cuadro 19 dice «las quince historias de usuario»: son 19. Quedan tres partes para revisión manual: la redacción de S1 (HU-01, RCN-06), el orden visual del foco y el teclado en el panel y en la zona del profesional (HU-11, con la revisión manual de T10) y la duración real y la aplicación sin ayuda con los voluntarios (HU-17, CT-08). Anotar en ese documento el resultado de cada una. | HU-01 a HU-19, RCN-06, RA-03, RA-11, CT-08 |
 | T10 | Hacer la revisión manual de `docs/evaluacion/accesibilidad.md` («Lo que no se revisa automáticamente») sobre la vista previa de Vercel: NVDA, TalkBack y VoiceOver, zoom al 200 % con «Letra muy grande», solo teclado y reducir movimiento; anotar el resultado en ese documento. Agregar al protocolo de aplicación de M-09 la pregunta por la visión de color y la revisión de que el dispositivo no tenga filtros de color ni escala de grises (el rojo y el azul de la tarea de cambio de regla tienen casi la misma luminancia). El documento debe reflejar los límites de tiempo de WCAG 2.2.1: los 5 s por ensayo son la excepción «esencial» (no hay temporizadores visibles, CT-03); el panel y la zona del profesional avisan 2 minutos antes del cierre por inactividad con «Seguir conectado»; el tope de 8 horas y las 2 horas de la aplicación son límites de seguridad. | M-08, M-09, RA-01 a RA-11, CT-03 |
 | T16 | El documento debe reflejar el resultado de la corrida completa 39153850094 (`docs/evaluacion/precision.md`): con el reloj de la aplicación y sin carga, el 100 % de los ensayos con error de 50 ms o menos en los tres motores; las dos celdas de Firefox con el hilo ocupado se leen con la cota superior (¹). Además, el método de CT-07: se mide el error del software frente a una aparición y una pulsación de referencia medidas en el navegador, no la latencia del teclado ni de la pantalla, y una latencia constante se cancela en CC-09 y CC-10. También, que los 6 perfiles simulados recuperan sus parámetros con ±1 ms y que la misma entrada da la misma salida al pasar por la API (CT-13). | M-09, CT-07, CT-13 |
@@ -589,13 +589,17 @@ Propón el plan antes de escribir código.
 ### T17 — Análisis de la evaluación con adultos ✅
 Hecha. Decisiones acordadas al aprobar el plan: la proporción de sesiones completas va sobre
 las **entregadas**, no sobre las creadas, y valores.csv suma `entregada` (true o false) junto a
-`duracionMin`; el resumen informa creadas, entregadas y completas. En el código y en los
+`duracionMin`; el resumen informa creadas, entregadas y completas. Ajustes de la revisión: la
+eficacia cumple si al menos el 85 % de las entregadas se completaron en 20 minutos o menos
+(con la mediana, el máximo y cuántas completas pasan de 20, sin criterio aparte), y el
+programa acepta un par de CSV por cuenta de profesional (`--par`; un seudónimo en dos pares
+se rechaza con código 1). En el código y en los
 `describe` solo van códigos oficiales (M-09, CC-09, CC-10, CT-08, CT-13, RF-14, RF-15, HU-19):
 H3 a H5 y el Cuadro 31 se nombran solo en `resumen.md` y en
 `docs/evaluacion/analisis-adultos.md`. Las mitades se cuentan en el orden de presentación
 después de los filtros de RF-14 (mitades parejas). El cuantil de la t se calcula, sin tabla.
 La duración va de la última entrega del dispositivo a la llegada de las dos tareas, sin el
-SUS, y el criterio de 20 minutos se lee con el máximo (todas las completas). El SUS de los
+SUS. El SUS de los
 profesionales se aplica en papel y no entra. Hecha en la rama `claude/stoic-planck-lsa33f` (la
 que asignó el entorno de Claude Code; corresponde a `feat/analisis-evaluacion`). Método y
 lectura de los criterios en `docs/evaluacion/analisis-adultos.md`.

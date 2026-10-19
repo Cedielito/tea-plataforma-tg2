@@ -18,17 +18,23 @@ redondear) y **solo trae agregados y n**: ningún seudónimo y ningún valor por
 1. La prueba se hace sobre la versión congelada y solo con el aval escrito del comité de
    ética. Cada adulto firma el consentimiento escrito (Anexo A) y el profesional marca la
    constancia, la versión del formato y la mayoría de edad al crear la sesión (HU-16).
-2. **Una sola cuenta de profesional para toda la prueba.** Cada cuenta exporta solo sus
-   sesiones, y el programa recibe un solo par de archivos.
-3. **Borrar las sesiones de ensayo del equipo** antes de exportar (eliminar por seudónimo,
-   HU-19), o usar una cuenta que solo tenga las sesiones de la prueba. El programa analiza
-   todas las filas: una sesión de ensayo cuenta como participante.
+2. **Cada profesional usa su propia cuenta.** Cada cuenta exporta solo sus sesiones, así
+   que cada profesional descarga su par de CSV y el programa los une (`--par`, ver
+   «Comandos»). La cuenta de otro profesional se crea como la primera
+   (`docs/despliegue.md`, «Crear la cuenta de un profesional»).
+3. **La cuenta de prueba del equipo no se exporta.** Las sesiones de ensayo se hacen solo
+   en esa cuenta. Si una cuenta de la prueba tiene una sesión de ensayo, se elimina por su
+   seudónimo antes de exportar (HU-19): el programa analiza todas las filas, y una sesión
+   de ensayo contaría como participante.
 4. **Exportar cuando no quede ninguna sesión en curso.** Una sesión entregada que sigue en
    curso cuenta como incompleta. Una sesión pasa a «abandonada» 2 horas después de creada;
    basta con exportar 2 horas después de la última.
-5. Descargar los dos CSV desde la zona del profesional (`/registro`): «Descargar los
-   ensayos (CSV)» (`registro-ensayos.csv`) y «Descargar los valores y el SUS (CSV)»
-   (`registro-valores-sus.csv`). **No abrirlos y guardarlos en una hoja de cálculo**: una
+5. Cada profesional descarga sus dos CSV desde la zona del profesional (`/registro`):
+   «Descargar los ensayos (CSV)» (`registro-ensayos.csv`) y «Descargar los valores y el
+   SUS (CSV)» (`registro-valores-sus.csv`). Como los dos profesionales descargan archivos
+   con el mismo nombre, cada par va en su propia carpeta (por ejemplo,
+   `~/evaluacion/profesional-1/` y `~/evaluacion/profesional-2/`). **No abrirlos y
+   guardarlos en una hoja de cálculo**: una
    hoja de cálculo en español puede cambiar la coma por punto y coma o el punto decimal por
    coma, y el programa los rechaza.
 6. Guardar los CSV en la carpeta del equipo, **fuera del repositorio**. No se suben a
@@ -36,18 +42,29 @@ redondear) y **solo trae agregados y n**: ningún seudónimo y ningún valor por
 
 ## Comandos
 
-Desde la raíz del repositorio:
+Desde la raíz del repositorio, con una sola cuenta:
 
 ```
 node api/scripts/analisisEvaluacion.js ~/evaluacion/registro-ensayos.csv ~/evaluacion/registro-valores-sus.csv
 ```
 
-Escribe `resumen.md` y `resumen.json` junto al CSV de valores (en el ejemplo,
-`~/evaluacion/`). Para escribirlos en otra carpeta:
+Con varias cuentas, un `--par` por profesional, con sus ensayos y sus valores en ese orden:
 
 ```
-node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv> --salida ~/evaluacion/resumen
+node api/scripts/analisisEvaluacion.js \
+  --par ~/evaluacion/profesional-1/registro-ensayos.csv ~/evaluacion/profesional-1/registro-valores-sus.csv \
+  --par ~/evaluacion/profesional-2/registro-ensayos.csv ~/evaluacion/profesional-2/registro-valores-sus.csv \
+  --salida ~/evaluacion/resumen
 ```
+
+El programa une las filas de todos los pares y analiza el conjunto como si fuera una sola
+exportación. El resumen dice cuántos pares recibió. **Si un seudónimo aparece en dos
+pares**, el programa termina con código 1 sin escribir nada: es el mismo archivo pasado dos
+veces o una cuenta compartida. El mensaje dice cuántos seudónimos se repiten y entre qué
+pares, sin escribirlos.
+
+`resumen.md` y `resumen.json` quedan junto al CSV de valores (del primer par, si hay
+varios) o en la carpeta de `--salida`.
 
 Si falta un archivo, falta una columna o una celda no tiene el formato de la exportación,
 el programa lo explica (archivo, fila y columna) y termina con código 1, sin escribir nada.
@@ -63,12 +80,12 @@ Las pruebas del programa corren con las demás (`npm test`); solas, con
 
 | Cifra | Archivo | Sesiones que entran | Qué se toma |
 |---|---|---|---|
-| Creadas, entregadas y completas | valores.csv | Todas las filas | `estado` y `entregada` |
+| Creadas, entregadas y completas | valores.csv | Todas las filas (de todos los pares) | `estado` y `entregada` |
 | H3: CC-09 y CC-10 | valores.csv | `estado` = completada (RF-15) | `cc09` y `cc10`: el resultado que se guardó al completarse la sesión, con su versión del algoritmo (CT-13) |
 | H4: mitades | ensayos.csv | `estadoSesion` = completada (RF-15) | Los ensayos, con los filtros de RF-14 (ver «Fórmulas») |
 | H5: valor SUS | valores.csv | Las filas con `valorSUS` (solo una sesión completa llega al SUS) | `valorSUS`, que calcula la API al guardar |
-| H5: sesiones completas | valores.csv | Las entregadas | Completas ÷ entregadas |
-| H5: duración | valores.csv | Las completas | `duracionMin` |
+| H5: sesiones completas en 20 minutos o menos | valores.csv | Las entregadas | Completas con `duracionMin` ≤ 20 ÷ entregadas |
+| H5: duración | valores.csv | Las completas | `duracionMin`: mediana, máximo y cuántas pasan de 20 |
 
 **Comprobación.** El programa vuelve a calcular CC-09 y CC-10 de cada sesión completa con
 los ensayos de ensayos.csv y el motor de M-09 (`procesarSesion`), y los compara con los de
@@ -137,16 +154,22 @@ valorSUS = 2,5 × (Σ ítems impares (respuesta − 1) + Σ ítems pares (5 − 
 a 100. Lo calcula la API al guardar el cuestionario (`api/src/dominio/registro/sus.js`); el
 programa lo lee de valores.csv.
 
-### Sesiones completas y duración (H5, CT-08)
+### Sesiones completas en 20 minutos o menos (H5, CT-08)
 
-- Proporción de sesiones completas = completas ÷ entregadas. Una sesión creada que nunca se
-  entregó no se aplicó: cuenta en las creadas, pero no como incompleta. El resumen informa
-  las tres cifras: creadas, entregadas y completas.
 - duracionMin = (`completadaEn` − `entregadaEn`) ÷ 60 000 ms, con dos decimales. Va desde la
   **última** entrega del dispositivo hasta que llegan las dos tareas: incluye las
   instrucciones, la práctica y las pausas, y no incluye el SUS. Solo existe en las sesiones
   completas. Las fechas no se exportan, solo la duración.
-- Se informan la mediana, el máximo y cuántas sesiones duraron 20 minutos o menos.
+- Proporción = sesiones entregadas que se completaron con duracionMin ≤ 20 ÷ sesiones
+  entregadas. Una entregada que no se completó y una completa que pasó de 20 minutos
+  cuentan igual en contra. Una sesión creada que nunca se entregó no se aplicó: cuenta en
+  las creadas, pero no en el denominador.
+- El resumen informa además las creadas, las entregadas, las completas (y su proporción
+  sobre las entregadas) y, de las completas, la mediana y el máximo de la duración y
+  cuántas pasan de 20 minutos.
+
+Por ejemplo, con 7 entregadas, una que pase de 20 minutos deja 6 de 7 (85,7 %) y cumple;
+dos, sean incompletas o largas, dejan 5 de 7 (71,4 %) y no cumple.
 
 ## Lectura de cada criterio del Cuadro 31
 
@@ -157,8 +180,7 @@ programa lo lee de valores.csv.
 | H4 (consistencia) | Spearman-Brown ≥ 0,70 en los tiempos medios por condición | Una lectura por condición: cambio, repetición, global y local | Se informa la condición que no llega |
 | H4, exploratorio | CC-09 y CC-10 por mitad, sin umbral | Se informan r y Spearman-Brown, sin «Cumple» | — |
 | H5 (usabilidad) | Media del valor SUS de los participantes ≥ 68, siempre con su IC 95 % | Cumple si la media es 68 o más. Es una referencia de aceptabilidad, no una prueba estadística: el intervalo se informa, pero no decide | Se informa la media con su intervalo |
-| H5 (eficacia), sesiones completas | ≥ 85 % de sesiones completas | Completas ÷ entregadas ≥ 0,85 | Se informan las tres cifras |
-| H5 (eficacia), duración | Duración de 20 minutos o menos (CT-08) | Cumple si **todas** las sesiones completas duran 20 minutos o menos (el máximo). La mediana y el conteo dicen cuántas lo superan | Se informa cuántas superan los 20 minutos |
+| H5 (eficacia) | Al menos el 85 % de las sesiones entregadas se completaron en 20 minutos o menos (CT-08) | Cumple si (completas con duracionMin ≤ 20) ÷ entregadas ≥ 0,85. La duración de las completas (mediana, máximo y cuántas pasan de 20) se informa sin criterio aparte | Se informan las creadas, las entregadas, las completas y cuántas pasan de 20 minutos |
 
 El SUS de los profesionales se aplica en papel y se reporta aparte: no entra en este
 programa.
@@ -177,14 +199,17 @@ equipo. Con esos datos el resumen da:
 
 | Cifra | Resultado con los perfiles |
 |---|---|
-| Sesiones | 8 creadas, 7 entregadas y 6 completas: 85,7 % de las entregadas (sobre las creadas sería 75 %) |
+| Sesiones | 8 creadas, 7 entregadas y 6 completas (85,7 % de las entregadas) |
 | CC-09 | n = 6; media 175,0 ms (la de los perfiles, ±1 ms); IC 95 % [110,7; 239,3]: excluye el 0, porque el efecto simulado es grande (150 a 300 ms) |
 | CC-10 | n = 6; media −28,3 ms; IC 95 % [−84,0; 27,4]: incluye el 0, porque un perfil va en sentido contrario (+80 ms) |
 | Mitades | n = 6 en las cuatro condiciones (la sesión interrumpida no entra); las dos mitades juntas recuperan las medias de cada perfil (±1 ms) y la r es la misma que con los perfiles sin pasar por la exportación |
 | Valor SUS | n = 6; media 77,5; IC 95 % [67,7; 87,3] |
-| Duración | Mediana 17,0 min; máximo 25,0 min; 4 de 6 en 20 minutos o menos |
+| Eficacia | 5 de 7 entregadas completas en 20 minutos o menos (71,4 %): no cumple, porque la interrumpida y la de 25 minutos cuentan en contra. Duración de las completas: mediana 17,0 min, máximo 25,0 min, 1 pasa de 20 (la de 20 justos cuenta como dentro) |
+| Dos cuentas | Un segundo profesional con 2 sesiones más: con `--par` el resumen es el de las 10 filas unidas (8 completas); el mismo par dos veces termina con código 1 |
 
-Además: el cuantil de la t frente a la tabla; la media, la DE, el intervalo, Pearson y
+Además: el criterio de eficacia con 7 entregadas, donde una completa de 23 minutos no lo
+hace fallar si las demás cumplen y una segunda (larga o incompleta) sí; el cuantil de la t
+frente a la tabla; la media, la DE, el intervalo, Pearson y
 Spearman-Brown con casos calculados a mano; el reparto en mitades con una omisión, una
 anticipación, un error y una pausa en medio; la lectura de los CSV (comillas, BOM, una
 columna que falta, una coma decimal); que ni `resumen.md` ni `resumen.json` tienen

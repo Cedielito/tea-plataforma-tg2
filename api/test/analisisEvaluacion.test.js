@@ -8,7 +8,7 @@ const { levantar, limpiar, bajar } = require('./ayudas/baseEnMemoria');
 const { USUARIO_PROFESIONAL, crearProfesional, iniciarSesion } = require('./ayudas/administrador');
 const { crearAppRegistro, crearSesion, sesionEntregada } = require('./ayudas/registro');
 const { Administrador, SesionRegistro, EnsayoRegistro } = require('../src/datos/modelos');
-const { COLUMNAS_ENSAYOS, COLUMNAS_VALORES } = require('../src/dominio/registro/exportacion');
+const { COLUMNAS_ENSAYOS, COLUMNAS_VALORES, aCsv } = require('../src/dominio/registro/exportacion');
 const { buscarVocabularioProhibido } = require('../src/dominio/registro/vocabularioProhibido');
 const { cuantilT, describirMuestra, mediana, pearson, spearmanBrown } = require('../scripts/estadistica');
 const {
@@ -199,7 +199,7 @@ describe('HU-19 lectura de los CSV que exporta el profesional', () => {
     const vacio = analizarTextos(`${COLUMNAS_ENSAYOS.join(',')}\r\n`, `${COLUMNAS_VALORES.join(',')}\r\n`);
     expect(vacio.sesiones).toEqual({ creadas: 0, entregadas: 0, completas: 0, porEstado: {} });
     expect(vacio.replicacion.cc09).toMatchObject({ n: 0, media: null, cumple: null });
-    expect(vacio.eficacia).toMatchObject({ proporcionCompletas: null, cumpleProporcion: null });
+    expect(vacio.eficacia).toMatchObject({ proporcionEnLimite: null, proporcionCompletas: null, cumple: null });
     expect(vacio.consistencia.condiciones.cambio).toEqual({ n: 0, r: null, spearmanBrown: null, cumple: null });
     const md = aMarkdown(vacio);
     expect(md).toContain('No calculable');
@@ -207,10 +207,52 @@ describe('HU-19 lectura de los CSV que exporta el profesional', () => {
   });
 });
 
+describe('CT-08 eficacia: entregadas que se completaron en 20 minutos o menos', () => {
+  /** valores.csv con el formato de la exportacion: una fila por sesion, con su estado y su duracion. */
+  function valoresCsv(sesiones) {
+    const filas = sesiones.map(([estado, entregada, duracionMin], i) => ({
+      seudonimo: `ABCD-${String(2222 + i)}`,
+      estado,
+      entregada,
+      duracionMin
+    }));
+    return aCsv(COLUMNAS_VALORES, filas);
+  }
+  const ensayosVacio = `${COLUMNAS_ENSAYOS.join(',')}\r\n`;
+  const completa = (minutos) => ['completada', true, minutos];
+  const NO_ENTREGADA = ['en_curso', false, null];
+
+  test('una completa de más de 20 minutos no hace fallar el criterio si las demás cumplen', () => {
+    // 6 de 7 entregadas en 20 minutos o menos (85,7 %); la de 20 justos cuenta
+    const sesiones = [10, 12, 14, 15, 16, 20, 23].map(completa).concat([NO_ENTREGADA]);
+    const { sesiones: cuentas, eficacia } = analizarTextos(ensayosVacio, valoresCsv(sesiones));
+    expect(cuentas).toMatchObject({ creadas: 8, entregadas: 7, completas: 7 });
+    expect(eficacia).toEqual({
+      limiteMin: 20,
+      completasEnLimite: 6,
+      proporcionEnLimite: 6 / 7,
+      criterioProporcion: CRITERIOS.proporcionEnLimiteMinima,
+      cumple: true,
+      proporcionCompletas: 1,
+      duracionMin: { n: 7, mediana: 15, maximo: 23, pasanDelLimite: 1 }
+    });
+  });
+
+  test('una incompleta y una completa de más de 20 minutos cuentan igual en contra', () => {
+    const conLarga = [10, 12, 14, 15, 16, 21, 23].map(completa);
+    expect(analizarTextos(ensayosVacio, valoresCsv(conLarga)).eficacia).toMatchObject({ completasEnLimite: 5, cumple: false });
+    const conIncompleta = [10, 12, 14, 15, 16, 23].map(completa).concat([['interrumpida', true, null]]);
+    expect(analizarTextos(ensayosVacio, valoresCsv(conIncompleta)).eficacia).toMatchObject({ completasEnLimite: 5, cumple: false });
+    // Las creadas que nunca se entregaron no cuentan
+    const sinEntregar = [10, 12, 14, 15, 16, 18].map(completa).concat([NO_ENTREGADA, NO_ENTREGADA, NO_ENTREGADA]);
+    expect(analizarTextos(ensayosVacio, valoresCsv(sinEntregar)).eficacia).toMatchObject({ proporcionEnLimite: 1, cumple: true });
+  });
+});
+
 describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasados por la exportación', () => {
   const APLICACION = '/api/registro/aplicacion';
   // Por perfil, en el orden del archivo: minutos de la aplicacion y valor SUS.
-  const DURACIONES = [12, 14, 16, 18, 21, 25];
+  const DURACIONES = [12, 14, 16, 18, 20, 25];
   const VALORES_SUS = [65, 70, 75, 80, 85, 90];
 
   let app;
@@ -224,6 +266,8 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
   const ENSAYOS_CSV = 'registro-ensayos.csv';
   const VALORES_CSV = 'registro-valores-sus.csv';
   const enCarpeta = (archivo) => path.join(carpeta, archivo);
+  // Aplicar las sesiones por la API y correr el programa pasa de los 5 s por defecto de Jest
+  const ESPERA_MS = 60000;
 
   /** Respuestas (1 a 5) que dan el valor pedido: cada item aporta de 0 a 4 y el valor es 2,5 × la suma. */
   function respuestasSus(valor) {
@@ -245,14 +289,14 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
     };
   }
 
-  async function entrar() {
+  async function entrar(usuario = USUARIO_PROFESIONAL) {
     const agente = request.agent(app);
-    await iniciarSesion(agente, { usuario: USUARIO_PROFESIONAL });
+    await iniciarSesion(agente, { usuario });
     return agente;
   }
 
-  async function aplicarPerfil({ sesion: sesionWeb }, minutos, valorSUS) {
-    const agente = await entrar();
+  async function aplicarPerfil({ sesion: sesionWeb }, minutos, valorSUS, usuario = USUARIO_PROFESIONAL) {
+    const agente = await entrar(usuario);
     const { sesion, estado } = await sesionEntregada(agente);
     await agente
       .put(`${APLICACION}/tareas/cambio-regla`)
@@ -303,7 +347,7 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
     json = fs.readFileSync(path.join(carpeta, 'resumen.json'), 'utf8');
     md = fs.readFileSync(path.join(carpeta, 'resumen.md'), 'utf8');
     resumen = JSON.parse(json);
-  });
+  }, ESPERA_MS);
 
   afterAll(async () => {
     await limpiar();
@@ -372,27 +416,22 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
     expect(conValores.consistencia).toEqual(resumen.consistencia);
   });
 
-  test('eficacia: completas sobre las entregadas, no sobre las creadas', () => {
-    expect(resumen.eficacia.proporcionCompletas).toBeCloseTo(6 / 7, 12);
-    expect(resumen.eficacia).toMatchObject({
-      criterioProporcion: CRITERIOS.proporcionCompletasMinima,
-      cumpleProporcion: true
+  test('CT-08 eficacia: completas en 20 minutos o menos sobre las entregadas, con la duración de las completas', () => {
+    // 5 de 7 entregadas: la interrumpida y la de 25 minutos cuentan en contra; la no entregada no cuenta
+    expect(resumen.eficacia).toEqual({
+      limiteMin: 20,
+      completasEnLimite: 5,
+      proporcionEnLimite: 5 / 7,
+      criterioProporcion: CRITERIOS.proporcionEnLimiteMinima,
+      cumple: false,
+      proporcionCompletas: 6 / 7,
+      duracionMin: { n: 6, mediana: 17, maximo: 25, pasanDelLimite: 1 }
     });
-    // Sobre las creadas (6 de 8 = 75 %) no cumpliria
-    expect(6 / 8).toBeLessThan(CRITERIOS.proporcionCompletasMinima);
-    expect(md).toContain('| Sesiones completas | 6 de 7 entregadas (85,7 %); 8 creadas | ≥ 85 % de las entregadas | Cumple |');
-  });
-
-  test('CT-08 duración: mediana, máximo y cuántas en 20 minutos o menos', () => {
-    expect(resumen.eficacia.duracionMin).toEqual({
-      n: 6,
-      mediana: 17,
-      maximo: 25,
-      hastaLimite: 4,
-      limite: 20,
-      cumple: false
-    });
-    expect(md).toContain('n = 6; mediana 17,0 min; máximo 25,0 min; 4 de 6 en 20 min o menos | 20 min o menos en todas (CT-08) | No cumple |');
+    expect(md).toContain(
+      '| Sesiones completas en 20 min o menos (CT-08) | 5 de 7 entregadas (71,4 %); completas: 6 de 7 (85,7 %); ' +
+        'creadas: 8 | ≥ 85 % de las entregadas | No cumple |'
+    );
+    expect(md).toContain('| Duración de las completas | n = 6; mediana 17,0 min; máximo 25,0 min; 1 pasa de 20 min |');
   });
 
   test('usabilidad: media del valor SUS con su IC 95 %', () => {
@@ -470,6 +509,69 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
     expect(fs.readFileSync(archivos.md, 'utf8')).toBe(md);
   });
 
+  test('varias cuentas: une un par de CSV por profesional y rechaza un seudónimo repetido', async () => {
+    const OTRO = 'otro.profesional';
+    await crearProfesional({ usuario: OTRO });
+    const otros = [];
+    for (const [id, minutos, valorSUS] of [
+      ['base', 15, 80],
+      ['lento', 17, 70]
+    ]) {
+      otros.push(await aplicarPerfil(perfiles.find((p) => p.id === id), minutos, valorSUS, OTRO));
+    }
+    const agente = await entrar(OTRO);
+    const otro = {
+      ensayos: (await agente.get('/api/admin/registro/exportacion/ensayos.csv').expect(200)).text,
+      valores: (await agente.get('/api/admin/registro/exportacion/valores.csv').expect(200)).text
+    };
+    fs.mkdirSync(enCarpeta('otro'));
+    fs.writeFileSync(enCarpeta(path.join('otro', ENSAYOS_CSV)), otro.ensayos);
+    fs.writeFileSync(enCarpeta(path.join('otro', VALORES_CSV)), otro.valores);
+
+    const parUno = ['--par', enCarpeta(ENSAYOS_CSV), enCarpeta(VALORES_CSV)];
+    const parDos = ['--par', enCarpeta(path.join('otro', ENSAYOS_CSV)), enCarpeta(path.join('otro', VALORES_CSV))];
+    const corrida = spawnSync(process.execPath, [SCRIPT, ...parUno, ...parDos, '--salida', enCarpeta('dos')], { encoding: 'utf8' });
+    expect(corrida.status).toBe(0);
+    const dos = JSON.parse(fs.readFileSync(enCarpeta(path.join('dos', 'resumen.json')), 'utf8'));
+    const mdDos = fs.readFileSync(enCarpeta(path.join('dos', 'resumen.md')), 'utf8');
+
+    expect(dos.pares).toBe(2);
+    expect(mdDos).toContain('- Pares de CSV (uno por cuenta de profesional): 2.');
+    expect(dos.sesiones).toEqual({
+      creadas: 10,
+      entregadas: 9,
+      completas: 8,
+      porEstado: { completada: 8, interrumpida: 1, en_curso: 1 }
+    });
+    expect(dos.comprobacion.coinciden).toBe(true);
+    expect(dos.replicacion.cc09.n).toBe(8);
+    expect(dos.consistencia.condiciones.cambio.n).toBe(8);
+    expect(Math.abs(dos.replicacion.cc09.media - describirMuestra([...parametro('costoCambioMs'), 150, 150]).media)).toBeLessThanOrEqual(
+      TOLERANCIA_MS
+    );
+    expect(dos.usabilidad.valorSUS.media).toBe(describirMuestra([...VALORES_SUS, 80, 70]).media);
+    expect(dos.eficacia).toMatchObject({ completasEnLimite: 7, proporcionEnLimite: 7 / 9 });
+    // Lo mismo que analizar las filas de los dos pares juntas
+    const filas = (t) => ({ ensayos: leerTabla(t.ensayos, TIPOS_ENSAYOS, 'e'), valores: leerTabla(t.valores, TIPOS_VALORES, 'v') });
+    const [uno, otroLeido] = [filas(textos), filas(otro)];
+    expect(dos).toEqual(
+      analizar({ ensayos: [...uno.ensayos, ...otroLeido.ensayos], valores: [...uno.valores, ...otroLeido.valores], pares: 2 })
+    );
+    for (const seudonimo of [...Object.values(seudonimos), ...otros]) expect(mdDos + JSON.stringify(dos)).not.toContain(seudonimo);
+
+    // Un solo par con --par es la forma corta
+    expect(ejecutar([...parUno, '--salida', enCarpeta('un-par')]).resumen).toEqual(resumen);
+
+    // El mismo par dos veces: los 8 seudonimos del primero se repiten, y no se escriben
+    const repetido = spawnSync(process.execPath, [SCRIPT, ...parUno, ...parUno, '--salida', enCarpeta('repetido')], {
+      encoding: 'utf8'
+    });
+    expect(repetido.status).toBe(1);
+    expect(repetido.stderr).toContain('Hay seudónimos repetidos en más de un par (8 entre los pares 1 y 2).');
+    for (const seudonimo of Object.values(seudonimos)) expect(repetido.stderr).not.toContain(seudonimo);
+    expect(fs.existsSync(enCarpeta('repetido'))).toBe(false);
+  }, ESPERA_MS);
+
   test('línea de comandos: sin los dos archivos, o con uno que no existe, termina con código 1 y lo explica', () => {
     const sinArgumentos = spawnSync(process.execPath, [SCRIPT], { encoding: 'utf8' });
     expect(sinArgumentos.status).toBe(1);
@@ -478,5 +580,9 @@ describe('M-09 CC-09 CC-10 CT-08 RF-15 análisis de los perfiles simulados pasad
     expect(noExiste.status).toBe(1);
     expect(noExiste.stderr).toContain('No se pudo leer');
     expect(() => ejecutar(['a.csv', 'b.csv', '--salida'])).toThrow(ErrorDeEntrada);
+    // Un --par incompleto, o --par mezclado con la forma corta
+    expect(() => ejecutar(['--par', 'a.csv'])).toThrow(ErrorDeEntrada);
+    expect(() => ejecutar(['--par', 'a.csv', '--salida', 'x'])).toThrow(ErrorDeEntrada);
+    expect(() => ejecutar(['a.csv', 'b.csv', '--par', 'c.csv', 'd.csv'])).toThrow(ErrorDeEntrada);
   });
 });

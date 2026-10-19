@@ -13,8 +13,12 @@ const { NIVEL_CONFIANZA, describirMuestra, mediana, pearson, spearmanBrown } = r
  *
  * Uso, desde la raiz del repositorio:
  *   node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv> [--salida <carpeta>]
+ * Con varias cuentas de profesional, un par de CSV por cuenta:
+ *   node api/scripts/analisisEvaluacion.js --par <ensayos1.csv> <valores1.csv> --par <ensayos2.csv> <valores2.csv>
+ * Las filas de los pares se unen; un seudonimo en dos pares se rechaza.
  * Escribe resumen.json y resumen.md en la carpeta de salida (por defecto, la
- * del CSV de valores, para que los datos no queden dentro del repositorio).
+ * del CSV de valores del primer par, para que los datos no queden dentro del
+ * repositorio).
  *
  * Cuatro partes (metodo y lectura en docs/evaluacion/analisis-adultos.md):
  * - Replicacion: CC-09 y CC-10 de valores.csv (el resultado guardado con su
@@ -27,8 +31,9 @@ const { NIVEL_CONFIANZA, describirMuestra, mediana, pearson, spearmanBrown } = r
  *   global y local en Navon). Pearson entre mitades y Spearman-Brown; lo
  *   mismo para CC-09 y CC-10 por mitad, como exploratorio.
  * - Usabilidad: valorSUS de los participantes.
- * - Eficacia: sesiones completas sobre las entregadas (las creadas que nunca
- *   se entregaron no son incompletas) y duracion de las completas (CT-08).
+ * - Eficacia: entregadas que se completaron en 20 minutos o menos, sobre las
+ *   entregadas (las creadas que nunca se entregaron no cuentan), y duracion
+ *   de las completas (CT-08).
  *
  * RF-15: solo las sesiones completas entran a la replicacion y a la
  * consistencia; todas cuentan en las creadas. Comprobacion: CC-09 y CC-10 se
@@ -43,12 +48,16 @@ const { NIVEL_CONFIANZA, describirMuestra, mediana, pearson, spearmanBrown } = r
 const CRITERIOS = Object.freeze({
   spearmanBrownMinimo: 0.7,
   valorSusReferencia: 68,
-  proporcionCompletasMinima: 0.85,
+  proporcionEnLimiteMinima: 0.85,
   duracionMaximaMin: 20
 });
 
-const USO =
-  'Uso: node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv> [--salida <carpeta>]';
+const USO = [
+  'Uso: node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-sus.csv> [--salida <carpeta>]',
+  'Con varias cuentas de profesional, un par de CSV por cuenta:',
+  '     node api/scripts/analisisEvaluacion.js --par <ensayos1.csv> <valores1.csv> --par <ensayos2.csv> <valores2.csv> ' +
+    '[--salida <carpeta>]'
+].join('\n');
 
 /** Un problema con los archivos de entrada: se informa sin la pila y el programa termina con código 1. */
 class ErrorDeEntrada extends Error {}
@@ -304,26 +313,31 @@ function usabilidad(filasValores) {
   };
 }
 
-/** Completas sobre entregadas y duracion de las completas (CT-08). */
+/**
+ * CT-08. Entregadas que se completaron en el limite de minutos o menos, sobre
+ * todas las entregadas: una incompleta y una completa que pasa del limite
+ * cuentan igual en contra. Ademas, la duracion de las completas.
+ */
 function eficacia(filasValores, { entregadas, completas }) {
-  const proporcion = entregadas === 0 ? null : completas / entregadas;
+  const limite = CRITERIOS.duracionMaximaMin;
   const duraciones = filasValores
-    .filter(esCompleta)
+    .filter((f) => f.entregada === true && esCompleta(f))
     .map((f) => f.duracionMin)
     .filter((d) => d !== null);
-  const maximo = duraciones.length > 0 ? Math.max(...duraciones) : null;
+  const enLimite = duraciones.filter((d) => d <= limite).length;
+  const proporcion = entregadas === 0 ? null : enLimite / entregadas;
   return {
-    proporcionCompletas: proporcion,
-    criterioProporcion: CRITERIOS.proporcionCompletasMinima,
-    cumpleProporcion: proporcion === null ? null : proporcion >= CRITERIOS.proporcionCompletasMinima,
+    limiteMin: limite,
+    completasEnLimite: enLimite,
+    proporcionEnLimite: proporcion,
+    criterioProporcion: CRITERIOS.proporcionEnLimiteMinima,
+    cumple: proporcion === null ? null : proporcion >= CRITERIOS.proporcionEnLimiteMinima,
+    proporcionCompletas: entregadas === 0 ? null : completas / entregadas,
     duracionMin: {
       n: duraciones.length,
       mediana: mediana(duraciones),
-      maximo,
-      hastaLimite: duraciones.filter((d) => d <= CRITERIOS.duracionMaximaMin).length,
-      limite: CRITERIOS.duracionMaximaMin,
-      // Todas las completas en el limite o menos.
-      cumple: maximo === null ? null : maximo <= CRITERIOS.duracionMaximaMin
+      maximo: duraciones.length > 0 ? Math.max(...duraciones) : null,
+      pasanDelLimite: duraciones.filter((d) => d > limite).length
     }
   };
 }
@@ -359,14 +373,15 @@ function comprobacion(filasValores, porSesion) {
 }
 
 /**
- * @param {{ensayos: object[], valores: object[]}} filas las de leerTabla
+ * @param {{ensayos: object[], valores: object[], pares?: number}} filas las de leerTabla (o unirPares)
  * @returns {object} el resumen: solo agregados y n
  */
-function analizar({ ensayos, valores }) {
+function analizar({ ensayos, valores, pares = 1 }) {
   const porSesion = ensayosPorSesion(ensayos);
   const cuentas = sesiones(valores);
   return {
     nivelConfianza: NIVEL_CONFIANZA,
+    pares,
     versiones: {
       algoritmo: conteo(valores.map((f) => f.versionAlgoritmo)),
       catalogo: conteo(valores.map((f) => f.versionCatalogo))
@@ -380,12 +395,50 @@ function analizar({ ensayos, valores }) {
   };
 }
 
-function analizarTextos(textoEnsayos, textoValores) {
-  return analizar({
-    ensayos: leerTabla(textoEnsayos, TIPOS_ENSAYOS, 'ensayos.csv'),
-    valores: leerTabla(textoValores, TIPOS_VALORES, 'valores.csv')
+/**
+ * Une los pares de CSV de varias cuentas de profesional. Cada sesion es de
+ * una sola cuenta: un seudonimo en dos pares es un archivo repetido o una
+ * cuenta compartida, y se rechaza sin escribir el seudonimo.
+ */
+function unirPares(pares) {
+  const parDe = new Map();
+  const choques = new Map();
+  pares.forEach((par, i) => {
+    for (const seudonimo of new Set([...par.valores, ...par.ensayos].map((f) => f.seudonimo))) {
+      if (!parDe.has(seudonimo)) parDe.set(seudonimo, i);
+      else {
+        const clave = `${parDe.get(seudonimo) + 1} y ${i + 1}`;
+        choques.set(clave, (choques.get(clave) || 0) + 1);
+      }
+    }
   });
+  if (choques.size > 0) {
+    const detalle = [...choques].map(([clave, n]) => `${n} entre los pares ${clave}`).join('; ');
+    throw new ErrorDeEntrada(
+      `Hay seudónimos repetidos en más de un par (${detalle}). Cada par debe ser de una cuenta de profesional ` +
+        'distinta y el mismo archivo no se puede pasar dos veces.'
+    );
+  }
+  return { ensayos: pares.flatMap((p) => p.ensayos), valores: pares.flatMap((p) => p.valores), pares: pares.length };
 }
+
+/**
+ * @param {{ensayos: string, valores: string, nombreEnsayos?: string, nombreValores?: string}[]} pares
+ *   el texto de cada CSV y, para los mensajes de error, su nombre
+ */
+function analizarPares(pares) {
+  const nombre = (propio, archivo, i) => propio || (pares.length === 1 ? archivo : `${archivo} del par ${i + 1}`);
+  return analizar(
+    unirPares(
+      pares.map((par, i) => ({
+        ensayos: leerTabla(par.ensayos, TIPOS_ENSAYOS, nombre(par.nombreEnsayos, 'ensayos.csv', i)),
+        valores: leerTabla(par.valores, TIPOS_VALORES, nombre(par.nombreValores, 'valores.csv', i))
+      }))
+    )
+  );
+}
+
+const analizarTextos = (textoEnsayos, textoValores) => analizarPares([{ ensayos: textoEnsayos, valores: textoValores }]);
 
 // ---------------------------------------------------------------------------
 // Salida
@@ -434,6 +487,7 @@ function encabezado(resumen) {
     'que exporta el profesional; método y lectura en `docs/evaluacion/analisis-adultos.md`.',
     '',
     `- Intervalos de confianza del ${numero(resumen.nivelConfianza * 100, 0)} % con la t de Student.`,
+    `- Pares de CSV (uno por cuenta de profesional): ${resumen.pares}.`,
     `- Versión del algoritmo: ${listaDeVersiones(versiones.algoritmo)}.`,
     `- Versión del catálogo: ${listaDeVersiones(versiones.catalogo)}.`
   ];
@@ -520,11 +574,16 @@ function seccionUsabilidadEficacia({ usabilidad: u, eficacia: e, sesiones: s }) 
     '|---|---|---|---|',
     `| Valor SUS de los participantes | n = ${sus.n}; media ${numero(sus.media)}; DE ${numero(sus.de)}; IC 95 % ${intervalo(sus.ic95)} | ` +
       `Media ≥ ${numero(sus.referencia, 0)} (referencia de aceptabilidad, no es una prueba estadística) | ${lectura(sus.cumple)} |`,
-    `| Sesiones completas | ${s.completas} de ${s.entregadas} entregadas (${porcentaje(e.proporcionCompletas)}); ${s.creadas} creadas | ` +
-      `≥ ${numero(e.criterioProporcion * 100, 0)} % de las entregadas | ${lectura(e.cumpleProporcion)} |`,
-    `| Duración de la aplicación (de la entrega del dispositivo a la llegada de las dos tareas) | n = ${d.n}; mediana ` +
-      `${numero(d.mediana)} min; máximo ${numero(d.maximo)} min; ${d.hastaLimite} de ${d.n} en ${d.limite} min o menos | ` +
-      `${d.limite} min o menos en todas (CT-08) | ${lectura(d.cumple)} |`,
+    `| Sesiones completas en ${e.limiteMin} min o menos (CT-08) | ${e.completasEnLimite} de ${s.entregadas} entregadas ` +
+      `(${porcentaje(e.proporcionEnLimite)}); completas: ${s.completas} de ${s.entregadas} ` +
+      `(${porcentaje(e.proporcionCompletas)}); creadas: ${s.creadas} | ` +
+      `≥ ${numero(e.criterioProporcion * 100, 0)} % de las entregadas | ${lectura(e.cumple)} |`,
+    `| Duración de las completas | n = ${d.n}; mediana ${numero(d.mediana)} min; máximo ${numero(d.maximo)} min; ` +
+      `${d.pasanDelLimite} ${d.pasanDelLimite === 1 ? 'pasa' : 'pasan'} de ${e.limiteMin} min | ` +
+      'Sin criterio aparte: entra en la fila anterior | — |',
+    '',
+    'Duración: de la entrega del dispositivo a la llegada de las dos tareas, sin el SUS. Una sesión creada que nunca',
+    'se entregó no cuenta; una entregada que no se completó, o que se completó en más tiempo, cuenta en contra.',
     '',
     'El valor SUS de los profesionales se aplica en papel y se reporta aparte.'
   ];
@@ -546,19 +605,27 @@ const aJson = (resumen) => `${JSON.stringify(resumen, null, 2)}\n`;
 // ---------------------------------------------------------------------------
 // Linea de comandos
 
+const esValor = (v) => typeof v === 'string' && v !== '' && !v.startsWith('--');
+
+/** Un par por cada --par <ensayos> <valores>, o la forma corta: un solo par sin --par. */
 function leerArgumentos(argv) {
   const posicionales = [];
+  const pares = [];
   let salida = null;
   for (let i = 0; i < argv.length; i += 1) {
-    if (argv[i] !== '--salida') posicionales.push(argv[i]);
-    else {
+    if (argv[i] === '--salida') {
       salida = argv[i + 1];
       i += 1;
-    }
+    } else if (argv[i] === '--par') {
+      pares.push({ ensayos: argv[i + 1], valores: argv[i + 2] });
+      i += 2;
+    } else posicionales.push(argv[i]);
   }
-  if (posicionales.length !== 2 || salida === undefined) throw new ErrorDeEntrada(USO);
-  const [ensayos, valores] = posicionales;
-  return { ensayos, valores, salida: salida || path.dirname(valores) };
+  if (pares.length === 0 && posicionales.length === 2) pares.push({ ensayos: posicionales[0], valores: posicionales[1] });
+  else if (posicionales.length > 0) throw new ErrorDeEntrada(USO);
+  const completos = pares.length > 0 && pares.every((p) => esValor(p.ensayos) && esValor(p.valores));
+  if (!completos || (salida !== null && !esValor(salida))) throw new ErrorDeEntrada(USO);
+  return { pares, salida: salida || path.dirname(pares[0].valores) };
 }
 
 function leerArchivo(ruta) {
@@ -569,12 +636,19 @@ function leerArchivo(ruta) {
   }
 }
 
-/** Lee los dos CSV, escribe resumen.json y resumen.md y devuelve el resumen y sus rutas. */
+/** Lee los pares de CSV, escribe resumen.json y resumen.md y devuelve el resumen y sus rutas. */
 function ejecutar(argv) {
-  const args = leerArgumentos(argv);
-  const resumen = analizarTextos(leerArchivo(args.ensayos), leerArchivo(args.valores));
-  fs.mkdirSync(args.salida, { recursive: true });
-  const archivos = { json: path.join(args.salida, 'resumen.json'), md: path.join(args.salida, 'resumen.md') };
+  const { pares, salida } = leerArgumentos(argv);
+  const resumen = analizarPares(
+    pares.map((par) => ({
+      ensayos: leerArchivo(par.ensayos),
+      valores: leerArchivo(par.valores),
+      nombreEnsayos: par.ensayos,
+      nombreValores: par.valores
+    }))
+  );
+  fs.mkdirSync(salida, { recursive: true });
+  const archivos = { json: path.join(salida, 'resumen.json'), md: path.join(salida, 'resumen.md') };
   fs.writeFileSync(archivos.json, aJson(resumen));
   fs.writeFileSync(archivos.md, aMarkdown(resumen));
   return { resumen, archivos };
@@ -603,7 +677,9 @@ module.exports = {
   mitades,
   mitadesDeSesion,
   analizar,
+  analizarPares,
   analizarTextos,
+  unirPares,
   aMarkdown,
   aJson,
   ejecutar
