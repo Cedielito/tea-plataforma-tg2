@@ -15,7 +15,7 @@ Decisión en `docs/decisiones/0007-registro-conductual.md`.
 |---|---|---|
 | 1 | 6 – 12 oct | Repo limpio, base visual, contenidos (M-01, M-02, M-07) y panel con login |
 | 2 | 13 – 19 oct | Ruta, directorio, recursos, preguntas, contacto y **despliegue**; núcleo del registro (T12, 18 oct) |
-| 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); **versión congelada el 26 oct** |
+| 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); T17, análisis de la evaluación con adultos; **versión congelada el 26 oct** |
 | 4 | 27 oct – 6 nov | Prueba con voluntarios adultos sobre la versión congelada (solo con el aval escrito del comité de ética), resultados en el documento (lo amarillo) y **entrega el 6 de noviembre** |
 
 Reglas:
@@ -35,8 +35,9 @@ Reglas:
 | ✅ Pasos de la ruta por perfil, edad y régimen (según el protocolo de MinSalud) | Hechos: 18 pasos (`api/contenidos/ruta/`); Santiago los revisa | 13 oct | T5 |
 | ✅ 3 a 5 recursos descargables o enlaces oficiales y 10 preguntas frecuentes | Hechos: 6 recursos y 12 preguntas (`api/contenidos/recursos/` y `preguntas/`); Santiago los revisa | 15 oct | T7 |
 | ✅ Poner la fecha de vigencia de la política (`COMPLETAR` en `api/contenidos/paginas/privacidad.md`); los datos del responsable ya están | Hecha: vigente desde el 7 de octubre de 2026; si T8 se fusiona otro día, se cambia antes de fusionar | Antes de fusionar T8 | T8 |
-| Google Form con consentimiento (Anexo A) + SUS + registro de tareas (Anexo B) | Santiago | 18 oct | Semana 3 |
-| Conseguir 10 a 15 voluntarios adultos y agendarlos | Ambos | 19 oct | Semana 3 |
+| Consentimiento escrito (Anexo A), impreso y en el formato del comité de ética, con su versión (la que el profesional marca al crear la sesión). El SUS y el registro de las tareas ya están en M-09 (T15) | Santiago | Antes del 26 oct | Prueba con voluntarios (semana 4) |
+| Lista de 15 a 20 adultos interesados. Las sesiones se agendan solo con el aval escrito del comité de ética | Ambos | 23 oct (agendar: con el aval) | Prueba con voluntarios (semana 4) |
+| Al terminar la prueba: cada profesional exporta los dos CSV de su propia cuenta (la cuenta de prueba del equipo no se exporta), correr el análisis de T17 con un `--par` por cuenta y pasar `resumen.md` al documento (pasos en `docs/evaluacion/analisis-adultos.md`) | Ambos | Antes del 6 nov | Resultados de la capa 2 en el documento |
 | Repetir las tareas T1 a T8 del Cuadro B.1 en el sitio desplegado (Vercel) y anotar el resultado en `docs/evaluacion/casos-aceptacion.md`: los casos automáticos de T11 corren sobre el build local, con la API y MongoDB en memoria, y el Cuadro 19 pide ejecutarlos en el entorno desplegado | Ambos | Sobre la versión congelada (26 oct) | Cuadro 19 del documento |
 
 ## Tareas de desarrollo (una por sesión de Claude Code, en su propia rama)
@@ -60,6 +61,7 @@ Reglas:
 | T16 ✅ | `test/precision-temporal` | Experimento de precisión temporal, perfiles simulados y reproducibilidad | M-09, CT-07, CT-13 | 3 (24 oct) |
 | T10 ✅ | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
 | T11 ✅ | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
+| T17 ✅ | `feat/analisis-evaluacion` | Análisis de la evaluación con adultos (capa 2): `entregada` y `duracionMin` en valores.csv y programa que resume los dos CSV en agregados | M-09, HU-19, CC-09, CC-10, CT-08, CT-13, RF-14, RF-15 | 3 |
 
 Reglas de cada sesión (Claude Code web): sesión nueva desde `main` → pegar el prompt → revisar y aprobar el plan → Claude programa, prueba, hace commit y push **a la rama de la tarea** y abre el Pull Request → revisar CI y vista previa → el otro integrante aprueba → *Squash and merge* → borrar la rama.
 
@@ -69,6 +71,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T17 | El documento debe reflejar el método de la capa 2 (`docs/evaluacion/analisis-adultos.md`): CC-09 y CC-10 se toman del resultado guardado de cada sesión completa; las mitades de H4 se cuentan en el orden de presentación después de los filtros de RF-14; la eficacia cumple si al menos el 85 % de las sesiones entregadas se completaron en 20 minutos o menos (las creadas que nunca se entregaron no cuentan; una incompleta y una completa de más de 20 minutos cuentan igual en contra) y se informan creadas, entregadas y completas, con la mediana, el máximo y cuántas completas pasan de 20 minutos; la duración va de la entrega del dispositivo a la llegada de las dos tareas, sin el SUS; con varias cuentas, cada profesional exporta su par de CSV y el programa los une. En los criterios de HU-19, valores.csv suma `entregada` y `duracionMin`. | M-09, HU-19, CC-09, CC-10, CT-08, RF-14, RF-15 |
 | T11 | El documento debe reflejar los casos de aceptación (`docs/evaluacion/casos-aceptacion.md`): los 19 casos cumplen en lo automático y ninguno dio «No cumple». El Cuadro 19 dice «las quince historias de usuario»: son 19. Quedan tres partes para revisión manual: la redacción de S1 (HU-01, RCN-06), el orden visual del foco y el teclado en el panel y en la zona del profesional (HU-11, con la revisión manual de T10) y la duración real y la aplicación sin ayuda con los voluntarios (HU-17, CT-08). Anotar en ese documento el resultado de cada una. | HU-01 a HU-19, RCN-06, RA-03, RA-11, CT-08 |
 | T10 | Hacer la revisión manual de `docs/evaluacion/accesibilidad.md` («Lo que no se revisa automáticamente») sobre la vista previa de Vercel: NVDA, TalkBack y VoiceOver, zoom al 200 % con «Letra muy grande», solo teclado y reducir movimiento; anotar el resultado en ese documento. Agregar al protocolo de aplicación de M-09 la pregunta por la visión de color y la revisión de que el dispositivo no tenga filtros de color ni escala de grises (el rojo y el azul de la tarea de cambio de regla tienen casi la misma luminancia). El documento debe reflejar los límites de tiempo de WCAG 2.2.1: los 5 s por ensayo son la excepción «esencial» (no hay temporizadores visibles, CT-03); el panel y la zona del profesional avisan 2 minutos antes del cierre por inactividad con «Seguir conectado»; el tope de 8 horas y las 2 horas de la aplicación son límites de seguridad. | M-08, M-09, RA-01 a RA-11, CT-03 |
 | T16 | El documento debe reflejar el resultado de la corrida completa 39153850094 (`docs/evaluacion/precision.md`): con el reloj de la aplicación y sin carga, el 100 % de los ensayos con error de 50 ms o menos en los tres motores; las dos celdas de Firefox con el hilo ocupado se leen con la cota superior (¹). Además, el método de CT-07: se mide el error del software frente a una aparición y una pulsación de referencia medidas en el navegador, no la latencia del teclado ni de la pantalla, y una latencia constante se cancela en CC-09 y CC-10. También, que los 6 perfiles simulados recuperan sus parámetros con ±1 ms y que la misma entrada da la misma salida al pasar por la API (CT-13). | M-09, CT-07, CT-13 |
@@ -580,5 +583,58 @@ A partir del Cuadro 12 de docs/requisitos-fase-i.md (HU-01 a HU-19), escribe
 docs/evaluacion/casos-aceptacion.md: un caso por historia con pasos, resultado
 esperado y columna de resultado obtenido. Donde sea viable, automatízalos con
 pruebas de extremo a extremo (pide autorización para Playwright).
+Propón el plan antes de escribir código.
+```
+
+### T17 — Análisis de la evaluación con adultos ✅
+Hecha. Decisiones acordadas al aprobar el plan: la proporción de sesiones completas va sobre
+las **entregadas**, no sobre las creadas, y valores.csv suma `entregada` (true o false) junto a
+`duracionMin`; el resumen informa creadas, entregadas y completas. Ajustes de la revisión: la
+eficacia cumple si al menos el 85 % de las entregadas se completaron en 20 minutos o menos
+(con la mediana, el máximo y cuántas completas pasan de 20, sin criterio aparte), y el
+programa acepta un par de CSV por cuenta de profesional (`--par`; un seudónimo en dos pares
+se rechaza con código 1). En el código y en los
+`describe` solo van códigos oficiales (M-09, CC-09, CC-10, CT-08, CT-13, RF-14, RF-15, HU-19):
+H3 a H5 y el Cuadro 31 se nombran solo en `resumen.md` y en
+`docs/evaluacion/analisis-adultos.md`. Las mitades se cuentan en el orden de presentación
+después de los filtros de RF-14 (mitades parejas). El cuantil de la t se calcula, sin tabla.
+La duración va de la última entrega del dispositivo a la llegada de las dos tareas, sin el
+SUS. El SUS de los
+profesionales se aplica en papel y no entra. Hecha en la rama `claude/stoic-planck-lsa33f` (la
+que asignó el entorno de Claude Code; corresponde a `feat/analisis-evaluacion`). Método y
+lectura de los criterios en `docs/evaluacion/analisis-adultos.md`.
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea nueva T17, rama feat/analisis-evaluacion:
+análisis de la evaluación con adultos (M-09, OE4; Cuadro 31 del documento 2.3). Agrégala
+al backlog en el mismo PR y actualiza las tareas humanas que cambiaron: el Google Form y
+los 10 a 15 voluntarios pasan a consentimiento escrito y 15 a 20 adultos.
+
+Objetivo: un programa reproducible que lea los dos CSV que exporta el profesional
+(ensayos.csv y valores.csv) y produzca las cifras de la capa 2, solo como agregados.
+
+1. valores.csv: agregar duracionMin (de entregadaEn a completadaEn; vacío si la sesión
+   no se completó). Actualiza la prueba de HU-19 y la decisión 0010.
+2. api/scripts/analisisEvaluacion.js (Node, sin dependencias nuevas), que reciba las
+   rutas de los dos CSV y escriba resumen.md y resumen.json con:
+   - H3: CC-09 y CC-10 por participante; media, DE, n e IC 95 % con t de Student.
+     Dirección esperada: CC-09 > 0 y CC-10 < 0.
+   - H4: consistencia por mitades. Con ensayos.csv y los mismos filtros de RF-14 (sin
+     práctica, omisiones ni anticipaciones; solo aciertos), tiempo medio de ensayos
+     pares e impares por participante y condición (cambio y repetición en los bloques
+     mixtos, con clasificarEnsayosMixtos del dominio; global y local en Navon).
+     Correlación de Pearson entre mitades y corrección de Spearman-Brown, 2r/(1+r).
+     Reportar también la de CC-09 y CC-10, marcada como exploratoria.
+   - H5: SUS de los participantes (media, DE, IC 95 %); proporción de sesiones
+     completas sobre las creadas; duración (mediana, máximo y cuántas en 20 minutos o
+     menos).
+   - Nada por seudónimo en el resumen: solo agregados y n.
+3. Pruebas Jest con los 6 perfiles de api/test/ayudas/perfilesSimulados.json pasados por
+   la exportación: el script recupera las medias conocidas, el IC excluye 0 cuando el
+   efecto simulado es grande y la fórmula de Spearman-Brown se verifica con un caso
+   calculado a mano. Una sesión incompleta no entra a H3 ni a H4, pero sí cuenta en el
+   total de sesiones creadas.
+4. Documentar el uso en docs/evaluacion/analisis-adultos.md: comandos, fórmulas y la
+   lectura de cada criterio del Cuadro 31.
+
 Propón el plan antes de escribir código.
 ```

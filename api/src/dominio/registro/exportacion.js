@@ -3,18 +3,23 @@ const { ORDEN_TAREAS, TAREAS } = require('./catalogo');
 const { INDICADORES } = require('./indicadores');
 const { NUMERO_ITEMS } = require('./sus');
 const { deGuardado } = require('./resultado');
+const { ESTADOS_SESION } = require('./motor');
 
 /**
- * Exportacion del registro conductual en CSV. M-09, HU-19, CT-11, CT-13, RF-15
+ * Exportacion del registro conductual en CSV. M-09, HU-19, CT-08, CT-11,
+ * CT-13, RF-15
  *
  * Dos archivos, solo con las sesiones del profesional que los pide:
  * - ensayos.csv: un ensayo por fila.
  * - valores.csv: una sesion por fila, con los valores observados por tarea,
  *   las variables de contexto, las respuestas del SUS y el valorSUS. Las
- *   sesiones incompletas salen sin valores (RF-15).
+ *   sesiones incompletas salen sin valores (RF-15). Tambien dice si el
+ *   dispositivo se entrego y, en las completas, la duracion en minutos
+ *   (CT-08), para el analisis de la evaluacion (api/scripts/).
  * Las dos llevan el seudonimo, la version del algoritmo (vacia si la sesion
  * no se proceso), la del catalogo, el reloj y el navegador. Ningun dato de la
- * persona (CT-11): ni la constancia del consentimiento ni las fechas.
+ * persona (CT-11): ni la constancia del consentimiento ni las fechas (de las
+ * fechas sale solo la duracion).
  *
  * Formato (RFC 4180): separador coma, punto decimal, UTF-8, fin de linea CRLF
  * y comillas solo donde hacen falta. Un valor vacio es un dato que no existe
@@ -137,6 +142,8 @@ const COLUMNAS_SUS = Object.freeze([
 const COLUMNAS_VALORES = Object.freeze([
   'seudonimo',
   'estado',
+  'entregada',
+  'duracionMin',
   'versionAlgoritmo',
   'versionCatalogo',
   'reloj',
@@ -147,6 +154,19 @@ const COLUMNAS_VALORES = Object.freeze([
   ...ORDEN_TAREAS.flatMap(columnasDeTarea),
   ...COLUMNAS_SUS
 ]);
+
+const MS_POR_MINUTO = 60000;
+
+/**
+ * CT-08. Minutos desde la ultima entrega del dispositivo hasta que llegan las
+ * dos tareas (`completadaEn`): las tareas con sus instrucciones y pausas, sin
+ * el SUS. Con dos decimales; null si la sesion no se completo.
+ */
+function duracionMinutos(sesion) {
+  if (sesion.estado !== ESTADOS_SESION.COMPLETADA || !sesion.entregadaEn || !sesion.completadaEn) return null;
+  const ms = new Date(sesion.completadaEn).getTime() - new Date(sesion.entregadaEn).getTime();
+  return Math.round((ms / MS_POR_MINUTO) * 100) / 100;
+}
 
 function valoresDeTareas(vista) {
   const fila = { ...vista.contexto };
@@ -181,6 +201,8 @@ function csvValores(sesiones) {
     return {
       ...datosDeSesion(sesion),
       estado: sesion.estado,
+      entregada: Boolean(sesion.entregadaEn),
+      duracionMin: duracionMinutos(sesion),
       ...(vista.procesada ? valoresDeTareas(vista) : {}),
       ...valoresSus(sesion.sus)
     };
@@ -188,4 +210,4 @@ function csvValores(sesiones) {
   return aCsv(COLUMNAS_VALORES, filas);
 }
 
-module.exports = { COLUMNAS_ENSAYOS, COLUMNAS_VALORES, aCsv, csvEnsayos, csvValores };
+module.exports = { COLUMNAS_ENSAYOS, COLUMNAS_VALORES, aCsv, csvEnsayos, csvValores, duracionMinutos };

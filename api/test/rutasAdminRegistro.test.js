@@ -36,11 +36,15 @@ async function entrar() {
   return agente;
 }
 
-/** Sesion aplicada de punta a punta: las dos tareas y el SUS. Devuelve su seudonimo. */
-async function sesionCompleta() {
+/**
+ * Sesion aplicada de punta a punta: las dos tareas y el SUS. Entre las dos
+ * tareas pasan `minutos` en el reloj de la prueba. Devuelve su seudonimo.
+ */
+async function sesionCompleta({ minutos = 0 } = {}) {
   const agente = await entrar();
   const { sesion, estado } = await sesionEntregada(agente);
   for (const tarea of ['cambio-regla', 'navon']) {
+    if (tarea === 'navon') reloj.avanzar(minutos);
     await agente.put(`/api/registro/aplicacion/tareas/${tarea}`).send(envioDe(tarea, { semilla: estado.semilla })).expect(200);
   }
   await agente.put('/api/registro/aplicacion/sus').send({ version: estado.cuestionarioSus.version, respuestas: RESPUESTAS_SUS }).expect(200);
@@ -315,7 +319,14 @@ describe('HU-19 exportacion en CSV', () => {
   });
 
   test('valores.csv: una sesion por fila, con los valores, el SUS y las incompletas sin valores', async () => {
-    const seudonimo = await sesionCompleta();
+    const seudonimo = await sesionCompleta({ minutos: 12.5 });
+    // Entregada, con una sola tarea recibida
+    const participante = await entrar();
+    const aMedias = await sesionEntregada(participante);
+    await participante
+      .put('/api/registro/aplicacion/tareas/cambio-regla')
+      .send(envioDe('cambio-regla', { semilla: aMedias.estado.semilla }))
+      .expect(200);
     const agente = await entrar();
     const incompleta = await crearSesion(agente);
     const res = await agente.get('/api/admin/registro/exportacion/valores.csv');
@@ -328,6 +339,8 @@ describe('HU-19 exportacion en CSV', () => {
 
     expect(porSeudonimo[seudonimo]).toMatchObject({
       estado: 'completada',
+      entregada: 'true',
+      duracionMin: '12.5',
       versionAlgoritmo: VERSION_ALGORITMO,
       versionCatalogo: VERSION_CATALOGO,
       reloj: 'animacion',
@@ -341,7 +354,16 @@ describe('HU-19 exportacion en CSV', () => {
     });
     expect(porSeudonimo[seudonimo].cc08).not.toBe('');
     expect(porSeudonimo[seudonimo].cc10).not.toBe('');
-    expect(porSeudonimo[incompleta.seudonimo]).toMatchObject({ estado: 'en_curso', versionAlgoritmo: '', cc08: '', valorSUS: '' });
+    // CT-08: la duracion solo existe en las completas; entregada separa las que nunca se aplicaron
+    expect(porSeudonimo[aMedias.sesion.seudonimo]).toMatchObject({ estado: 'en_curso', entregada: 'true', duracionMin: '', cc08: '' });
+    expect(porSeudonimo[incompleta.seudonimo]).toMatchObject({
+      estado: 'en_curso',
+      entregada: 'false',
+      duracionMin: '',
+      versionAlgoritmo: '',
+      cc08: '',
+      valorSUS: ''
+    });
   });
 
   test('otro profesional no recibe sesiones ajenas', async () => {

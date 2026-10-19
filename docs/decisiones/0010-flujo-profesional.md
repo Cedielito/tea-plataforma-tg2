@@ -73,7 +73,8 @@ aplicación.
   con un campo identificable (422) antes de llegar al modelo. Del navegador se guardan
   solo la familia y la versión mayor («Firefox 131»): `describirNavegador` reduce el
   User-Agent de la entrega y el esquema no acepta otro formato. La exportación no lleva la
-  constancia del consentimiento ni fechas.
+  constancia del consentimiento ni fechas: de las fechas solo sale la duración en minutos
+  (T17).
 - **Vista del profesional (HU-18).** Lista por seudónimo con estado; en una sesión
   completa, los valores por tarea con su unidad, el aviso de M-09 y la versión del
   algoritmo, y las variables de contexto aparte. Las pruebas pasan por
@@ -81,7 +82,11 @@ aplicación.
   pantallas.
 - **Exportación (HU-19).** Dos CSV con las sesiones del profesional: ensayos (uno por fila)
   y valores con el SUS (una sesión por fila; las incompletas sin valores). Llevan el
-  seudónimo, la versión del algoritmo y del catálogo, el reloj y el navegador. Formato
+  seudónimo, la versión del algoritmo y del catálogo, el reloj y el navegador. Con T17,
+  valores.csv dice además si el dispositivo se entregó (`entregada`, true o false) y, en las
+  sesiones completas, la duración en minutos con dos decimales (`duracionMin`): desde la
+  última entrega hasta que llegan las dos tareas, sin el SUS (CT-08). Las dos columnas son
+  para el análisis de la evaluación (`docs/evaluacion/analisis-adultos.md`). Formato
   acordado: coma como separador, punto decimal y UTF-8 (RFC 4180).
 - **Eliminación (HU-19, Ley 1581).** Por seudónimo, escrito como sea
   (`normalizarSeudonimo`): se borran los ensayos y la sesión.
