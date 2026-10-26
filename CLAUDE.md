@@ -210,10 +210,11 @@ node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-
   `describe('RCN-01 fuente obligatoria', ...)`.
 - **Códigos oficiales**: usa solo los códigos de `docs/requisitos-fase-i.md`
   (M-01..M-09, RCN-01..08, RA-01..11, RF-01..15, RS-01..07, HU-01..HU-19 y, para M-09,
-  CC-08, CC-09, CC-10, CC-12, CT-03, CT-07, CT-08, CT-11, CT-13, CP-01 y CP-04), que
-  copia los cuadros del documento de tesis, incluido el modelo de datos (Cuadro 13).
-  No inventes códigos; si hace falta uno, pregunta. Los códigos de la Fase II que no
-  están en esa lista (RF-20, RF-23, RN-01, ...) no se usan: chocan con los actuales.
+  CC-08, CC-09, CC-10, CC-12, CT-01 a CT-09, CT-11 a CT-13, CP-01 a CP-05 y CP-07 a
+  CP-12), que copia los cuadros del documento de tesis, incluido el modelo de datos
+  (Cuadro 13). No inventes códigos; si hace falta uno, pregunta. Los códigos de la
+  Fase II que no están en esa lista (RF-20, RF-23, RN-01, CT-10, CT-14, CP-06, ...) no
+  se usan: chocan con los actuales o salieron de esta fase.
 - **Voz del equipo**: commits, PR, comentarios de revisión y documentos se redactan en
   primera persona del plural, como trabajo del equipo: «implementamos», «verificamos»,
   «revisamos». Nunca en singular («revisé», «comprobé»). En el chat de la sesión sí se
