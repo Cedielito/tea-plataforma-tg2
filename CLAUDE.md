@@ -250,7 +250,7 @@ node api/scripts/analisisEvaluacion.js <registro-ensayos.csv> <registro-valores-
 
 ## Estado actual
 
-T0 a T17 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
+T0 a T18 hechas. API con `/salud` y `/api/salud`, manejo de errores y conexión a
 MongoDB. Web con tokens y alto contraste (`tokens.css`), fuentes autoalojadas, layout
 común (`web/src/componentes/`), barra de accesibilidad M-07 con sessionStorage
 (`web/src/accesibilidad/`), inicio M-01 y páginas vacías por sección. Las secciones
@@ -579,5 +579,16 @@ desde ensayos.csv con `procesarSesion` y se comparan con valores.csv. Criterios 
 `api/test/analisisEvaluacion.test.js` pasa los 6 perfiles de T16 por la API y la
 exportación, con una sesión interrumpida y una sin entregar, y un segundo profesional para
 los dos pares.
+
+Cierre de CP-03 y de los criterios de M-09 (T18): la sección 7 de `docs/requisitos-fase-i.md`
+trae los criterios técnicos (CT-01 a CT-09 y CT-11 a CT-13) y pedagógicos (CP-01 a CP-05 y
+CP-07 a CP-12) de M-09; CT-10 y CT-14 pasan a la Fase II y CP-06 se excluye. CP-03: lo que ve
+el participante va en frases de 15 palabras o menos. `describe('CP-03 frases de 15 palabras o
+menos')`, en `web/src/registro/textos.test.js`, recorre `textos.js` (también lo que sale de
+funciones) y `APLICACION` y `SUS` de `textosProfesional.js`; una frase termina en punto, signo
+de interrogación o de exclamación (los dos puntos no la cortan). Quedan fuera el aviso de
+M-09, la nota de `/registro/prueba` y los ítems del SUS, cuya redacción fija la versión
+validada. `EXPLICACION_REGLA` empieza en minúscula para ir después de «Si dice COLOR,» o «Con
+la regla COLOR,», y `laReglaEs` la pone después de «La regla es COLOR.».
 
 Siguiente: versión congelada el 26 de octubre y los pendientes de `docs/backlog-fase-i.md`.
