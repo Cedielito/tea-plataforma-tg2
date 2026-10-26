@@ -1,9 +1,11 @@
 /**
  * Textos del flujo del profesional y de la aplicación del registro conductual
- * (M-09, HU-16 a HU-19, RCN-03). Español de Colombia, frases cortas y
- * literales. Pasan por buscarVocabularioProhibido (textosProfesional.test.js):
- * sin etiquetas diagnósticas, niveles, puntos de corte ni puntajes. El SUS
- * valora la herramienta, no a la persona: su resultado se llama «valor SUS».
+ * (M-09, HU-16 a HU-19, RCN-03, CP-03). Español de Colombia, frases cortas y
+ * literales; lo que ve el participante (APLICACION y SUS) va en frases de 15
+ * palabras o menos (CP-03, en textos.test.js). Pasan por
+ * buscarVocabularioProhibido (textosProfesional.test.js): sin etiquetas
+ * diagnósticas, niveles, puntos de corte ni puntajes. El SUS valora la
+ * herramienta, no a la persona: su resultado se llama «valor SUS».
  */
 
 export const ZONA = Object.freeze({
@@ -171,7 +173,7 @@ export const APLICACION = Object.freeze({
   sinAplicacion: 'En este dispositivo no hay actividades en curso. Devuelve el dispositivo a la persona que te acompaña.',
   interrumpidaTitulo: 'Las actividades se interrumpieron',
   interrumpida: [
-    'La página se cerró o se volvió a cargar en medio de una actividad, así que no se puede continuar.',
+    'La página se cerró o se volvió a cargar en medio de una actividad. Por eso no se puede continuar.',
     'Devuelve el dispositivo a la persona que te acompaña.'
   ],
   graciasTitulo: 'Gracias',

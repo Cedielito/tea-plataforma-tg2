@@ -1,8 +1,9 @@
 /**
- * Textos de las tareas de cambio de regla y de Navon (M-09, RCN-03, HU-17):
- * sin vocabulario prohibido, con el aviso de M-09 igual al de api/, con una
- * pantalla de instrucciones en cada cambio de regla y, en Navon, antes de
- * cada bloque.
+ * Textos de las tareas de cambio de regla y de Navon (M-09, RCN-03, HU-17,
+ * CP-03): sin vocabulario prohibido, con el aviso de M-09 igual al de api/,
+ * con una pantalla de instrucciones en cada cambio de regla y, en Navon,
+ * antes de cada bloque, y con lo que ve el participante en frases de 15
+ * palabras o menos.
  */
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
@@ -15,6 +16,7 @@ import { planificarSesion } from '../../../api/src/dominio/registro/secuenciador
 import * as textos from './textos.js';
 import { CAJAS, ESTIMULOS_PRUEBA } from './estimulos.js';
 import { OPCIONES_LETRA } from './estimulosNavon.js';
+import { APLICACION, SUS } from './textosProfesional.js';
 
 const SECUENCIA = planificarSesion().secuencias.find((s) => s.tarea === 'cambio-regla');
 const SECUENCIA_NAVON = planificarSesion().secuencias.find((s) => s.tarea === 'navon');
@@ -153,5 +155,85 @@ describe('HU-17 instrucciones de la tarea de Navon', () => {
     assert.equal(new Set(mensajes).size, total);
     assert.match(mensajes.at(-1), /Terminaste todos los carteles/);
     assert.equal(animoNavon.length, 2);
+  });
+});
+
+/**
+ * Lo que ve el participante: los textos de las dos tareas y, de
+ * textosProfesional.js, los de la aplicación y el SUS. Quedan fuera el aviso
+ * de M-09, que es para el profesional y tiene un texto fijo (regla 10 de
+ * CLAUDE.md), y la nota de /registro/prueba, que es para el equipo. Los ítems
+ * del SUS llegan de la API (api/contenidos/registro/sus.yaml) y tampoco
+ * entran: su redacción la fija la versión validada.
+ */
+const NO_LOS_VE_EL_PARTICIPANTE = new Set([textos.AVISO_REGISTRO, textos.PAGINA_PRUEBA.nota]);
+
+/** Todas las cadenas de un valor, recorriendo lo anidado. */
+const cadenas = (valor) => {
+  if (typeof valor === 'string') return [valor];
+  if (valor === null || typeof valor !== 'object') return [];
+  return Object.values(valor).flatMap(cadenas);
+};
+
+const textosDelParticipante = () =>
+  cadenas([todosLosTextos(), APLICACION, SUS, SUS.enunciado(1, 10)]).filter(
+    (texto) => !NO_LOS_VE_EL_PARTICIPANTE.has(texto)
+  );
+
+const MAXIMO_PALABRAS = 15;
+
+/** Una frase termina en punto, signo de interrogación o de exclamación, o puntos suspensivos. */
+const frases = (texto) => texto.split(/(?<=[.?!…])\s+/u).filter(Boolean);
+
+/** Una palabra es lo que separa un espacio y tiene al menos una letra o un número. */
+const palabras = (frase) => frase.split(/\s+/u).filter((p) => /[\p{L}\p{N}]/u.test(p));
+
+/** Frases de más de 15 palabras, con su número de palabras. */
+const frasesLargas = (lista) =>
+  lista
+    .flatMap(frases)
+    .map((frase) => ({ frase, palabras: palabras(frase).length }))
+    .filter((f) => f.palabras > MAXIMO_PALABRAS);
+
+describe('CP-03 frases de 15 palabras o menos', () => {
+  test('ninguna frase de lo que ve el participante pasa de 15 palabras', () => {
+    assert.deepEqual(frasesLargas(textosDelParticipante()), []);
+  });
+
+  test('recorre las instrucciones de las dos tareas y la aplicación, sin el aviso de M-09 ni la nota de la prueba', () => {
+    const vistos = textosDelParticipante();
+    const [color, forma, mixto1] = SECUENCIA.bloques;
+    const esperados = [
+      textos.PRACTICA.parrafos[0],
+      ...textosAntesDeBloque(color, false).parrafos,
+      ...textosAntesDeBloque(forma, false).parrafos,
+      ...textosAntesDeBloque(mixto1, true).parrafos,
+      RETROALIMENTACION.incorrecta('forma'),
+      NAVON.practica.parrafos[0],
+      APLICACION.interrumpida[0],
+      SUS.descripcion[0]
+    ];
+    for (const texto of esperados) assert.ok(vistos.includes(texto), texto);
+    assert.ok(!vistos.includes(textos.AVISO_REGISTRO));
+    assert.ok(!vistos.includes(textos.PAGINA_PRUEBA.nota));
+  });
+
+  test('la prueba sí detecta las frases largas que tenían las instrucciones', () => {
+    const antes = [
+      'La regla es COLOR: cada juguete va en la caja de su mismo color: lo rojo con lo rojo y lo azul con lo azul.',
+      'Primero vas a practicar con dos carteles: en uno miras la letra grande y en el otro, las letras pequeñas.'
+    ];
+    assert.deepEqual(
+      frasesLargas(antes).map((f) => f.palabras),
+      [25, 20]
+    );
+  });
+
+  test('una frase termina en punto, interrogación o exclamación, y una palabra tiene una letra o un número', () => {
+    assert.deepEqual(frases('Mira. ¿Listo? ¡Vamos! Uno: dos; tres.'), ['Mira.', '¿Listo?', '¡Vamos!', 'Uno: dos; tres.']);
+    assert.deepEqual(palabras('Presiona la tecla F — o toca 1.'), ['Presiona', 'la', 'tecla', 'F', 'o', 'toca', '1.']);
+    const quince = `${Array(15).fill('palabra').join(' ')}.`;
+    assert.deepEqual(frasesLargas([quince]), []);
+    assert.equal(frasesLargas([`Una ${quince}`])[0].palabras, 16);
   });
 });
