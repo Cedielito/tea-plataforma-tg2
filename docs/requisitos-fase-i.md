@@ -8,9 +8,10 @@ referencias bibliográficas del documento.
 Usa solo estos códigos en comentarios, pruebas, commits y PR. No inventes códigos nuevos.
 
 Los códigos de M-09 (sección 7) vienen del documento anterior y de la versión 2.3 del
-documento, que lleva los mismos textos: RF-13 a RF-15, CC-08, CC-09, CC-10, CC-12,
-CT-03, CT-07, CT-08, CT-11, CT-13, CP-01 y CP-04. Los demás códigos de la Fase II
-(RF-20, RF-23, RN-01, ...) no se usan: chocan con los de este archivo.
+documento, que lleva los mismos textos: RF-13 a RF-15; CT-01 a CT-09 y CT-11 a CT-13;
+CC-08, CC-09, CC-10 y CC-12; CP-01 a CP-05 y CP-07 a CP-12. CT-10 y CT-14 pasan a la
+Fase II y CP-06 se excluye (sección 7). Los demás códigos de la Fase II (RF-20, RF-23,
+RN-01, ...) no se usan: chocan con los de este archivo.
 
 Nota de implementación: el Cuadro 14 fija una base tipográfica mínima de 16 px; la
 plataforma usa 18 px (más legible y dentro de la regla).
@@ -89,7 +90,7 @@ plataforma usa 18 px (más legible y dentro de la regla).
 | M-06. Contacto y privacidad | Formulario de contacto con autorización de tratamiento de datos, política de privacidad y página «Acerca de». | Familia, docente | RF-08, RF-12, RS-02, RS-03 |
 | M-07. Ajustes de accesibilidad | Control permanente de tamaño de letra, alto contraste y reducción de movimiento. | Todos | RA-07 |
 | M-08. Panel de administración | Gestión de contenidos, preguntas, recursos, directorio, pasos de la ruta y mensajes, con acceso autenticado. | Administrador | RF-09 a RF-11, RS-04, RS-05 |
-| M-09. Registro conductual estructurado | Herramienta para que un profesional registre de forma estandarizada el desempeño en dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas de Navon, y entregue los valores observados por tarea con el aviso de no diagnóstico. En esta fase se evalúa solo con adultos voluntarios. | Profesional, participante adulto | RF-13 a RF-15, CC-08, CC-09, CC-10, CC-12, CT-03, CT-07, CT-08, CT-11, CT-13, CP-01, CP-04, RCN-03 |
+| M-09. Registro conductual estructurado | Herramienta para que un profesional registre de forma estandarizada el desempeño en dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas de Navon, y entregue los valores observados por tarea con el aviso de no diagnóstico. En esta fase se evalúa solo con adultos voluntarios. | Profesional, participante adulto | RCN-03; RF-13 a RF-15; CT-01 a CT-09 y CT-11 a CT-13; CC-08, CC-09, CC-10 y CC-12; CP-01 a CP-05 y CP-07 a CP-12 |
 
 ### Cuadro 11. Arquitectura de contenidos del portal
 
@@ -198,17 +199,44 @@ clínicos y ninguno se asocia a un dominio del DSM-5-TR.
 | RF-14 | Los ensayos de práctica, las omisiones y las anticipaciones no entran al cálculo. | Profesional | Prueba automatizada |
 | RF-15 | Las sesiones incompletas no se procesan. | Profesional | Prueba automatizada |
 
-### Restricciones técnicas y de procedimiento de M-09
+### Criterios técnicos de M-09
 
-| Código | Restricción | Verificación |
-|---|---|---|
-| CT-03 | Durante los ensayos, el participante no ve temporizadores, marcadores ni puntajes. | Prueba automatizada y revisión de interfaz |
-| CT-07 | El sistema registra el tiempo de reacción de cada ensayo con un error de 50 ms o menos. | Experimento de precisión temporal (T16) |
-| CT-08 | La aplicación de las tareas dura 20 minutos o menos, con una pausa al menos cada 5 minutos. | Prueba automatizada y prueba con voluntarios |
-| CT-11 | Cada sesión se identifica con un seudónimo aleatorio y ninguna colección del registro guarda datos identificables. | Prueba automatizada |
-| CT-13 | Cada resultado guarda la versión del algoritmo; la misma entrada con la misma versión produce la misma salida. | Prueba automatizada |
-| CP-01 | Cada bloque tiene como máximo 7 ensayos. | Prueba automatizada |
-| CP-04 | Cada tarea empieza con al menos 2 ensayos de práctica con retroalimentación. | Prueba automatizada |
+| Código | Criterio | Fuente | Verificación |
+|---|---|---|---|
+| CT-01 | Contraste mínimo de 4,5:1 en el texto normal y de 3:1 en el texto grande y los componentes de la interfaz. | WCAG 2.1, 1.4.3 [1] | Auditoría con axe-core |
+| CT-02 | Ningún contenido destella más de tres veces por segundo. | WCAG 2.1, 2.3.1 [1] | Revisión del código y de las pantallas |
+| CT-03 | Durante los ensayos, el participante no ve temporizadores, marcadores ni puntajes; el tiempo de reacción se registra sin mostrarse. | WCAG 2.1, 2.2.1 [1]; carga cognitiva [35] | Prueba automatizada y revisión de la interfaz |
+| CT-04 | Todas las funciones se operan con el teclado, sin gestos complejos. | WCAG 2.1, 2.1.1 [1] | Recorrido solo con teclado |
+| CT-05 | Todo contenido no textual, incluidos los estímulos de las tareas, tiene una alternativa textual. | WCAG 2.1, 1.1.1 [1] | Auditoría con axe-core |
+| CT-06 | Ajustes de tamaño de letra, alto contraste y reducción de movimiento disponibles antes y durante la sesión; los estímulos conservan su tamaño y sus colores. | WCAG 2.1 [1]; [72] | Prueba funcional y auditoría en alto contraste |
+| CT-07 | El tiempo de reacción de cada ensayo se registra con un error de 50 ms o menos. | [96], [97] | Experimento de precisión temporal |
+| CT-08 | La aplicación de las tareas dura 20 minutos o menos, con una pausa al menos cada 5 minutos. | Carga cognitiva [35], [70] | Prueba automatizada y sesiones con voluntarios |
+| CT-09 | La interfaz se usa sin desplazamiento horizontal desde 320 píxeles de ancho, en computador y tableta. | Diseño responsivo; equidad de acceso [23] | Auditoría a 320 píxeles |
+| CT-11 | Cada sesión se identifica con un seudónimo aleatorio y ninguna colección del registro guarda datos identificables. | Ley 1581 de 2012 [29] | Prueba automatizada |
+| CT-12 | Consentimiento informado escrito del participante adulto, con constancia en la plataforma antes de crear la sesión. | Ley 1581, art. 9 [29]; Res. 8430, arts. 15 y 16 [56] | Prueba automatizada |
+| CT-13 | Cada resultado guarda la versión del algoritmo; la misma entrada con la misma versión produce la misma salida. | Reproducibilidad del cálculo | Prueba automatizada |
+
+CT-10 (sincronización diferida sin conexión) y CT-14 (asentimiento del menor) pasan a la
+Fase II. CT-06, CT-07, CT-11 y CT-12 se adaptaron a la evaluación con adultos.
+
+### Criterios pedagógicos y neuroeducativos de M-09
+
+| Código | Criterio | Fundamento | Verificación |
+|---|---|---|---|
+| CP-01 | Bloques de siete ensayos como máximo, con una pausa entre bloques. | Carga cognitiva [35]; segmentación [70] | Prueba automatizada |
+| CP-02 | Instrucciones con texto y un ejemplo visual del estímulo, contiguos en la misma pantalla. | Modalidad y contigüidad [70] | Revisión de las pantallas de instrucción |
+| CP-03 | Frases de quince palabras o menos, en lenguaje literal, sin metáforas ni ironía. | Lenguaje sencillo [73] | Conteo automatizado sobre los textos de las tareas |
+| CP-04 | Al menos dos ensayos de práctica con retroalimentación antes de la medición; no entran al cálculo. | Diseño instruccional; validez de la medición | Prueba automatizada |
+| CP-05 | Retroalimentación inmediata y de tono positivo o neutro, solo en la práctica; sin sonidos ni señales enfáticas del error. | Neuroeducación; motivación intrínseca [34] | Revisión de la interfaz |
+| CP-07 | Progreso visible con una barra de avance por partes; sin insignias ni recompensas por aciertos. | Competencia en la teoría de la autodeterminación [34] | Revisión de la interfaz |
+| CP-08 | Sin comparación social, tablas de clasificación ni puntajes visibles. | Prevención de la ansiedad evaluativa [73] | Revisión de la interfaz y vocabulario prohibido |
+| CP-09 | Un elemento animado como máximo por pantalla y fondo plano, sin decoración irrelevante. | Carga extrínseca [35], [70] | Revisión de las pantallas |
+| CP-10 | Consistencia entre las dos tareas: misma posición de las opciones, misma paleta y misma estructura de pantalla. | Predictibilidad [73] | Pantalla de ensayo común a las dos tareas |
+| CP-11 | Textos, objetos y ejemplos adaptados al español de Colombia. | Adecuación cultural [65] | Revisión por los jueces |
+| CP-12 | Sin penalización por error ni por tiempo; la dinámica no contempla perder. | Motivación intrínseca [34] | Revisión de las reglas de las tareas |
+
+CP-06 (elegir el orden de las tareas y personalizar un avatar) se excluye porque rompería la
+estandarización. CP-02, CP-03 y CP-07 se adaptaron a la evaluación con adultos.
 
 ### Indicadores de desempeño de M-09
 

@@ -1,10 +1,10 @@
 /**
- * Textos de las tareas de cambio de regla y de Navon (M-09, HU-17, CP-04,
- * RCN-03). Todos los textos visibles de las tareas están aquí, para que una
- * prueba los pase
- * por buscarVocabularioProhibido (api/src/dominio/registro/
- * vocabularioProhibido.js): ni etiquetas diagnósticas, ni niveles, ni puntos,
- * ni puntajes. Frases cortas y literales.
+ * Textos de las tareas de cambio de regla y de Navon (M-09, HU-17, CP-03,
+ * CP-04, RCN-03). Todos los textos visibles de las tareas están aquí, para
+ * que una prueba los pase por buscarVocabularioProhibido (api/src/dominio/
+ * registro/vocabularioProhibido.js): ni etiquetas diagnósticas, ni niveles,
+ * ni puntos, ni puntajes. Frases literales de 15 palabras o menos (CP-03):
+ * textos.test.js las cuenta en todo lo que ve el participante.
  *
  * Dinámicas gamificadas que no alteran la medición (cada una declara su
  * principio neuroeducativo):
@@ -35,10 +35,23 @@ export const AVISO_REGISTRO =
 /** Señal de cada regla: la palabra que aparece arriba del juguete, junto con el ícono. */
 export const SENALES = Object.freeze({ color: 'COLOR', forma: 'FORMA' });
 
+/**
+ * Qué pide cada regla, en frases de 15 palabras o menos (CP-03). Empieza en
+ * minúscula porque va después de «Si dice COLOR,» y de «Con la regla
+ * COLOR,»; laReglaEs la pone, con mayúscula, después de «La regla es COLOR.».
+ */
 const EXPLICACION_REGLA = Object.freeze({
-  color: 'cada juguete va en la caja de su mismo color: lo rojo con lo rojo y lo azul con lo azul.',
-  forma: 'cada juguete va en la caja de su misma forma: el conejo con el conejo y el barco con el barco, sin importar el color.'
+  color: 'cada juguete va en la caja de su mismo color. Lo rojo va con lo rojo y lo azul con lo azul.',
+  forma:
+    'cada juguete va en la caja de su misma forma. El conejo va con el conejo y el barco con el barco. ' +
+    'El color no importa.'
 });
+
+/** «La regla es COLOR. Cada juguete va en la caja de su mismo color. Lo rojo…» */
+function laReglaEs(regla, inicio = 'La regla es') {
+  const explicacion = EXPLICACION_REGLA[regla];
+  return `${inicio} ${SENALES[regla]}. ${explicacion[0].toUpperCase()}${explicacion.slice(1)}`;
+}
 
 const otraRegla = (regla) => Object.keys(SENALES).find((r) => r !== regla);
 
@@ -77,7 +90,7 @@ export const INSTRUCCIONES = Object.freeze({
 export const PRACTICA = Object.freeze({
   titulo: 'Práctica',
   parrafos: [
-    `Primero vas a practicar con dos juguetes. La regla es ${SENALES.color}: ${EXPLICACION_REGLA.color}`,
+    `Primero vas a practicar con dos juguetes. ${laReglaEs('color')}`,
     'En la práctica te diremos si elegiste la caja correcta.'
   ],
   boton: 'Empezar la práctica'
@@ -107,17 +120,14 @@ export function textosAntesDeBloque(bloque, esPrimerMixto) {
   if (bloque.fase === 'pre-cambio') {
     return {
       titulo: 'Empieza el trabajo',
-      parrafos: [
-        `La regla es ${SENALES[bloque.regla]}: ${EXPLICACION_REGLA[bloque.regla]}`,
-        'La palabra de arriba del juguete te recuerda la regla.'
-      ]
+      parrafos: [laReglaEs(bloque.regla), 'La palabra de arriba del juguete te recuerda la regla.']
     };
   }
   if (bloque.fase === 'post-cambio') {
     return {
       titulo: 'El taller cambió la regla',
       parrafos: [
-        `Ahora la regla es ${SENALES[bloque.regla]}: ${EXPLICACION_REGLA[bloque.regla]}`,
+        laReglaEs(bloque.regla, 'Ahora la regla es'),
         `Ya no se guarda por ${SENALES[otraRegla(bloque.regla)]}. La palabra de arriba del juguete te recuerda la regla.`
       ]
     };
@@ -260,7 +270,7 @@ export const NAVON = Object.freeze({
   practica: Object.freeze({
     titulo: 'Práctica',
     parrafos: [
-      'Primero vas a practicar con dos carteles: en uno miras la letra grande y en el otro, las letras pequeñas.',
+      'Primero vas a practicar con dos carteles. En uno miras la letra grande. En el otro miras las letras pequeñas.',
       'En la práctica te diremos si elegiste la letra correcta.'
     ],
     boton: 'Empezar la práctica'

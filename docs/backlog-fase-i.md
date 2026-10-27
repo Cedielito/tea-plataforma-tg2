@@ -15,7 +15,7 @@ Decisión en `docs/decisiones/0007-registro-conductual.md`.
 |---|---|---|
 | 1 | 6 – 12 oct | Repo limpio, base visual, contenidos (M-01, M-02, M-07) y panel con login |
 | 2 | 13 – 19 oct | Ruta, directorio, recursos, preguntas, contacto y **despliegue**; núcleo del registro (T12, 18 oct) |
-| 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); T17, análisis de la evaluación con adultos; **versión congelada el 26 oct** |
+| 3 | 20 – 26 oct | M-09: T13 (20 oct), T14 (21 oct), T15 (23 oct) y T16 (24 oct); T10 y T11 (25 oct); T17, análisis de la evaluación con adultos; T18, cierre de CP-03 y de los criterios de M-09 (26 oct); **versión congelada el 26 oct** |
 | 4 | 27 oct – 6 nov | Prueba con voluntarios adultos sobre la versión congelada (solo con el aval escrito del comité de ética), resultados en el documento (lo amarillo) y **entrega el 6 de noviembre** |
 
 Reglas:
@@ -62,6 +62,7 @@ Reglas:
 | T10 ✅ | `test/accesibilidad` | axe-core + Lighthouse + correcciones, también en las pantallas de M-09 | RA-01 a RA-11 | 3 (25 oct) |
 | T11 ✅ | `docs/casos-aceptacion` | Casos de aceptación de HU-01 a HU-19 y su ejecución | C1 | 3 (25 oct) |
 | T17 ✅ | `feat/analisis-evaluacion` | Análisis de la evaluación con adultos (capa 2): `entregada` y `duracionMin` en valores.csv y programa que resume los dos CSV en agregados | M-09, HU-19, CC-09, CC-10, CT-08, CT-13, RF-14, RF-15 | 3 |
+| T18 ✅ | `fix/cp03-criterios` | Cierre: instrucciones del participante en frases de 15 palabras o menos, con su prueba, y criterios técnicos y pedagógicos de M-09 en `docs/requisitos-fase-i.md` | M-09, CP-03; CT-01 a CT-09, CT-11 a CT-13, CP-01 a CP-05 y CP-07 a CP-12 | 3 (26 oct) |
 
 Reglas de cada sesión (Claude Code web): sesión nueva desde `main` → pegar el prompt → revisar y aprobar el plan → Claude programa, prueba, hace commit y push **a la rama de la tarea** y abre el Pull Request → revisar CI y vista previa → el otro integrante aprueba → *Squash and merge* → borrar la rama.
 
@@ -71,6 +72,7 @@ Al cerrar cada tarea, marcarla con ✅ en la tabla dentro del mismo PR.
 
 | Detectado en | Pendiente | Módulos / requisitos |
 |---|---|---|
+| T18 | El documento debe reflejar cómo se verifica CP-03: una prueba cuenta las palabras de cada frase en lo que ve el participante (las dos tareas, la aplicación y el SUS); una frase termina en punto, signo de interrogación o de exclamación (los dos puntos no la cortan) y cuenta como palabra lo que tiene al menos una letra o un número. Quedan fuera el aviso de M-09 (texto fijo, para el profesional), la nota de `/registro/prueba` (para el equipo) y los ítems del SUS, cuya redacción fija la versión validada: el ítem 4 de la traducción de trabajo (`api/contenidos/registro/sus.yaml`, «Creo que necesitaría el apoyo de una persona con conocimientos técnicos para poder usar esta herramienta.») tiene 16 palabras, y al reemplazarla por la de Sevilla-González y colaboradores (2020) se copia tal cual. Si el documento cita las instrucciones de las tareas, actualizarlas con los textos de T18. Todos los criterios marcados «Prueba automatizada» tienen prueba, pero tres se prueban con otro código en el `describe`: CT-12 con HU-16 (`api/test/registroSesionEnvio.test.js` y `api/test/rutasAdminRegistro.test.js`), la pausa entre bloques de CP-01 con CT-08 (`api/test/registroSecuencia.test.js`) y «no entran al cálculo» de CP-04 con RF-14 (`api/test/registroRestricciones.test.js`). | M-09, CP-01, CP-03, CP-04, CT-12, HU-16 |
 | T17 | El documento debe reflejar el método de la capa 2 (`docs/evaluacion/analisis-adultos.md`): CC-09 y CC-10 se toman del resultado guardado de cada sesión completa; las mitades de H4 se cuentan en el orden de presentación después de los filtros de RF-14; la eficacia cumple si al menos el 85 % de las sesiones entregadas se completaron en 20 minutos o menos (las creadas que nunca se entregaron no cuentan; una incompleta y una completa de más de 20 minutos cuentan igual en contra) y se informan creadas, entregadas y completas, con la mediana, el máximo y cuántas completas pasan de 20 minutos; la duración va de la entrega del dispositivo a la llegada de las dos tareas, sin el SUS; con varias cuentas, cada profesional exporta su par de CSV y el programa los une. En los criterios de HU-19, valores.csv suma `entregada` y `duracionMin`. | M-09, HU-19, CC-09, CC-10, CT-08, RF-14, RF-15 |
 | T11 | El documento debe reflejar los casos de aceptación (`docs/evaluacion/casos-aceptacion.md`): los 19 casos cumplen en lo automático y ninguno dio «No cumple». El Cuadro 19 dice «las quince historias de usuario»: son 19. Quedan tres partes para revisión manual: la redacción de S1 (HU-01, RCN-06), el orden visual del foco y el teclado en el panel y en la zona del profesional (HU-11, con la revisión manual de T10) y la duración real y la aplicación sin ayuda con los voluntarios (HU-17, CT-08). Anotar en ese documento el resultado de cada una. | HU-01 a HU-19, RCN-06, RA-03, RA-11, CT-08 |
 | T10 | Hacer la revisión manual de `docs/evaluacion/accesibilidad.md` («Lo que no se revisa automáticamente») sobre la vista previa de Vercel: NVDA, TalkBack y VoiceOver, zoom al 200 % con «Letra muy grande», solo teclado y reducir movimiento; anotar el resultado en ese documento. Agregar al protocolo de aplicación de M-09 la pregunta por la visión de color y la revisión de que el dispositivo no tenga filtros de color ni escala de grises (el rojo y el azul de la tarea de cambio de regla tienen casi la misma luminancia). El documento debe reflejar los límites de tiempo de WCAG 2.2.1: los 5 s por ensayo son la excepción «esencial» (no hay temporizadores visibles, CT-03); el panel y la zona del profesional avisan 2 minutos antes del cierre por inactividad con «Seguir conectado»; el tope de 8 horas y las 2 horas de la aplicación son límites de seguridad. | M-08, M-09, RA-01 a RA-11, CT-03 |
@@ -637,4 +639,43 @@ Objetivo: un programa reproducible que lea los dos CSV que exporta el profesiona
    lectura de cada criterio del Cuadro 31.
 
 Propón el plan antes de escribir código.
+```
+
+### T18 — Cierre: CP-03 y criterios de M-09 ✅
+Hecha. Decisiones acordadas al aprobar el plan: `EXPLICACION_REGLA` se corrige una sola vez y
+vale para las cinco pantallas que la usan (práctica, bloques de color y de forma, primer bloque
+mixto y retroalimentación de un error); «sin importar el color» pasa a su propia frase («El
+color no importa.»), porque unida a la anterior daría 16 palabras y el primer bloque mixto no
+lo dice en otro lado. También se dividió `APLICACION.interrumpida` (20 palabras), que ve el
+participante. La prueba de CP-03 está en `web/src/registro/textos.test.js`: recorre
+`textos.js` y, de `textosProfesional.js`, `APLICACION` y `SUS`; quedan fuera el aviso de M-09,
+la nota de `/registro/prueba` y los ítems del SUS (su redacción la fija la versión validada;
+el ítem 4 quedó en pendientes). La fila de M-09 del Cuadro 10 lista los códigos nuevos. El
+archivo adjunto con las tablas no llegó a la sesión: el equipo las pegó en la conversación.
+Hecha en la rama `claude/loving-tesla-h47kk8` (la que asignó el entorno de Claude Code;
+corresponde a `fix/cp03-criterios`).
+```
+Lee CLAUDE.md y docs/backlog-fase-i.md. Tarea nueva T18 «Cierre: CP-03 y criterios de
+M-09», rama fix/cp03-criterios desde main actualizado. Propón el plan y espera aprobación.
+
+1. web/src/registro/textos.js: divide en frases de 15 palabras o menos las dos
+   instrucciones del participante que las superan, manteniendo el paralelo con su par:
+   - «La regla es COLOR: cada juguete va en la caja de su mismo color: lo rojo con lo
+     rojo y lo azul con lo azul.» → «La regla es COLOR. Cada juguete va en la caja de
+     su mismo color. Lo rojo va con lo rojo y lo azul con lo azul.» (y la de FORMA
+     igual, si aplica)
+   - «Primero vas a practicar con dos carteles: en uno miras la letra grande y en el
+     otro, las letras pequeñas.» → «Primero vas a practicar con dos carteles. En uno
+     miras la letra grande. En el otro miras las letras pequeñas.»
+2. Prueba con node --test, describe('CP-03 frases de 15 palabras o menos', ...):
+   recorre los textos que ve el participante y falla si una frase supera 15 palabras.
+   Excluye el aviso de M-09 (texto fijo de la regla 10, dirigido al profesional) y la
+   nota de /registro/prueba.
+3. docs/requisitos-fase-i.md, sección 7: reemplaza «Restricciones técnicas y de
+   procedimiento de M-09» por las tablas de criterios técnicos y pedagógicos del
+   archivo adjunto. Deja igual las tablas de RF y CC.
+4. CLAUDE.md, «Códigos oficiales»: agrega CT-01 a CT-09, CT-11, CT-12 y CP-01 a CP-05,
+   CP-07 a CP-12. Agrega T18 al backlog.
+npm test y npm run build:web en verde, commits con el código del requisito y PR contra
+main. Al final, dime cuántas pruebas hay en Jest y en node --test, y la cobertura.
 ```
