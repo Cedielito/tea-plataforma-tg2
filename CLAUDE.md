@@ -590,5 +590,3 @@ de interrogación o de exclamación (los dos puntos no la cortan). Quedan fuera 
 M-09, la nota de `/registro/prueba` y los ítems del SUS, cuya redacción fija la versión
 validada. `EXPLICACION_REGLA` empieza en minúscula para ir después de «Si dice COLOR,» o «Con
 la regla COLOR,», y `laReglaEs` la pone después de «La regla es COLOR.».
-
-Siguiente: versión congelada el 26 de octubre y los pendientes de `docs/backlog-fase-i.md`.
