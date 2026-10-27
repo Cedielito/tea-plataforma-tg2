@@ -90,7 +90,7 @@ plataforma usa 18 px (más legible y dentro de la regla).
 | M-06. Contacto y privacidad | Formulario de contacto con autorización de tratamiento de datos, política de privacidad y página «Acerca de». | Familia, docente | RF-08, RF-12, RS-02, RS-03 |
 | M-07. Ajustes de accesibilidad | Control permanente de tamaño de letra, alto contraste y reducción de movimiento. | Todos | RA-07 |
 | M-08. Panel de administración | Gestión de contenidos, preguntas, recursos, directorio, pasos de la ruta y mensajes, con acceso autenticado. | Administrador | RF-09 a RF-11, RS-04, RS-05 |
-| M-09. Registro conductual estructurado | Herramienta para que un profesional registre de forma estandarizada el desempeño en dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas de Navon, y entregue los valores observados por tarea con el aviso de no diagnóstico. En esta fase se evalúa solo con adultos voluntarios. | Profesional, participante adulto | RF-13 a RF-15; CT-01 a CT-09 y CT-11 a CT-13; CC-08, CC-09, CC-10 y CC-12; CP-01 a CP-05 y CP-07 a CP-12 |
+| M-09. Registro conductual estructurado | Herramienta para que un profesional registre de forma estandarizada el desempeño en dos tareas de dominio público, la clasificación con cambio de regla (DCCS) y las figuras jerárquicas de Navon, y entregue los valores observados por tarea con el aviso de no diagnóstico. En esta fase se evalúa solo con adultos voluntarios. | Profesional, participante adulto | RCN-03; RF-13 a RF-15; CT-01 a CT-09 y CT-11 a CT-13; CC-08, CC-09, CC-10 y CC-12; CP-01 a CP-05 y CP-07 a CP-12 |
 
 ### Cuadro 11. Arquitectura de contenidos del portal
 
